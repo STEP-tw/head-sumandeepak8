@@ -11,8 +11,15 @@ const getRequiredData = function(fileContent, numbers) {
   });
 }
 
+const getHead = function(file,number = 10,outputType) {
+  let delimiter = selectDelimiter(outputType) ;
+  file = file.split(delimiter) ; 
+  return getRequiredData(file,number).join(delimiter) ;
+}
+
 
 module.exports = {
   selectDelimiter,
   getRequiredData,
+  getHead,
 }

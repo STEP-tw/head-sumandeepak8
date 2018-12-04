@@ -9,5 +9,9 @@ describe('Test for selectDelimiter function',function(){
   it('should return empty string for c(byte)  outputType ',function(){
     equal(selectDelimiter('c'),'');
   });
+  
+  it('should return "\n" string for n(lines)  outputType ',function(){
+    equal(selectDelimiter('n'),'\n');
+  });
 
 });

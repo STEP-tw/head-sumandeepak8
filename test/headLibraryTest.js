@@ -1,7 +1,6 @@
 const { equal, deepEqual } = require('assert');
 
 const { selectDelimiter , 
-  getRequiredData ,
   getHead,
 } = require('../src/headLibrary.js');
 
@@ -18,24 +17,6 @@ describe('Test for selectDelimiter function',function(){
 
 });
 
-
-describe('Test for getRequiredData function',function(){
-
-  it('should return 4 element of fileContent ',function(){
-    let fileContent = ['h','e','l','m','e','t'];
-    let expectedOutput = ['h','e','l','m'];
-    deepEqual(getRequiredData(fileContent,4),expectedOutput);
-  });
-
-  it('should return 2 element of fileContent ',function(){
-
-    let fileContent = ['hello world', 'your welcome','\n','good bye'];
-    let expectedOutput = ['hello world','your welcome'];
-    deepEqual(getRequiredData(fileContent,2),expectedOutput);
-
-  });
-
-});
 
 
 describe('Test for getHead()',function(){

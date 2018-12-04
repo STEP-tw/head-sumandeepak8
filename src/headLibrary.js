@@ -3,23 +3,13 @@ const selectDelimiter = function(outputType) {
   return delimiter[outputType] ;
 }
 
-const getRequiredData = function(fileContent, numbers) {
-  let number = 0 ;
-  return fileContent.filter(()=>{
-    ++number ;
-    return (number<=numbers) ;
-  });
-}
-
 const getHead = function(file,number = 10,outputType) {
   let delimiter = selectDelimiter(outputType) ;
-  file = file.split(delimiter) ; 
-  return getRequiredData(file,number).join(delimiter) ;
+   return  file.split(delimiter).slice(0,number).join(delimiter); 
 }
 
 
 module.exports = {
   selectDelimiter,
-  getRequiredData,
   getHead,
 }

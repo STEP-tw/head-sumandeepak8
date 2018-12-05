@@ -2,7 +2,7 @@ const { equal, deepEqual } = require('assert');
 
 const { selectDelimiter , 
   getHead,
-  getNumbersNType,
+ filterOptions,
 } = require('../src/headLibrary.js');
 
 
@@ -47,11 +47,11 @@ describe('Test for getHead()',function(){
 });
 
 
-describe('Test for getNumbersNType() ',function(){
+describe('Test for filterOptions() ',function(){
 
   it("should give only the elements which contains '-' or any number",function(){
     let a = ['-n','file','file1','12'];
-    deepEqual(getNumbersNType(a),['-n','12']);
+    deepEqual(filterOptions(a),['-n','12']);
   });
 
 });

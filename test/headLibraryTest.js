@@ -5,6 +5,7 @@ const { selectDelimiter ,
  filterOptions,
   extractFiles,
   extractInputs,
+  head,
 } = require('../src/headLibrary.js');
 
 
@@ -27,22 +28,22 @@ describe('Test for getHead()',function(){
   let expectedOutput = "hello world";
 
   it('should return one line of fileContent',function(){
-    deepEqual(getHead(fileContent,1,'n'),expectedOutput);
+    deepEqual(getHead(fileContent,'n',1),expectedOutput);
   });
 
   it('should return two line of fileContent',function(){
      expectedOutput = "hello world\nyour welcome";
-    deepEqual(getHead(fileContent,2,'n'),expectedOutput);
+    deepEqual(getHead(fileContent,'n',2),expectedOutput);
   });
 
   it('should return one character of fileContent',function(){
      expectedOutput ='he';
-    deepEqual(getHead(fileContent,2,'c'),expectedOutput);
+    deepEqual(getHead(fileContent,'c',2),expectedOutput);
   });
 
   it('should return  character of fileContent',function(){
      expectedOutput = 'hello w';
-    deepEqual(getHead(fileContent,7,'c'),expectedOutput);
+    deepEqual(getHead(fileContent,'c',7),expectedOutput);
   });
 
 });
@@ -75,8 +76,29 @@ describe('Test for extractInputs() ',function(){
 
   it('should return object which contains two keys options and files',function(){
     input = ['-n','5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(input),{ files : ['fileContent','file1Content'], outputType : '-n', numbers : 5 });
+    deepStrictEqual(extractInputs(input),{ files : ['fileContent','file1Content'], outputType : 'n', numbers : 5 });
 
+  });
+
+});
+
+describe('Test for head() ',function(){
+
+  it('should return the expected output ',function(){
+    let input = ['-n1','hello\n\nworld\ngoodbye'];
+    deepStrictEqual(head(input),['hello']);
+
+    input = ['-n2','hello\n\nworld'];
+    deepStrictEqual(head(input),['hello\n']);
+
+    input = ['-n','5','hello\n\nworld\ngoodbye\nhii'];
+    deepStrictEqual(head(input),['hello\n\nworld\ngoodbye\nhii']);
+
+    input = ['-c2','hello\n\nworld'];
+    deepStrictEqual(head(input),['he']);
+
+    input = ['-c','6','hello\n\nworld'];
+    deepStrictEqual(head(input),['hello\n']);
   });
 
 });

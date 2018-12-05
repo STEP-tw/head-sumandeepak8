@@ -5,7 +5,7 @@ const selectDelimiter = function(outputType) {
 
 const getHead = function(file,number = 10,outputType) {
   let delimiter = selectDelimiter(outputType) ;
-  return  file.split(delimiter).slice(0,number).join(delimiter); 
+  return  file.split(delimiter).slice(0,number).join(delimiter) ; 
 }
 
 const filterOptions = function(input) {
@@ -15,9 +15,14 @@ const filterOptions = function(input) {
     ));
 }
 
+const extractFiles = function(input) {
+  let initialIndex = filterOptions(input).length ;
+  return input.slice(initialIndex) ;
+}
 
 module.exports = {
   selectDelimiter,
   getHead,
   filterOptions,
+  extractFiles,
 }

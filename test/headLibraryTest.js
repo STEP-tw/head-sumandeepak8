@@ -3,6 +3,7 @@ const { equal, deepEqual } = require('assert');
 const { selectDelimiter , 
   getHead,
  filterOptions,
+  extractFiles,
 } = require('../src/headLibrary.js');
 
 
@@ -17,7 +18,6 @@ describe('Test for selectDelimiter function',function(){
   });
 
 });
-
 
 
 describe('Test for getHead()',function(){
@@ -52,6 +52,18 @@ describe('Test for filterOptions() ',function(){
   it("should give only the elements which contains '-' or any number",function(){
     let a = ['-n','file','file1','12'];
     deepEqual(filterOptions(a),['-n','12']);
+  });
+
+});
+
+describe('Test for extractFiles () ',function(){
+
+  it('should return the all files names in array ',function(){
+    let input = ['-n','-c','file1','file','file.txt']
+    deepEqual(extractFiles(input),['file1','file','file.txt']);
+
+    input = ['-n','-c','-n5','5','file1','file.txt']
+    deepEqual(extractFiles(input),['file1','file.txt']);
   });
 
 });

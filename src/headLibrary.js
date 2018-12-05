@@ -1,9 +1,9 @@
-const createFileHeader = function() {
-  let header = '==> file1.txt <==';
+const createFileHeader = function(fileName) {
+  let header = '==> '+fileName+' <==';
   return header;
 }
 
-const selectDelimiter = function(outputType) {
+const selectDelimiter = function(outputType = 'n') {
   let delimiter = { n:'\n', c:'',} ;
   return delimiter[outputType] ;
 }
@@ -16,7 +16,7 @@ const getHead = function(file,outputType,number = 10) {
 const filterOptions = function(input) {
   return input.filter((element)=>
     (element.includes('-') || 
-      (element.charCodeAt(0) <= 57)
+      (element.charCodeAt(0) >= 48 && element.charCodeAt(0) <= 57)
     ));
 }
 
@@ -37,16 +37,21 @@ const extractInputs = function(input) {
 }
 
 const head = function(extractedInput) {
-  let {filesContents, outputType, numbers} = extractedInput;
+  let {filesContents, outputType, numbers,fileNames} = extractedInput;
   return  filesContents.map((file)=>{
+    if(filesContents.length > 1){
+        return createFileHeader(fileNames.shift()) + '\n' 
+        + getHead(file,outputType,numbers) + '\n';
+    }
     return getHead(file,outputType,numbers);
   });
 }
 
 const output = function(readFile,input) {
   let {filesContents, outputType, numbers} = extractInputs(input.slice(2));
+  let fileNames = filesContents.slice();
   filesContents = filesContents.map(readFile);
-  let extractedInput = { filesContents,outputType,numbers }
+  let extractedInput = { filesContents,outputType,numbers ,fileNames}
   return head(extractedInput).join('\n');
 }
 

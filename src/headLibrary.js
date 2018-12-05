@@ -22,10 +22,15 @@ const extractFiles = function(input) {
 
 const extractInputs = function(input) {
   let options  = filterOptions(input) ;
+  let outputType = options[0][1];
+  let numbers = +options[0].slice(2);
+  if(options.length > 1){
+    outputType = options[0] ;
+    numbers = +options[1] ;
+  }
   let files = extractFiles(input) ;
-  return {files, options} 
+  return {files,outputType,numbers} ;
 }
-
 
 
 module.exports = {

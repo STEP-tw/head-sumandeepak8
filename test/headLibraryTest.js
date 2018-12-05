@@ -1,4 +1,4 @@
-const { equal, deepEqual } = require('assert');
+const { equal, deepEqual, deepStrictEqual } = require('assert');
 
 const { selectDelimiter , 
   getHead,
@@ -51,7 +51,7 @@ describe('Test for getHead()',function(){
 describe('Test for filterOptions() ',function(){
 
   it("should give only the elements which contains '-' or any number",function(){
-    let a = ['-n','file','file1','12'];
+    let a = ['-n','your welcome','hello world','12'];
     deepEqual(filterOptions(a),['-n','12']);
   });
 
@@ -60,11 +60,13 @@ describe('Test for filterOptions() ',function(){
 describe('Test for extractFiles () ',function(){
 
   it('should return the all files names in array ',function(){
-    let input = ['-n','-c','file1','file','file.txt']
-    deepEqual(extractFiles(input),['file1','file','file.txt']);
 
-    input = ['-n','-c','-n5','5','file1','file.txt']
-    deepEqual(extractFiles(input),['file1','file.txt']);
+    let input = ['-n','-c','welcome back','hii what is going on','hello world']
+    deepEqual(extractFiles(input),['welcome back','hii what is going on','hello world']);
+
+    input = ['-n','-c','-n5','5','good bye','take care']
+    deepEqual(extractFiles(input),['good bye','take care']);
+
   });
 
 });
@@ -72,8 +74,9 @@ describe('Test for extractFiles () ',function(){
 describe('Test for extractInputs() ',function(){
 
   it('should return object which contains two keys options and files',function(){
-    input = ['-n','-c','-n5','5','file1','file.txt']
-    deepEqual(extractInputs(input),{ files : ['file1','file.txt'], options : ['-n','-c','-n5','5'] });
+    input = ['-n','5','fileContent','file1Content']
+    deepStrictEqual(extractInputs(input),{ files : ['fileContent','file1Content'], outputType : '-n', numbers : 5 });
+
   });
 
 });

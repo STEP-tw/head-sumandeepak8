@@ -2,6 +2,7 @@ const { equal, deepEqual } = require('assert');
 
 const { selectDelimiter , 
   getHead,
+  getNumbersNType,
 } = require('../src/headLibrary.js');
 
 
@@ -38,9 +39,20 @@ describe('Test for getHead()',function(){
     deepEqual(getHead(fileContent,2,'c'),expectedOutput);
   });
 
-  it('should return 7 character of fileContent',function(){
+  it('should return  character of fileContent',function(){
      expectedOutput = 'hello w';
     deepEqual(getHead(fileContent,7,'c'),expectedOutput);
   });
 
 });
+
+
+describe('Test for getNumbersNType() ',function(){
+
+  it("should give only the elements which contains '-' or any number",function(){
+    let a = ['-n','file','file1','12'];
+    deepEqual(getNumbersNType(a),['-n','12']);
+  });
+
+});
+

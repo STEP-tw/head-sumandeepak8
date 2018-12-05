@@ -76,7 +76,7 @@ describe('Test for extractInputs() ',function(){
 
   it('should return object which contains two keys options and files',function(){
     input = ['-n','5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(input),{ files : ['fileContent','file1Content'], outputType : 'n', numbers : 5 });
+    deepStrictEqual(extractInputs(input),{ filesContents : ['fileContent','file1Content'], outputType : 'n', numbers : 5 });
 
   });
 
@@ -85,19 +85,19 @@ describe('Test for extractInputs() ',function(){
 describe('Test for head() ',function(){
 
   it('should return the expected output ',function(){
-    let input = ['-n1','hello\n\nworld\ngoodbye'];
+    let input = { filesContents : ['hello\n\nworld\ngoodbye'], outputType : 'n', numbers : '1'}
     deepStrictEqual(head(input),['hello']);
 
-    input = ['-n2','hello\n\nworld'];
+    input = { filesContents : ['hello\n\nworld\ngoodbye'], outputType : 'n', numbers : '2'}
     deepStrictEqual(head(input),['hello\n']);
 
-    input = ['-n','5','hello\n\nworld\ngoodbye\nhii'];
+     input = { filesContents : ['hello\n\nworld\ngoodbye\nhii'], outputType : 'n', numbers : '5'}
     deepStrictEqual(head(input),['hello\n\nworld\ngoodbye\nhii']);
 
-    input = ['-c2','hello\n\nworld'];
+     input = { filesContents : ['hello\n\nworld\ngoodbye'], outputType : 'c', numbers : '2'}
     deepStrictEqual(head(input),['he']);
 
-    input = ['-c','6','hello\n\nworld'];
+     input = { filesContents : ['hello\n\nworld\ngoodbye'], outputType : 'c', numbers : '6'}
     deepStrictEqual(head(input),['hello\n']);
   });
 

@@ -1,3 +1,9 @@
+const fileSeparator = function() {
+  if(files.length > 1)
+    return '==> file1.txt <==';
+  return;
+}
+
 const selectDelimiter = function(outputType) {
   let delimiter = { n:'\n', c:'',} ;
   return delimiter[outputType] ;
@@ -27,13 +33,13 @@ const extractInputs = function(input) {
   if(options.length > 1){
     numbers = +options[1] ;
   }
-  let files = extractFiles(input) ;
-  return {files,outputType,numbers} ;
+  let filesContents = extractFiles(input) ;
+  return {filesContents,outputType,numbers} ;
 }
 
-const head = function(input) {
-  let {files, outputType, numbers} = extractInputs(input);
- return  files.map((file)=>{
+const head = function(extractedInput) {
+  let {filesContents, outputType, numbers} = extractedInput;
+ return  filesContents.map((file)=>{
     return getHead(file,outputType,numbers);
   });
 }

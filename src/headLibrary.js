@@ -1,4 +1,4 @@
-const fileSeparator = function() {
+const createFileHeader = function() {
   let header = '==> file1.txt <==';
   return header;
 }
@@ -38,11 +38,17 @@ const extractInputs = function(input) {
 
 const head = function(extractedInput) {
   let {filesContents, outputType, numbers} = extractedInput;
- return  filesContents.map((file)=>{
+  return  filesContents.map((file)=>{
     return getHead(file,outputType,numbers);
   });
 }
 
+const output = function(readFile,input) {
+  let {filesContents, outputType, numbers} = extractInputs(input.slice(2));
+  filesContents = filesContents.map(readFile);
+  let extractedInput = { filesContents,outputType,numbers }
+  return head(extractedInput).join('\n');
+}
 
 module.exports = {
   selectDelimiter,
@@ -51,4 +57,6 @@ module.exports = {
   extractFiles,
   extractInputs,
   head,
+  createFileHeader,
+  output
 }

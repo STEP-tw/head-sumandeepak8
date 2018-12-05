@@ -1,55 +1,52 @@
 const { equal, deepEqual, deepStrictEqual } = require('assert');
 
-const { selectDelimiter , 
+const { selectDelimiter, 
   getHead,
- filterOptions,
+  filterOptions,
   extractFiles,
   extractInputs,
-  head,
+  head
 } = require('../src/headLibrary.js');
 
+describe('selectDelimiter',function(){
 
-describe('Test for selectDelimiter function',function(){
-
-  it('should return empty string for c(byte)  outputType ',function(){
+  it('should return empty string for c(byte) outputType ',function(){
     equal(selectDelimiter('c'),'');
   });
 
-  it('should return "\n" string for n(lines)  outputType ',function(){
+  it('should return "\n" string for n(lines) outputType ',function(){
     equal(selectDelimiter('n'),'\n');
   });
 
 });
 
-
-describe('Test for getHead()',function(){
+describe('getHead',function(){
 
   let fileContent = "hello world\nyour welcome\ngood bye";
   let expectedOutput = "hello world";
 
-  it('should return one line of fileContent',function(){
+  it('should return expectedOutput',function(){
     deepEqual(getHead(fileContent,'n',1),expectedOutput);
   });
 
-  it('should return two line of fileContent',function(){
-     expectedOutput = "hello world\nyour welcome";
+  it('should return expectedOutput as given below',function(){
+    expectedOutput = "hello world\nyour welcome";
     deepEqual(getHead(fileContent,'n',2),expectedOutput);
   });
 
-  it('should return one character of fileContent',function(){
-     expectedOutput ='he';
+  it('should return first 2 character of fileContent',function(){
+    expectedOutput ='he';
     deepEqual(getHead(fileContent,'c',2),expectedOutput);
   });
 
-  it('should return  character of fileContent',function(){
-     expectedOutput = 'hello w';
+  it('should return first 7 character of fileContent',function(){
+    expectedOutput = 'hello w';
     deepEqual(getHead(fileContent,'c',7),expectedOutput);
   });
 
 });
 
-
-describe('Test for filterOptions() ',function(){
+describe('filterOptions',function(){
 
   it("should give only the elements which contains '-' or any number",function(){
     let a = ['-n','your welcome','hello world','12'];
@@ -58,7 +55,7 @@ describe('Test for filterOptions() ',function(){
 
 });
 
-describe('Test for extractFiles () ',function(){
+describe('extractFiles',function(){
 
   it('should return the all files names in array ',function(){
 
@@ -72,33 +69,26 @@ describe('Test for extractFiles () ',function(){
 
 });
 
-describe('Test for extractInputs() ',function(){
+describe('extractInputs',function(){
 
   it('should return object which contains two keys options and files',function(){
     input = ['-n','5','fileContent','file1Content']
     deepStrictEqual(extractInputs(input),{ filesContents : ['fileContent','file1Content'], outputType : 'n', numbers : 5 });
-
   });
 
 });
 
-describe('Test for head() ',function(){
+describe('head',function(){
 
-  it('should return the expected output ',function(){
-    let input = { filesContents : ['hello\n\nworld\ngoodbye'], outputType : 'n', numbers : '1'}
-    deepStrictEqual(head(input),['hello']);
-
-    input = { filesContents : ['hello\n\nworld\ngoodbye'], outputType : 'n', numbers : '2'}
-    deepStrictEqual(head(input),['hello\n']);
-
-     input = { filesContents : ['hello\n\nworld\ngoodbye\nhii'], outputType : 'n', numbers : '5'}
+  it('should return 5 lines when the outputType is n and value of numbers is 5',function(){
+    input = { filesContents : ['hello\n\nworld\ngoodbye\nhii'], outputType : 'n', numbers : 5}
     deepStrictEqual(head(input),['hello\n\nworld\ngoodbye\nhii']);
+  });
 
-     input = { filesContents : ['hello\n\nworld\ngoodbye'], outputType : 'c', numbers : '2'}
-    deepStrictEqual(head(input),['he']);
-
-     input = { filesContents : ['hello\n\nworld\ngoodbye'], outputType : 'c', numbers : '6'}
-    deepStrictEqual(head(input),['hello\n']);
+  it('should return 5 characters ,outputType is c(byte) and value of numbers is 5',function(){
+    input = { filesContents : ['hello\n\nworld\ngoodbye'], outputType : 'c', numbers : 5}
+    deepStrictEqual(head(input),['hello']);
   });
 
 });
+

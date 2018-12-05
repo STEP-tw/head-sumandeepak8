@@ -1,3 +1,5 @@
+const { isOutputType } = require('../src/util.js');
+
 const createFileHeader = function(fileName) {
   let header = '==> '+fileName+' <==';
   return header;
@@ -53,6 +55,14 @@ const output = function(readFile,input) {
   filesContents = filesContents.map(readFile);
   let extractedInput = { filesContents,outputType,numbers ,fileNames}
   return head(extractedInput).join('\n');
+}
+
+const isValidInput = function(input) {
+  let inputToProcess = input.slice();
+  inputToProcess.map((element)=>{
+    
+  })
+  
 }
 
 module.exports = {

@@ -1,7 +1,6 @@
 const fileSeparator = function() {
-  if(files.length > 1)
-    return '==> file1.txt <==';
-  return;
+  let header = '==> file1.txt <==';
+  return header;
 }
 
 const selectDelimiter = function(outputType) {

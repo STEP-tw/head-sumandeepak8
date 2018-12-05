@@ -30,39 +30,31 @@ const extractFiles = function(input) {
 const extractInputs = function(input) {
   let options  = filterOptions(input) ;
   let outputType = options[0][1];
-  let numbers = +options[0].slice(2);
+  let number = +options[0].slice(2);
   if(options.length > 1){
-    numbers = +options[1] ;
+    number = +options[1] ;
   }
   let filesContents = extractFiles(input) ;
-  return {filesContents,outputType,numbers} ;
+  return {filesContents,outputType,number} ;
 }
 
 const head = function(extractedInput) {
-  let {filesContents, outputType, numbers,fileNames} = extractedInput;
+  let {filesContents, outputType, number,fileNames} = extractedInput;
   return  filesContents.map((file)=>{
     if(filesContents.length > 1){
         return createFileHeader(fileNames.shift()) + '\n' 
-        + getHead(file,outputType,numbers) + '\n';
+        + getHead(file,outputType,number) + '\n';
     }
-    return getHead(file,outputType,numbers);
+    return getHead(file,outputType,number);
   });
 }
 
 const output = function(readFile,input) {
-  let {filesContents, outputType, numbers} = extractInputs(input.slice(2));
+  let {filesContents, outputType, number} = extractInputs(input.slice(2));
   let fileNames = filesContents.slice();
   filesContents = filesContents.map(readFile);
-  let extractedInput = { filesContents,outputType,numbers ,fileNames}
+  let extractedInput = { filesContents,outputType,number ,fileNames}
   return head(extractedInput).join('\n');
-}
-
-const isValidInput = function(input) {
-  let inputToProcess = input.slice();
-  inputToProcess.map((element)=>{
-    
-  })
-  
 }
 
 module.exports = {

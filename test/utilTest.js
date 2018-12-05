@@ -1,6 +1,8 @@
 const { deepEqual } = require('assert');
 
-const { isOutputType,
+const { 
+  isOutputType,
+  isValidNumber,
 } = require('../src/util.js');
 
 
@@ -18,3 +20,12 @@ describe('isOutputType',function(){
 
 });
 
+describe('isValidNumber',function(){
+
+  it('should show an error message on screen as expected output',function(){
+    let number = 0;
+    let expectedOutput = 'head: illegal line count --' + number;
+    deepEqual(isValidNumber(number),expectedOutput);
+  });
+
+});

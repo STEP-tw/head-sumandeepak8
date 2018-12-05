@@ -73,7 +73,7 @@ describe('extractInputs',function(){
 
   it('should return object which contains two keys options and files',function(){
     input = ['-n','5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(input),{ filesContents : ['fileContent','file1Content'], outputType : 'n', numbers : 5 });
+    deepStrictEqual(extractInputs(input),{ filesContents : ['fileContent','file1Content'], outputType : 'n', number : 5 });
   });
 
 });
@@ -81,19 +81,19 @@ describe('extractInputs',function(){
 describe('head',function(){
 
   describe('single input file',function(){
-    it('should return 5 lines when the outputType is n and value of numbers is 5',function(){
-      input = { filesContents : ['hello\n\nworld\ngoodbye\nhii'], outputType : 'n', numbers : 5}
+    it('should return 5 lines when the outputType is n and value of number is 5',function(){
+      input = { filesContents : ['hello\n\nworld\ngoodbye\nhii'], outputType : 'n', number : 5}
       deepStrictEqual(head(input),['hello\n\nworld\ngoodbye\nhii']);
     });
 
-    it('should return 5 characters ,outputType is c(byte) and value of numbers is 5',function(){
-      input = { filesContents : ['hello\n\nworld\ngoodbye'], outputType : 'c', numbers : 5}
+    it('should return 5 characters ,outputType is c(byte) and value of number is 5',function(){
+      input = { filesContents : ['hello\n\nworld\ngoodbye'], outputType : 'c', number : 5}
       deepStrictEqual(head(input),['hello']);
     });
   });
 
   describe('mutliple input file',function(){ 
-    it('should return max.10 lines if files has ,when the outputType and value of numbers is not given ',function(){
+    it('should return max.10 lines if files has ,when the outputType and value of number is not given ',function(){
 
       input = { filesContents : ['hello\n\nworld','welcome\nback\ngood\nbye\again'],fileNames : ['file1','file2']};
       deepStrictEqual(head(input),['==> file1 <==\nhello\n\n\world\n','==> file2 <==\nwelcome\nback\ngood\nbye\again\n']);

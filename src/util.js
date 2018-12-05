@@ -9,6 +9,15 @@ const isOutputType = function(element) {
   return result;
 }
 
+const isValidNumber = function(number) {
+  if(number < 1){
+    return ('head: illegal line count --' + number);
+  }
+  return true;
+}
+
+
 module.exports = { 
   isOutputType,
+  isValidNumber,
 };

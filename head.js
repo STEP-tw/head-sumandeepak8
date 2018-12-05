@@ -1,7 +1,6 @@
 const fs = require('fs');
 const { output } = require('./src/headLibrary.js');
 
-
 const readFile = function(file) {
   return fs.readFileSync(file,'utf-8');
 }

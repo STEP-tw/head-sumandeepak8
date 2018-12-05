@@ -20,9 +20,18 @@ const extractFiles = function(input) {
   return input.slice(initialIndex) ;
 }
 
+const extractInputs = function(input) {
+  let options  = filterOptions(input) ;
+  let files = extractFiles(input) ;
+  return {files, options} 
+}
+
+
+
 module.exports = {
   selectDelimiter,
   getHead,
   filterOptions,
   extractFiles,
+  extractInputs,
 }

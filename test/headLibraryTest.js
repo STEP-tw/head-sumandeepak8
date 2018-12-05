@@ -4,6 +4,7 @@ const { selectDelimiter ,
   getHead,
  filterOptions,
   extractFiles,
+  extractInputs,
 } = require('../src/headLibrary.js');
 
 
@@ -68,3 +69,11 @@ describe('Test for extractFiles () ',function(){
 
 });
 
+describe('Test for extractInputs() ',function(){
+
+  it('should return object which contains two keys options and files',function(){
+    input = ['-n','-c','-n5','5','file1','file.txt']
+    deepEqual(extractInputs(input),{ files : ['file1','file.txt'], options : ['-n','-c','-n5','5'] });
+  });
+
+});

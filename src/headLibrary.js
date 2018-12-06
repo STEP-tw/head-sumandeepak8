@@ -5,21 +5,20 @@ const createFileHeader = function(fileName) {
   return header;
 }
 
-const selectDelimiter = function(outputType) {
+const selectDelimiter = function(outputType = 'n') {
   let delimiter = { n:'\n', c:'',} ;
   return delimiter[outputType] ;
 }
 
-const getHead = function(file,outputType,number) {
+const getHead = function(file,outputType,number = 10) {
   let delimiter = selectDelimiter(outputType) ;
   return  file.split(delimiter).slice(0,number).join(delimiter) ; 
 }
 
 const filterOptions = function(input) {
   return input.filter((element)=>
-    (element.includes('-') || 
-      (element.charCodeAt(0) >= 48 && element.charCodeAt(0) <= 57)
-    ));
+    element.includes('-') || 
+    (element.charCodeAt(0) >= 48 && element.charCodeAt(0) <= 57)) 
 }
 
 const extractFiles = function(input) {

@@ -11,7 +11,7 @@ const isOutputType = function(element) {
 
 const isValidNumber = function(number) {
   if(number < 1){
-    return ('head: illegal line count --' + number);
+    return ('head: illegal line count -- ' + number);
   }
   return true;
 }

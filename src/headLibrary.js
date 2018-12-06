@@ -1,16 +1,16 @@
-const { isOutputType } = require('../src/util.js');
+const { isOutputType, isValidNumber } = require('../src/util.js');
 
 const createFileHeader = function(fileName) {
   let header = '==> '+fileName+' <==';
   return header;
 }
 
-const selectDelimiter = function(outputType = 'n') {
+const selectDelimiter = function(outputType) {
   let delimiter = { n:'\n', c:'',} ;
   return delimiter[outputType] ;
 }
 
-const getHead = function(file,outputType,number = 10) {
+const getHead = function(file,outputType,number) {
   let delimiter = selectDelimiter(outputType) ;
   return  file.split(delimiter).slice(0,number).join(delimiter) ; 
 }
@@ -29,11 +29,15 @@ const extractFiles = function(input) {
 
 const extractInputs = function(input) {
   let options  = filterOptions(input) ;
-  let outputType = options[0][1];
-  let number = +options[0].slice(2);
-  if(options.length > 1){
-    number = +options[1] ;
+  let outputType = 'n';
+  let number = 10;
+
+  let length = options.length;
+  if(length > 1){
+    outputType = options[0][1];
+    number = +options[length-1];
   }
+
   let filesContents = extractFiles(input) ;
   return {filesContents,outputType,number} ;
 }
@@ -42,7 +46,7 @@ const head = function(extractedInput) {
   let {filesContents, outputType, number,fileNames} = extractedInput;
   return  filesContents.map((file)=>{
     if(filesContents.length > 1){
-        return createFileHeader(fileNames.shift()) + '\n' 
+      return createFileHeader(fileNames.shift()) + '\n' 
         + getHead(file,outputType,number) + '\n';
     }
     return getHead(file,outputType,number);
@@ -50,11 +54,22 @@ const head = function(extractedInput) {
 }
 
 const output = function(readFile,input) {
-  let {filesContents, outputType, number} = extractInputs(input.slice(2));
+  let { filesContents, outputType, number }
+    = extractInputs(input.slice(2));
+
   let fileNames = filesContents.slice();
   filesContents = filesContents.map(readFile);
+
+  let nextStep = validateInput(outputType,number);
+  if( nextStep != true)
+    return nextStep;
+
   let extractedInput = { filesContents,outputType,number ,fileNames}
   return head(extractedInput).join('\n');
+}
+
+const validateInput = function(outputType,number) {
+  return isOutputType(outputType) && isValidNumber(number);
 }
 
 module.exports = {

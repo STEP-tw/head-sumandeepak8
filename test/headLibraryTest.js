@@ -83,6 +83,11 @@ describe('extractFiles',function(){
     let input = ['-n7','-n5','5','file.txt','file4.js']
     deepEqual(extractFiles(input),['-n5','5','file.txt','file4.js']);
   });
+  
+  it.only('should return the files if options are not given in input',function(){
+    let input = ['file.txt','file4.js']
+    deepEqual(extractFiles(input),['file.txt','file4.js']);
+  });
 
 });
 

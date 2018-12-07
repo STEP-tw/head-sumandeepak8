@@ -29,6 +29,12 @@ const head = function(extractedInput) {
   });
 }
 
+const extractFiles = function(input) {
+  let options = getOptions(input);
+  if(options[0].length + 1 == input[0].length)
+    return input.slice(2);
+  return input.slice(1);
+}
 
 const filterOptions = function(parameters) {
   let {options,validCode} = parameters;

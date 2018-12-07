@@ -107,7 +107,11 @@ describe('extractInputs',function(){
   it('should return n number of lines when option is not given',function(){
     let input = ['fileContent','file1Content'];
     deepStrictEqual(extractInputs(input), { filesContents : ['fileContent','file1Content'] , outputType : 'n',number : 10 } );
+  });
 
+  it('should return and option n when only count is given',function(){
+    let input = ['-2','file','file1','file2'];
+    deepStrictEqual(extractInputs(input),{ filesContents : ['file','file1','file2'], outputType : 'n', number : 2 });
   });
 
 });

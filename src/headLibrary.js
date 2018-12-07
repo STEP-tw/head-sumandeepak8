@@ -74,12 +74,8 @@ const getOptions = function(input) {
 
 const extractInputs = function(input) {
   let options  = getOptions(input) ;
-  let outputType = 'n';
-  let number = 10;
-  if(options[0] != undefined){
-    outputType = options[0];
-    number = +options[1];
-  }
+  let outputType = options[0];
+  let number = +options[1];
   let filesContents = extractFiles(input) ;
   return {filesContents, outputType, number} ;
 }

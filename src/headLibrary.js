@@ -53,12 +53,9 @@ const extractOptions = function(input) {
 
 const extractFiles = function(input) {
   let options = extractOptions(input);
-  if(options[0] == undefined)
-    return input.slice();
-  if(options.length == 2)
-    return input.slice(2) ;
-  if(options.length == 1)
-    return input.slice(1) ;
+  let indexesForSlice = { 0 : 0, 1 : 1, 2 : 2 };
+  let length = options.length;
+  return input.slice(indexesForSlice[length]);
 }
 
 const getOptions = function(input) {

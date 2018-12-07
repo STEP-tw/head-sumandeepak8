@@ -44,6 +44,7 @@ describe('getHead',function(){
 });
 
 describe('getOptions',function(){
+
   it("should return max. first two element if it includes, where second element should be inputnumber - ",function(){
     let input = ['-n','file.txt','hello world','12'];
     deepEqual(getOptions(input),['n','file.txt']);
@@ -84,7 +85,7 @@ describe('extractFiles',function(){
     deepEqual(extractFiles(input),['-n5','5','file.txt','file4.js']);
   });
   
-  it.only('should return the files if options are not given in input',function(){
+  it('should return the files if options are not given in input',function(){
     let input = ['file.txt','file4.js']
     deepEqual(extractFiles(input),['file.txt','file4.js']);
   });
@@ -102,6 +103,13 @@ describe('extractInputs',function(){
     input = ['-n5','5','fileContent','file1Content']
     deepStrictEqual(extractInputs(input),{ filesContents : ['5','fileContent','file1Content'], outputType : 'n', number : 5 });
   });
+
+  it('should return n number of lines when option is not given',function(){
+    let input = ['fileContent','file1Content'];
+    deepStrictEqual(extractInputs(input), { filesContents : ['fileContent','file1Content'] , outputType : 'n',number : 10 } );
+
+  });
+
 });
 
 describe('head',function(){

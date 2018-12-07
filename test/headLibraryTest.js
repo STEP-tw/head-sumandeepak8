@@ -69,17 +69,17 @@ describe('getOptions',function(){
 });
 
 describe('extractFiles',function(){
-  it('should return the all files names in array ',function(){
+  it('should return input elements from index 2 if option is given',function(){
     let input = ['-n','-c','file1','file2','file3.txt']
     deepEqual(extractFiles(input),['file1','file2','file3.txt']);
 
-    input = ['-n7','-n5','5','file.txt','file4.js']
-    deepEqual(extractFiles(input),['-n5','5','file.txt','file4.js']);
+    input = ['-n','file1','file2','file3.txt']
+    deepEqual(extractFiles(input),['file2','file3.txt']);
   });
 
-  it('should return input elements from index 2 if option is given',function(){
-    let input = ['-n','file1','file2','file3.txt']
-    deepEqual(extractFiles(input),['file2','file3.txt']);
+  it('should return elements from index 1 of input if the first element is valid option and it also includes count  in it',function(){
+    let input = ['-n7','-n5','5','file.txt','file4.js']
+    deepEqual(extractFiles(input),['-n5','5','file.txt','file4.js']);
   });
 
 });

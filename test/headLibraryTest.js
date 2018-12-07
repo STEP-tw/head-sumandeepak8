@@ -105,7 +105,7 @@ describe('head',function(){
   describe('mutliple input file',function(){ 
     it('should return max.10 lines if files has ,when the outputType and value of number is not given ',function(){
       input = { filesContents : ['hello\n\nworld','welcome\nback\ngood\nbye\again'],fileNames : ['file1','file2']};
-      deepStrictEqual(head(input),['==> file1 <==\nhello\n\n\world\n','==> file2 <==\nwelcome\nback\ngood\nbye\again\n']);
+      deepStrictEqual(head(input),['==> file1 <==\nhello\n\n\world\n','==> file2 <==\nwelcome\nback\ngood\nbye\again']);
     });
   });
 

@@ -29,12 +29,6 @@ const head = function(extractedInput) {
   });
 }
 
-const extractFiles = function(input) {
-  let options = getOptions(input);
-  if(options[0].length + 1 == input[0].length)
-    return input.slice(2);
-  return input.slice(1) ;
-}
 
 const filterOptions = function(parameters) {
   let {options,validCode} = parameters;
@@ -50,12 +44,25 @@ const filterOptions = function(parameters) {
   return options;
 }
 
-const getOptions = function(input) {
+const extractOptions = function(input) {
   let options = input.slice(0,2);
   let validCode = [48,49,50,51,52,53,54,55,56,57,99,110];
-
   let parameters = {options,validCode};
-  let output = filterOptions(parameters);
+   return filterOptions(parameters);
+}
+
+const extractFiles = function(input) {
+  let options = extractOptions(input);
+  if(options[0] == undefined)
+    return input.slice();
+  if(options.length == 2)
+    return input.slice(2) ;
+  if(options.length == 1)
+    return input.slice(1) ;
+}
+
+const getOptions = function(input) {
+  let output = extractOptions(input);
 
   if(output[0] == undefined){
     output[0] = '-n';

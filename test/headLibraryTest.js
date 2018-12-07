@@ -75,6 +75,8 @@ describe('extractFiles',function(){
 
     input = ['-n','file1','file2','file3.txt']
     deepEqual(extractFiles(input),['file2','file3.txt']);
+    input = ['file1','file2','file3.txt']
+    deepEqual(extractFiles(input),['file1','file2','file3.txt']);
   });
 
   it('should return elements from index 1 of input if the first element is valid option and it also includes count  in it',function(){

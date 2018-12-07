@@ -57,6 +57,11 @@ const getOptions = function(input) {
   let parameters = {options,validCode};
   let output = filterOptions(parameters);
 
+  if(output[0] == undefined){
+    output[0] = '-n';
+    output[1] = 10;
+  }
+
   output[0] = output[0].slice(1);
   let length = output[0].length;
 

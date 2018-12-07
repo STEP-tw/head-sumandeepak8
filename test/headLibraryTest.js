@@ -60,6 +60,12 @@ describe('getOptions',function(){
     input = ['-c','5','file.txt','hello world','12'];
     deepEqual(getOptions(input),['c','5']);
   });
+
+  it('should return the default values of option and count when it is not given',function(){
+    input = ['file','file1'];
+    deepStrictEqual(getOptions(input),['n',10]);
+  });
+
 });
 
 describe('extractFiles',function(){

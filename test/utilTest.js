@@ -1,21 +1,21 @@
 const { deepEqual } = require('assert');
 
 const { 
-  isValidOption,
+  validateOption,
   isValidNumber,
 } = require('../src/util.js');
 
 
-describe('isValidOption',function(){
+describe('validateOption',function(){
 
   it('should return true for -n and -c',function(){
-    deepEqual(isValidOption('-n'),true);
-    deepEqual(isValidOption('-c'),true);
+    deepEqual(validateOption('-n'),{ isValid : true,error_message : undefined });
+    deepEqual(validateOption('-c'),{ isValid : true,error_message : undefined });
   });
 
   it('should return false value for input other than -n and -c',function(){
-    deepEqual(isValidOption('-s'),'head: illegal option -- s\nusage: head [-n lines | -c bytes] [file ...]');
-    deepEqual(isValidOption('-u'),'head: illegal option -- u\nusage: head [-n lines | -c bytes] [file ...]');
+    deepEqual(validateOption('-s'),{ isValid : false, error_message : 'head: illegal option -- s\nusage: head [-n lines | -c bytes] [file ...]'});
+    deepEqual(validateOption('-u'),{isValid : false, error_message : 'head: illegal option -- u\nusage: head [-n lines | -c bytes] [file ...]'});
   });
 
 });
@@ -24,7 +24,7 @@ describe('isValidNumber',function(){
 
   it('should show an error message on screen as expected output',function(){
     let number = 0;
-    let expectedOutput = 'head: illegal line count -- ' + number;
+    let expectedOutput = { isValid : false, error_message : 'head: illegal line count -- ' + number};
     deepEqual(isValidNumber(number),expectedOutput);
   });
 

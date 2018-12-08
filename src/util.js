@@ -1,23 +1,26 @@
-const isValidOption = function(option) {
-  let result = option.includes('-') && 
+const validateOption = function(option) {
+  let error_message;
+  let isValid = option.includes('-') && 
     (option.charCodeAt(1) == 99 || option.charCodeAt(1) == 110);
 
-  if(!result ){
-    return ('head: illegal option -- ' + option[1]) +'\n' +
+  if(!isValid ){
+    error_message = ('head: illegal option -- ' + option[1]) +'\n' +
       ('usage: head [-n lines | -c bytes] [file ...]');
   }
-  return result;
+  return { isValid, error_message };
 }
 
 const isValidNumber = function(count) {
-  if(count < 1){
-    return ('head: illegal line count -- ' + count);
+  let error_message;
+  let isValid = count >= 1;
+  if(!isValid){
+    error_message = 'head: illegal line count -- ' + count;
   }
-  return true;
+  return { isValid, error_message };
 }
 
 
 module.exports = { 
-  isValidOption,
+  validateOption,
   isValidNumber,
 };

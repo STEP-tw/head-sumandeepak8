@@ -1,23 +1,23 @@
-const isOutputType = function(element) {
-  let result = element.includes('-') && 
-    (element.charCodeAt(1) == 99 || element.charCodeAt(1) == 110);
+const isValidOption = function(option) {
+  let result = option.includes('-') && 
+    (option.charCodeAt(1) == 99 || option.charCodeAt(1) == 110);
 
   if(!result ){
-    return ('head: illegal option -- ' + element[1]) +'\n' +
+    return ('head: illegal option -- ' + option[1]) +'\n' +
       ('usage: head [-n lines | -c bytes] [file ...]');
   }
   return result;
 }
 
-const isValidNumber = function(number) {
-  if(number < 1){
-    return ('head: illegal line count -- ' + number);
+const isValidNumber = function(count) {
+  if(count < 1 || Number.isNaN(count)){
+    return ('head: illegal line count -- ' + count);
   }
   return true;
 }
 
 
 module.exports = { 
-  isOutputType,
+  isValidOption,
   isValidNumber,
 };

@@ -1,8 +1,12 @@
 const fs = require('fs');
-const { output , extractInputs } = require('./src/headLibrary.js');
+const { output } = require('./src/headLibrary.js');
+
+const isExist = function(file) {
+  return fs.existsSync(file);
+}
 
 const readFile = function(file) {
-  return fs.readFileSync(file,'utf-8');
+   return fs.readFileSync(file,'utf-8');
 }
 
 const main = function() {

@@ -1,4 +1,4 @@
-const { isOutputType, isValidNumber } = require('../src/util.js');
+const { isValidOption, isValidNumber } = require('../src/util.js');
 
 const createFileHeader = function(fileName) {
   let header = '==> '+fileName+' <==';
@@ -106,7 +106,7 @@ const output = function(readFile,input) {
 
 const validateInput = function(parsedInput) {
   let { filesContents, option , count } = parsedInput;
-  let result = isOutputType(option) && isValidNumber(count);
+  let result = isValidOption(option) && isValidNumber(count);
   return result;
 }
 

@@ -5,27 +5,27 @@ const createFileHeader = function(fileName) {
   return header;
 }
 
-const selectDelimiter = function(outputType = 'n') {
+const selectDelimiter = function(option = 'n') {
   let delimiter = { n:'\n', c:'',} ;
-  return delimiter[outputType] ;
+  return delimiter[option] ;
 }
 
-const getHead = function(file,outputType,number = 10) {
-  let delimiter = selectDelimiter(outputType) ;
-  return  file.split(delimiter).slice(0,number).join(delimiter) ; 
+const getHead = function(file,option,count = 10) {
+  let delimiter = selectDelimiter(option) ;
+  return  file.split(delimiter).slice(0,count).join(delimiter) ; 
 }
 
 const head = function(extractedInput) {
-  let {filesContents, outputType, number,fileNames} = extractedInput;
+  let {filesContents, option, count,fileNames} = extractedInput;
   return  filesContents.map((file,index)=>{
     if(filesContents.length > 1){
       let result = createFileHeader(fileNames.shift()) + '\n' 
-        + getHead(file,outputType,number);
+        + getHead(file,option,count);
       if(index < filesContents.length-1)
         result = result + '\n';
       return result;
     }
-    return getHead(file,outputType,number);
+    return getHead(file,option,count);
   });
 }
 
@@ -80,14 +80,14 @@ const getOptions = function(input) {
 
 const extractInputs = function(input) {
   let options  = getOptions(input) ;
-  let outputType = options[0];
-  let number = +options[1];
+  let option = options[0];
+  let count = +options[1];
   let filesContents = extractFiles(input) ;
-  return {filesContents, outputType, number} ;
+  return {filesContents, option, count} ;
 }
 
 const output = function(readFile,input) {
-  let { filesContents, outputType, number } =
+  let { filesContents, option, count } =
     extractInputs(input.slice(2));
 
   let parsedInput =  extractInputs(input.slice(2));
@@ -100,13 +100,13 @@ const output = function(readFile,input) {
   let fileNames = filesContents.slice();
   filesContents = filesContents.map(readFile);
 
-  let extractedInput = { filesContents,outputType,number ,fileNames}
+  let extractedInput = { filesContents,option,count ,fileNames}
   return head(extractedInput).join('\n');
 }
 
 const validateInput = function(parsedInput) {
-  let { filesContents, outputType , number } = parsedInput;
-  let result = isOutputType(outputType) && isValidNumber(number);
+  let { filesContents, option , count } = parsedInput;
+  let result = isOutputType(option) && isValidNumber(count);
   return result;
 }
 

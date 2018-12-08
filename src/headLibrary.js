@@ -52,9 +52,9 @@ const extractOptions = function(input) {
 }
 
 const extractFiles = function(input) {
-  let options = extractOptions(input);
-  let length = options.length;
-  return input.slice(length);
+  //let options = extractOptions(input);
+  //let length = options.length;
+  return input.slice(extractOptions(input).length);
 }
 
 const getOptions = function(input) {

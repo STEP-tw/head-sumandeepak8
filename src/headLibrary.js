@@ -54,12 +54,6 @@ const extractOptions = function(input) {
 const extractFiles = function(input) {
   let options = extractOptions(input);
   let length = options.length;
-
-  if(options[0] != undefined && options[0][1] != 'n' && options[0][1] != 'c'){
-    options[1] = options[0].slice(1);
-    options[0] = '-n';
-  }
-
   return input.slice(length);
 }
 
@@ -69,6 +63,8 @@ const getOptions = function(input) {
     output[1] = output[0].slice(1);
     output[0] = '-n';
   }
+
+  let files = input.slice(output.length);
 
   if(output[0] == undefined){
     output[0] = '-n';

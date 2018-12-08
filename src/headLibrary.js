@@ -90,8 +90,8 @@ const output = function(readFile,input) {
   let { filesContents, option, count } =
     extractInputs(input.slice(2));
 
-  let parsedInput =  extractInputs(input.slice(2));
-  let result = validateInput(parsedInput);
+  let parsedInput =  getOptions(input);
+  let result = validateInput(parsedInput[0],parsedInput[1]);
 
   if(result != true){
     return result;
@@ -104,10 +104,8 @@ const output = function(readFile,input) {
   return head(extractedInput).join('\n');
 }
 
-const validateInput = function(parsedInput) {
-  let { filesContents, option , count } = parsedInput;
-  let result = isValidOption(option) && isValidNumber(count);
-  return result;
+const validateInput = function(option,count) {
+  return isValidOption(option) && isValidNumber(count);
 }
 
 module.exports = {

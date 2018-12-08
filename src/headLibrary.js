@@ -90,8 +90,8 @@ const output = function(readFile,input) {
   let { filesContents, option, count } =
     extractInputs(input.slice(2));
 
-  let parsedInput =  getOptions(input);
-  let result = validateInput(parsedInput[0],parsedInput[1]);
+  let parsedInput =  getOptions(input.slice(2));
+  let result = isValidNumber(parsedInput[1]);
 
   if(result != true){
     return result;

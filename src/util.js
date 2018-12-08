@@ -10,7 +10,7 @@ const isValidOption = function(option) {
 }
 
 const isValidNumber = function(count) {
-  if(count < 1 || Number.isNaN(count)){
+  if(count < 1){
     return ('head: illegal line count -- ' + count);
   }
   return true;

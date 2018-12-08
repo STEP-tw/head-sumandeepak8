@@ -76,6 +76,7 @@ describe('extractFiles',function(){
 
     input = ['-n','file1','file2','file3.txt']
     deepEqual(extractFiles(input),['file2','file3.txt']);
+
     input = ['file1','file2','file3.txt']
     deepEqual(extractFiles(input),['file1','file2','file3.txt']);
   });
@@ -87,6 +88,11 @@ describe('extractFiles',function(){
   
   it('should return the files if options are not given in input',function(){
     let input = ['file.txt','file4.js']
+    deepEqual(extractFiles(input),['file.txt','file4.js']);
+  });
+
+  it('should return the files if count is given whereas option is not given',function(){
+    let input = ['-12','file.txt','file4.js']
     deepEqual(extractFiles(input),['file.txt','file4.js']);
   });
 

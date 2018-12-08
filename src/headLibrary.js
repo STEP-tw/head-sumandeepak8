@@ -30,45 +30,43 @@ const head = function(extractedInput) {
 }
 
 const filterOptions = function(parameters) {
-  let {options,validCode} = parameters;
+  let {options,validOptions,onlyOption} = parameters;
 
-  options = options.filter(function(element,index){
+  return options.filter(function(element,index){
     let result = options[0].includes('-') &&  
-      validCode.includes(options[0].charCodeAt(1))
-    if(result && index == 1 && options[0].length > 2)
+      validOptions.includes(options[0][1])
+    if(result && index == 1 && 
+      (options[0].length > 2 || !onlyOption.includes(options[0][1])))
       result = false;
     return result;
   });
 
-  return options;
 }
 
 const extractOptions = function(input) {
   let options = input.slice(0,2);
-  let validCode = [48,49,50,51,52,53,54,55,56,57,99,110];
-  let parameters = {options,validCode};
+  let validOptions = ['0','1','2','3','4','5','6','7','8','9','n','c'];
+  let onlyOption = ['n','c'];
+  let parameters = {options,validOptions,onlyOption};
   return filterOptions(parameters);
 }
 
 const extractFiles = function(input) {
   let options = extractOptions(input);
-  let indexesForSlice = { 0 : 0, 1 : 1, 2 : 2 };
   let length = options.length;
 
   if(options[0] != undefined && options[0][1] != 'n' && options[0][1] != 'c'){
-    options[1] = options[0][1];
+    options[1] = options[0].slice(1);
     options[0] = '-n';
-    length = length -1;
   }
 
-  return input.slice(indexesForSlice[length]);
+  return input.slice(length);
 }
 
 const getOptions = function(input) {
   let output = extractOptions(input);
-
   if(output[0] != undefined && output[0][1] != 'n' && output[0][1] != 'c'){
-    output[1] = output[0][1];
+    output[1] = output[0].slice(1);
     output[0] = '-n';
   }
 

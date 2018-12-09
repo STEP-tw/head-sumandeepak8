@@ -6,7 +6,7 @@ const { selectDelimiter,
   extractFiles,
   extractInputs,
   head,
-  filterOptions
+  filterOptionAndCount
 } = require('../src/headLibrary.js');
 
 describe('selectDelimiter',function(){
@@ -145,10 +145,10 @@ describe('head',function(){
 
 });
 
-describe('filterOptions',function(){
+describe('filterOptionAndCount',function(){
   it('should return an array of option elements',function(){
     let parameters = { options : ['n5','file'], validCode : [48,49,50,51,52,53,54,55,56,57,99,110] }
-    deepStrictEqual(filterOptions(parameters),[]);
+    deepStrictEqual(filterOptionAndCount(parameters),[]);
   });
 });
 

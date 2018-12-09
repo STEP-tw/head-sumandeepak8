@@ -29,7 +29,7 @@ const head = function(extractedInput) {
   });
 }
 
-const filterOptions = function(parameters) {
+const filterOptionAndCount = function(parameters) {
   let { options, validOptions, onlyOption } = parameters;
 
   return options.filter(function(element, index){
@@ -48,7 +48,7 @@ const extractOptions = function(input) {
   let validOptions = ['0','1','2','3','4','5','6','7','8','9','n','c'];
   let onlyOption = ['n','c'];
   let parameters = {options, validOptions, onlyOption};
-  return filterOptions(parameters);
+  return filterOptionAndCount(parameters);
 }
 
 const extractFiles = function(input) {
@@ -106,5 +106,5 @@ module.exports = {
   head,
   createFileHeader,
   output,
-  filterOptions
+  filterOptionAndCount
 }

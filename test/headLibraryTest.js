@@ -2,7 +2,7 @@ const { equal, deepEqual, deepStrictEqual } = require('assert');
 
 const { selectDelimiter, 
   getHead,
-  getOptions,
+  extractOptionAndCount,
   extractFiles,
   extractInputs,
   head,
@@ -43,28 +43,28 @@ describe('getHead',function(){
   });
 });
 
-describe('getOptions',function(){
+describe('extractOptionAndCount',function(){
 
   it("should return max. first two element if it includes, where second element should be inputnumber - ",function(){
     let input = ['-n','file.txt','hello world','12'];
-    deepEqual(getOptions(input),['n','file.txt']);
+    deepEqual(extractOptionAndCount(input),['n','file.txt']);
 
     input = ['-n5','file.txt','hello world','12'];
-    deepEqual(getOptions(input),['n','5']);
+    deepEqual(extractOptionAndCount(input),['n','5']);
 
     input = ['-n','-5','file.txt','hello world','12'];
-    deepEqual(getOptions(input),['n','-5']);
+    deepEqual(extractOptionAndCount(input),['n','-5']);
 
     input = ['-c5','file.txt','hello world','12'];
-    deepEqual(getOptions(input),['c','5']);
+    deepEqual(extractOptionAndCount(input),['c','5']);
 
     input = ['-c','5','file.txt','hello world','12'];
-    deepEqual(getOptions(input),['c','5']);
+    deepEqual(extractOptionAndCount(input),['c','5']);
   });
 
   it('should return the default values of option and count when it is not given',function(){
     input = ['file','file1'];
-    deepStrictEqual(getOptions(input),['n',10]);
+    deepStrictEqual(extractOptionAndCount(input),['n',10]);
   });
 
 });
@@ -101,23 +101,23 @@ describe('extractFiles',function(){
 describe('extractInputs',function(){
   it('should return object which contains two keys options and files',function(){
     let input = ['-n','5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(input),{ filesContents : ['fileContent','file1Content'], option : 'n', count : 5 });
+    deepStrictEqual(extractInputs(input),{ files : ['fileContent','file1Content'], option : 'n', count : 5 });
 
     input = ['-n','-5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(input),{ filesContents : ['fileContent','file1Content'], option : 'n', count : -5 });
+    deepStrictEqual(extractInputs(input),{ files : ['fileContent','file1Content'], option : 'n', count : -5 });
 
     input = ['-n5','5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(input),{ filesContents : ['5','fileContent','file1Content'], option : 'n', count : 5 });
+    deepStrictEqual(extractInputs(input),{ files : ['5','fileContent','file1Content'], option : 'n', count : 5 });
   });
 
   it('should return n count of lines when option is not given',function(){
     let input = ['fileContent','file1Content'];
-    deepStrictEqual(extractInputs(input), { filesContents : ['fileContent','file1Content'] , option : 'n',count : 10 } );
+    deepStrictEqual(extractInputs(input), { files : ['fileContent','file1Content'] , option : 'n',count : 10 } );
   });
 
   it('should return and option n when only count is given',function(){
     let input = ['-2','file','file1','file2'];
-    deepStrictEqual(extractInputs(input),{ filesContents : ['file','file1','file2'], option : 'n', count : 2 });
+    deepStrictEqual(extractInputs(input),{ files : ['file','file1','file2'], option : 'n', count : 2 });
   });
 
 });
@@ -138,7 +138,7 @@ describe('head',function(){
 
   describe('mutliple input file',function(){ 
     it('should return max.10 lines if files has ,when the option and value of count is not given ',function(){
-      input = { filesContents : ['hello\n\nworld','welcome\nback\ngood\nbye\again'],fileNames : ['file1','file2']};
+      input = { filesContents : ['hello\n\nworld','welcome\nback\ngood\nbye\again'],filesName : ['file1','file2']};
       deepStrictEqual(head(input),['==> file1 <==\nhello\n\n\world\n','==> file2 <==\nwelcome\nback\ngood\nbye\again']);
     });
   });

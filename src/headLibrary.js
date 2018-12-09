@@ -10,31 +10,31 @@ const selectDelimiter = function(option = 'n') {
   return delimiter[option] ;
 }
 
-const getHead = function(file,option,count = 10) {
+const getHead = function(file, option, count = 10) {
   let delimiter = selectDelimiter(option) ;
-  return  file.split(delimiter).slice(0,count).join(delimiter) ; 
+  return  file.split(delimiter).slice(0, count).join(delimiter); 
 }
 
 const head = function(extractedInput) {
-  let {filesContents, option, count,fileNames} = extractedInput;
-  return  filesContents.map((file,index)=>{
+  let { filesContents, option, count, filesName } = extractedInput;
+  return  filesContents.map( (file, index)=>{
     if(filesContents.length > 1){
-      let result = createFileHeader(fileNames.shift()) + '\n' 
-        + getHead(file,option,count);
+      let result = createFileHeader(filesName.shift()) + '\n' 
+        + getHead(file, option, count);
       if(index < filesContents.length-1)
         result = result + '\n';
       return result;
     }
-    return getHead(file,option,count);
+    return getHead(file, option, count);
   });
 }
 
 const filterOptions = function(parameters) {
-  let {options,validOptions,onlyOption} = parameters;
+  let { options, validOptions, onlyOption } = parameters;
 
-  return options.filter(function(element,index){
+  return options.filter(function(element, index){
     let result = options[0].includes('-') &&  
-      validOptions.includes(options[0][1])
+      validOptions.includes( options[0][1] )
     if(result && index == 1 && 
       (options[0].length > 2 || !onlyOption.includes(options[0][1])))
       result = false;
@@ -47,15 +47,15 @@ const extractOptions = function(input) {
   let options = input.slice(0,2);
   let validOptions = ['0','1','2','3','4','5','6','7','8','9','n','c'];
   let onlyOption = ['n','c'];
-  let parameters = {options,validOptions,onlyOption};
+  let parameters = {options, validOptions, onlyOption};
   return filterOptions(parameters);
 }
 
 const extractFiles = function(input) {
-  return input.slice(extractOptions(input).length);
+  return input.slice( extractOptions(input).length );
 }
 
-const getOptions = function(input) {
+const extractOptionAndCount = function(input) {
   let output = extractOptions(input);
   if(output[0] != undefined && output[0][1] != 'n' && output[0][1] != 'c'){
     output[1] = output[0].slice(1);
@@ -79,33 +79,28 @@ const getOptions = function(input) {
 }
 
 const extractInputs = function(input) {
-  let options  = getOptions(input) ;
+  let options  = extractOptionAndCount(input);
   let option = options[0];
   let count = +options[1];
-  let filesContents = extractFiles(input) ;
-  return {filesContents, option, count} ;
+  let files = extractFiles(input); 
+  return {files, option, count};
 }
 
 const output = function(readFile,input) {
-  let { filesContents, option, count } =
+  let { files, option, count } =
     extractInputs(input.slice(2));
 
-  let fileNames = filesContents.slice();
-  filesContents = filesContents.map(readFile);
+  let filesName = files.slice();
+  let filesContents = files.map(readFile);
 
-  let extractedInput = { filesContents,option,count ,fileNames}
+  let extractedInput = { filesContents, option, count, filesName };
   return head(extractedInput).join('\n');
-}
-
-const validateInput = function(parsedInput) {
-  return validateOption(parsedInput[0]) && 
-    isValidNumber(parsedInput[1]);
 }
 
 module.exports = {
   selectDelimiter,
   getHead,
-  getOptions,
+  extractOptionAndCount,
   extractFiles,
   extractInputs,
   head,

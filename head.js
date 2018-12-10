@@ -11,7 +11,7 @@ const readFile = function(file) {
 
 const main = function() {
   let input = process.argv;
-  console.log(output(readFile,input));
+  console.log(output(readFile, isExist, input));
 }
 
 main();

@@ -17,15 +17,15 @@ const getHead = function(file, option, count = 10) {
 };
 
 const head = function(extractedInput) {
-  let { filesContents, option, count, filesName } = extractedInput;
+  let { filesContents, option, count, filesName ,isExist } = extractedInput;
   return filesContents.map((file, index) => {
     if (filesContents.length > 1) {
-      let validationResult =
+      let result =
         createFileHeader(filesName.shift()) +
         "\n" +
         getHead(file, option, count);
-      if (index < filesContents.length - 1) validationResult = validationResult + "\n";
-      return validationResult;
+      if (index < filesContents.length - 1) result = result + "\n";
+      return result;
     }
     return getHead(file, option, count);
   });
@@ -35,10 +35,10 @@ const filterOptionAndCount = function(inputArgs) {
   let options = inputArgs.slice(0, 2);
 
   return options.filter(function(element, index) {
-    let validationResult = options[0].includes("-");
-    if (validationResult && index == 1 && (options[0].length > 2 || !isNaN(+options[0])))
-      validationResult = false;
-    return validationResult;
+    let result = options[0].includes("-");
+    if (result && index == 1 && (options[0].length > 2 || !isNaN(+options[0])))
+      result = false;
+    return result;
   });
 };
 
@@ -83,46 +83,24 @@ const extractInputs = function(inputArgs) {
   return { files, option, count };
 };
 
-const output = function(readFile, inputArgs) {
-  let { files, option, count } = extractInputs(inputArgs.slice(2));
-
-  let optionAndCount = filterOptionAndCount(inputArgs.slice(2));
-  let length = optionAndCount.length;
-
-  //..............check validity of option.........
-  let validationResult =  validateOption(optionAndCount[0].slice(0,2));
-  if(validationResult['isValid'] == false){
-    return validationResult['error_message'];
-  }
-
-  //.........to check count  eligibility......
-  let number = optionAndCount[1];
-  if(number == undefined)
-    number = optionAndCount[0].slice(2);
-
-  validationResult = isValidCount(number,optionAndCount[0].slice(0,2));
-  if(validationResult['isValid'] == false)
-    return validationResult['error_message'];
-
+const output = function(readFile, isExit, inputArgs) {
+  let input = inputArgs.slice(2);
+  let { files, option, count } = extractInputs(input);
+  if( checkValidation(input) != true)
+    return checkValidation(input);
   let filesName = files.slice();
   let filesContents = files.map(readFile);
-
-  let extractedInput = { filesContents, option, count, filesName };
+  let extractedInput = { filesContents, option, count, filesName ,isExit};
   return head(extractedInput).join("\n");
 };
 
 const validateOption = function(option) {
   let error_message;
-  let isValid =
-    option.includes("-") &&
+  let isValid = option.includes("-") &&
     (option[1] == 'n' || option[1] == 'c');
 
-  if (!isValid) {
-    error_message =
-      "head: illegal option -- " +
-      option[1] +
-      "\n" +
-      "usage: head [-n lines | -c bytes] [file ...]";
+  if (!isValid) { error_message = "head: illegal option -- " +
+    option[1] + "\n" + "usage: head [-n lines | -c bytes] [file ...]";
   }
   return { isValid, error_message };
 };
@@ -138,9 +116,27 @@ const isValidCount = function(count,option) {
   return { isValid, error_message };
 };
 
-const validationOfUserInput = function() {
-  return;
-};
+const checkValidation = function(input) {
+  let optionCount = filterOptionAndCount(input);
+  if(optionCount[0] == undefined) optionCount = ['-n',10];
+
+  if(optionCount[1] == undefined && !isNaN(optionCount[0].slice(0,2)))
+    optionCount = ['-n',optionCount[0].slice(1)];
+
+  if(optionCount[1] == undefined && isNaN(optionCount[0].slice(0,2))){
+    optionCount[1] = optionCount[0].slice(2);
+    optionCount[0] = optionCount[0].slice(0,2);
+  }
+
+  let isValidOptionResult = validateOption(optionCount[0]);
+  if(isValidOptionResult['isValid'] == false)
+    return isValidOptionResult['error_message'];
+
+  let isValidCountResult = isValidCount(optionCount[1],optionCount[0]);
+  if(isValidCountResult['isValid'] == false)
+    return isValidCountResult['error_message'];
+  return true;
+}
 
 module.exports = {
   selectDelimiter,

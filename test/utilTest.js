@@ -2,7 +2,7 @@ const { deepEqual } = require('assert');
 
 const { 
   validateOption,
-  isValidNumber,
+  isValidCount,
 } = require('../src/util.js');
 
 
@@ -20,12 +20,12 @@ describe('validateOption',function(){
 
 });
 
-describe('isValidNumber',function(){
+describe('isValidCount',function(){
 
   it('should show an error message on screen as expected output',function(){
     let number = 0;
     let expectedOutput = { isValid : false, error_message : 'head: illegal line count -- ' + number};
-    deepEqual(isValidNumber(number),expectedOutput);
+    deepEqual(isValidCount(number),expectedOutput);
   });
 
 });

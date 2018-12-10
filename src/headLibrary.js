@@ -1,4 +1,4 @@
-const { validateOption, isValidNumber } = require('../src/util.js');
+const { validateOption, isValidCount } = require('../src/util.js');
 
 const createFileHeader = function(fileName) {
   let header = '==> '+fileName+' <==';
@@ -96,6 +96,10 @@ const output = function(readFile,inputArgs) {
   let extractedInput = { filesContents, option, count, filesName };
   return head(extractedInput).join('\n');
 }
+
+
+
+
 
 
 module.exports = {

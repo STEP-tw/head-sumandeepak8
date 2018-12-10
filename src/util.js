@@ -10,7 +10,7 @@ const validateOption = function(option) {
   return { isValid, error_message };
 }
 
-const isValidNumber = function(count) {
+const isValidCount = function(count) {
   let error_message;
   let isValid = count >= 1;
   if(!isValid){
@@ -22,5 +22,5 @@ const isValidNumber = function(count) {
 
 module.exports = { 
   validateOption,
-  isValidNumber,
+  isValidCount,
 };

@@ -27,35 +27,28 @@ const head = function(extractedInput) {
   });
 }
 
-const filterOptionAndCount = function(parameters) {
-  let { options, validOptions, onlyOption } = parameters;
+const filterOptionAndCount = function(inputArgs) {
+  let options = inputArgs.slice(0,2);
 
   return options.filter(function(element, index){
-    let result = options[0].includes('-') //&&  
-      validOptions.includes( options[0][1] )
+    let result = options[0].includes('-')
     if(result && index == 1 && 
-      (options[0].length > 2 || !onlyOption.includes(options[0][1])))
+      (options[0].length > 2 || !isNaN(+options[0])))
       result = false;
     return result;
   });
 
 }
 
-const extractOptions = function(inputArgs) {
-  let options = inputArgs.slice(0,2);
-  let validOptions = ['0','1','2','3','4','5','6','7','8','9','n','c'];
-  let onlyOption = ['n','c'];
-  let parameters = {options, validOptions, onlyOption};
-  return filterOptionAndCount(parameters);
-}
-
 const extractFiles = function(inputArgs) {
-  return inputArgs.slice( extractOptions(inputArgs).length );
+  return inputArgs.slice( filterOptionAndCount(inputArgs).length );
 }
 
 const extractOptionAndCount = function(inputArgs) {
-  let output = extractOptions(inputArgs);
-  if(output[0] != undefined && output[0][1] != 'n' && output[0][1] != 'c'){
+  let output = filterOptionAndCount(inputArgs);
+
+  if(output[0] != undefined && output[0][1] != 'n' 
+    && output[0][1] != 'c' && !isNaN(+output[0][1])){
     output[1] = output[0].slice(1);
     output[0] = '-n';
   }

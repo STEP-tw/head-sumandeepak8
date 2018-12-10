@@ -110,11 +110,18 @@ describe('extractInputs',function(){
 
     inputArgs = ['-n5','5','fileContent','file1Content']
     deepStrictEqual(extractInputs(inputArgs),{ files : ['5','fileContent','file1Content'], option : 'n', count : 5 });
+
+    inputArgs = ['-a5','5','fileContent','file1Content']
+    deepStrictEqual(extractInputs(inputArgs),{ files : ['5','fileContent','file1Content'], option : 'a', count : 5 });
+
+    inputArgs = ['-b','6','fileContent','file1Content']
+    deepStrictEqual(extractInputs(inputArgs),{ files : ['fileContent','file1Content'], option : 'b', count : 6 });
   });
 
   it('should return n count of lines when option is not given',function(){
     let inputArgs = ['fileContent','file1Content'];
-    deepStrictEqual(extractInputs(inputArgs), { files : ['fileContent','file1Content'] , option : 'n',count : 10 } );
+    deepStrictEqual(extractInputs(inputArgs), { files : ['fileContent','file1Content'] , option : 'n',count : 10 });
+
   });
 
   it('should return and option n when only count is given',function(){
@@ -149,8 +156,8 @@ describe('head',function(){
 
 describe('filterOptionAndCount',function(){
   it('should return an array of option elements',function(){
-    let parameters = { options : ['n5','file'], validOptions : [48,49,50,51,52,53,54,55,56,57,99,110] }
-    deepStrictEqual(filterOptionAndCount(parameters),[]);
+    let options = ['n5','file'];
+    deepStrictEqual(filterOptionAndCount(options),[]);
   });
 });
 

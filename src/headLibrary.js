@@ -1,5 +1,3 @@
-const { validateOption, isValidCount } = require('../src/util.js');
-
 const createFileHeader = function(fileName) {
   let header = '==> '+fileName+' <==';
   return header;
@@ -33,7 +31,7 @@ const filterOptionAndCount = function(parameters) {
   let { options, validOptions, onlyOption } = parameters;
 
   return options.filter(function(element, index){
-    let result = options[0].includes('-') &&  
+    let result = options[0].includes('-') //&&  
       validOptions.includes( options[0][1] )
     if(result && index == 1 && 
       (options[0].length > 2 || !onlyOption.includes(options[0][1])))
@@ -97,8 +95,26 @@ const output = function(readFile,inputArgs) {
   return head(extractedInput).join('\n');
 }
 
+const validateOption = function(option) {
+  let error_message;
+  let isValid = option.includes('-') && 
+    (option.charCodeAt(1) == 99 || option.charCodeAt(1) == 110);
 
+  if(!isValid ){
+    error_message = ('head: illegal option -- ' + option[1]) +'\n' +
+      ('usage: head [-n lines | -c bytes] [file ...]');
+  }
+  return { isValid, error_message };
+}
 
+const isValidCount = function(count) {
+  let error_message;
+  let isValid = count >= 1;
+  if(!isValid){
+    error_message = 'head: illegal line count -- ' + count;
+  }
+  return { isValid, error_message };
+}
 
 
 
@@ -111,5 +127,7 @@ module.exports = {
   head,
   createFileHeader,
   output,
-  filterOptionAndCount
+  filterOptionAndCount,
+  validateOption,
+  isValidCount
 }

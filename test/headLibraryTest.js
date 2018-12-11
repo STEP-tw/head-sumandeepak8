@@ -131,29 +131,6 @@ describe('extractInputs',function(){
 
 });
 
-describe('head',function(){
-
-  describe('single inputArgs file',function(){
-    it('should return 5 lines when the option is n and value of count is 5',function(){
-      inputArgs = { filesContents : ['hello\n\nworld\ngoodbye\nhii'], option : 'n', count : 5}
-      deepStrictEqual(head(inputArgs),['hello\n\nworld\ngoodbye\nhii']);
-    });
-
-    it('should return 5 characters ,option is c(byte) and value of count is 5',function(){
-      inputArgs = { filesContents : ['hello\n\nworld\ngoodbye'], option : 'c', count : 5}
-      deepStrictEqual(head(inputArgs),['hello']);
-    });
-  });
-
-  describe('mutliple inputArgs file',function(){ 
-    it('should return max.10 lines if files has ,when the option and value of count is not given ',function(){
-      inputArgs = { filesContents : ['hello\n\nworld','welcome\nback\ngood\nbye\again'],filesName : ['file1','file2']};
-      deepStrictEqual(head(inputArgs),['==> file1 <==\nhello\n\n\world\n','==> file2 <==\nwelcome\nback\ngood\nbye\again']);
-    });
-  });
-
-});
-
 describe('filterOptionAndCount',function(){
   it('should return an array of option elements',function(){
     let options = ['n5','file'];

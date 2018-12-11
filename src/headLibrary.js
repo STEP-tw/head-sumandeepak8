@@ -20,22 +20,6 @@ const getHead = function(file, option, count = 10) {
     .join(delimiter);
 };
 
-const head = function(extractedInput) {
-  let { filesContents, option, count, filesName ,isExist } = extractedInput;
-  let delimiter = selectDelimiter(option);
-  return filesContents.map((file, index) => {
-    if (filesContents.length > 1) {
-      let result =
-        createFileHeader(filesName.shift()) +
-        "\n" +
-        getHead(file, option, count);
-      if (index < filesContents.length - 1) result = result + delimiter;
-      return result;
-    }
-    return getHead(file, option, count);
-  });
-};
-
 const filterOptionAndCount = function(inputArgs) {
   let options = inputArgs.slice(0, 2);
 
@@ -88,18 +72,39 @@ const extractInputs = function(inputArgs) {
   return { files, option, count };
 };
 
+const head = function(parsedInput) {
+  let { files ,readFileSync, existsSync, option, count } = parsedInput;
+  let delimiter = selectDelimiter(option);
+  let contents=[];
+
+  if(files.length == 1){
+    if(existsSync(files[0]) != true){
+      contents.push('head: ' + files[0] + ': No such file or directory');
+      return contents;
+    }
+    contents.push(getHead(readFileSync(files[0],'utf-8'),option,count));
+    return contents;
+  }
+
+  for(let index=0; index<files.length; index++){
+    contents[index] = (createFileHeader(files[index])+'\n'
+      +getHead(readFileSync(files[index],'utf-8'),option,count)) 
+    if(index != files.length-1){
+      contents[index] = contents[index] + delimiter;
+    }
+  }
+
+  return contents;
+}
+
 const output = function(fs, inputArgs) {
   let { files, option, count } = extractInputs(inputArgs);
   let { readFileSync , existsSync } = fs;
   let readContent = readFile.bind(null,readFileSync)
-
   if(checkValidation(inputArgs) != true)
     return checkValidation(inputArgs);
-
-  let filesName = files.slice();
-  let filesContents = files.map(readContent);
-  let extractedInput = { filesContents, option, count, filesName };
-  return head(extractedInput).join("\n");
+  let parsedInput = { files, readFileSync, existsSync, option,count};
+  return head(parsedInput).join('\n');
 };
 
 const validateOption = function(option) {

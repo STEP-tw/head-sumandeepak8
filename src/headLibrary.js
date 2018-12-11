@@ -86,7 +86,7 @@ const head = function(parsedInput) {
     return contents;
   }
 
-  for(let index=0; index<files.length; index++){
+  files.map(function(file,index){
     if(existsSync(files[index]) != true){
       contents.push('head: ' + files[index] + ': No such file or directory');
     }
@@ -97,7 +97,7 @@ const head = function(parsedInput) {
         contents[index] = contents[index] + delimiter;
       }
     }
-  }
+  });
 
   return contents;
 }

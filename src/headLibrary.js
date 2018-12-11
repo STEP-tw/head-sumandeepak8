@@ -100,7 +100,52 @@ const head = function(parsedInput) {
   });
 
   return contents;
-}
+};
+
+const getTail = function(file, option, count = 10) {
+  let delimiter = selectDelimiter(option);
+  return file.split(delimiter).reverse().slice(0, count).reverse().join(delimiter);
+};
+
+const tail = function(parsedInput) {
+  let { files ,readFileSync, existsSync, option, count } = parsedInput;
+  let delimiter = selectDelimiter(option);
+  let contents = [];
+
+  if(files.length == 1){
+    if(existsSync(files[0]) != true){
+      contents.push('head: ' + files[0] + ': No such file or directory');
+      return contents;
+    }
+    contents.push(getTail(readFileSync(files[0],'utf-8'),option,count));
+    return contents;
+  }
+
+  files.map(function(file,index){
+    if(existsSync(files[index]) != true){
+      contents.push('head: ' + files[index] + ': No such file or directory');
+    }
+    if(existsSync(files[index]) == true){
+      contents[index] = (createFileHeader(files[index])+'\n'
+        +getTail(readFileSync(files[index],'utf-8'),option,count)) 
+      if(index != files.length-1){
+        contents[index] = contents[index] + delimiter;
+      }
+    }
+  });
+
+  return contents;
+};
+
+const tailOutput = function(fs, inputArgs) {
+  let { files, option, count } = extractInputs(inputArgs);
+  let { readFileSync , existsSync } = fs;
+  let readContent = readFile.bind(null,readFileSync)
+  if(checkValidation(inputArgs) != true)
+    return checkValidation(inputArgs);
+  let parsedInput = { files, readFileSync, existsSync, option,count};
+  return tail(parsedInput).join('\n');
+};
 
 const output = function(fs, inputArgs) {
   let { files, option, count } = extractInputs(inputArgs);
@@ -167,5 +212,6 @@ module.exports = {
   output,
   filterOptionAndCount,
   validateOption,
-  isValidCount
+  isValidCount,
+  tailOutput
 };

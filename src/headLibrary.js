@@ -87,10 +87,15 @@ const head = function(parsedInput) {
   }
 
   for(let index=0; index<files.length; index++){
-    contents[index] = (createFileHeader(files[index])+'\n'
-      +getHead(readFileSync(files[index],'utf-8'),option,count)) 
-    if(index != files.length-1){
-      contents[index] = contents[index] + delimiter;
+    if(existsSync(files[index]) != true){
+      contents.push('head: ' + files[index] + ': No such file or directory');
+    }
+    if(existsSync(files[index]) == true){
+      contents[index] = (createFileHeader(files[index])+'\n'
+        +getHead(readFileSync(files[index],'utf-8'),option,count)) 
+      if(index != files.length-1){
+        contents[index] = contents[index] + delimiter;
+      }
     }
   }
 

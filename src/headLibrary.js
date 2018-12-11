@@ -8,6 +8,10 @@ const selectDelimiter = function(option = "n") {
   return delimiter[option];
 };
 
+const readFile = function(readFileSync,file) {
+  return readFileSync(file,'utf-8');
+};
+
 const getHead = function(file, option, count = 10) {
   let delimiter = selectDelimiter(option);
   return file
@@ -18,13 +22,14 @@ const getHead = function(file, option, count = 10) {
 
 const head = function(extractedInput) {
   let { filesContents, option, count, filesName ,isExist } = extractedInput;
+  let delimiter = selectDelimiter(option);
   return filesContents.map((file, index) => {
     if (filesContents.length > 1) {
       let result =
         createFileHeader(filesName.shift()) +
         "\n" +
         getHead(file, option, count);
-      if (index < filesContents.length - 1) result = result + "\n";
+      if (index < filesContents.length - 1) result = result + delimiter;
       return result;
     }
     return getHead(file, option, count);
@@ -83,14 +88,17 @@ const extractInputs = function(inputArgs) {
   return { files, option, count };
 };
 
-const output = function(readFile, isExit, inputArgs) {
-  let input = inputArgs.slice(2);
-  let { files, option, count } = extractInputs(input);
-  if( checkValidation(input) != true)
-    return checkValidation(input);
+const output = function(fs, inputArgs) {
+  let { files, option, count } = extractInputs(inputArgs);
+  let { readFileSync , existsSync } = fs;
+  let readContent = readFile.bind(null,readFileSync)
+
+  if(checkValidation(inputArgs) != true)
+    return checkValidation(inputArgs);
+
   let filesName = files.slice();
-  let filesContents = files.map(readFile);
-  let extractedInput = { filesContents, option, count, filesName ,isExit};
+  let filesContents = files.map(readContent);
+  let extractedInput = { filesContents, option, count, filesName };
   return head(extractedInput).join("\n");
 };
 
@@ -100,7 +108,7 @@ const validateOption = function(option) {
     (option[1] == 'n' || option[1] == 'c');
 
   if (!isValid) { error_message = "head: illegal option -- " +
-    option[1] + "\n" + "usage: head [-n lines | -c bytes] [file ...]";
+      option[1] + "\n" + "usage: head [-n lines | -c bytes] [file ...]";
   }
   return { isValid, error_message };
 };

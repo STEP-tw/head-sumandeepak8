@@ -100,19 +100,18 @@ const extractSingleFileData = function (details, funcRef, errorMessageRef) {
   return [funcRef(readContent(files[0]), option, count)];
 };
 
-const extractMultipleFileData = function (details, funcRef, errorMessageRef) {
+const extractMultipleFileData = function (parsedInput, funcRef, errorMessageRef) {
   let {
     files,
     existsSync,
     option,
     count,
     readContent,
-    delimiter
-  } = details;
+  } = parsedInput;
+  let delimiter = selectDelimiter(option);
 
   return files.map(function (file, index) {
     if (!existsSync(file)) return errorMessageRef(file);
-
     let fileContent = createFileHeader(file) + '\n' + funcRef(readContent(file), option, count);
     if (index != files.length - 1) return fileContent + delimiter;
     return fileContent;
@@ -120,27 +119,11 @@ const extractMultipleFileData = function (details, funcRef, errorMessageRef) {
 
 };
 
-const head = function (parsedInput) {
-  let {
-    files,
-    existsSync,
-    option,
-    count,
-    readContent
-  } = parsedInput;
-  let delimiter = selectDelimiter(option);
-  let details = {
-    files,
-    existsSync,
-    option,
-    count,
-    readContent,
-    delimiter
-  };
-  if (files.length == 1) {
-    return extractSingleFileData(details, getHead, errorMessageForFileInHead);
-  }
-  return extractMultipleFileData(details, getHead, errorMessageForFileInHead);
+const head = function (parsedInput){
+  let { files } = parsedInput;
+  if (files.length == 1)
+    return extractSingleFileData(parsedInput, getHead, errorMessageForFileInHead);
+  return extractMultipleFileData(parsedInput, getHead, errorMessageForFileInHead);
 };
 
 const getTail = function (file, option, count = 10) {
@@ -154,26 +137,10 @@ const getTail = function (file, option, count = 10) {
 };
 
 const tail = function (parsedInput) {
-  let {
-    files,
-    readContent,
-    existsSync,
-    option,
-    count
-  } = parsedInput;
-  let delimiter = selectDelimiter(option);
-  let details = {
-    files,
-    existsSync,
-    option,
-    count,
-    readContent,
-    delimiter
-  };
-  if (files.length == 1) {
-    return extractSingleFileData(details, getTail, errorMessageForFileInTail);
-  }
-  return extractMultipleFileData(details, getTail, errorMessageForFileInTail);
+  let { files } = parsedInput;
+  if (files.length == 1) 
+    return extractSingleFileData(parsedInput, getTail, errorMessageForFileInTail);
+  return extractMultipleFileData(parsedInput, getTail, errorMessageForFileInTail);
 };
 
 const tailOutput = function (fs, inputArgs) {

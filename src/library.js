@@ -73,7 +73,7 @@ const extractInputs = function(inputArgs) {
 };
 
 const head = function(parsedInput) {
-  let { files ,readFileSync, existsSync, option, count } = parsedInput;
+  let { files , existsSync, option, count, readContent } = parsedInput;
   let delimiter = selectDelimiter(option);
   let contents = [];
 
@@ -82,7 +82,7 @@ const head = function(parsedInput) {
       contents.push('head: ' + files[0] + ': No such file or directory');
       return contents;
     }
-    contents.push(getHead(readFileSync(files[0],'utf-8'),option,count));
+    contents.push(getHead(readContent(files[0]),option,count));
     return contents;
   }
 
@@ -92,7 +92,7 @@ const head = function(parsedInput) {
     }
     if(existsSync(files[index]) == true){
       contents[index] = (createFileHeader(files[index])+'\n'
-        +getHead(readFileSync(files[index],'utf-8'),option,count)) 
+        +getHead(readContent(files[index]),option,count)) 
       if(index != files.length-1){
         contents[index] = contents[index] + delimiter;
       }
@@ -108,7 +108,7 @@ const getTail = function(file, option, count = 10) {
 };
 
 const tail = function(parsedInput) {
-  let { files ,readFileSync, existsSync, option, count } = parsedInput;
+  let { files ,readContent, existsSync, option, count } = parsedInput;
   let delimiter = selectDelimiter(option);
   let contents = [];
 
@@ -117,7 +117,7 @@ const tail = function(parsedInput) {
       contents.push('head: ' + files[0] + ': No such file or directory');
       return contents;
     }
-    contents.push(getTail(readFileSync(files[0],'utf-8'),option,count));
+    contents.push(getTail(readContent(files[0]),option,count));
     return contents;
   }
 
@@ -127,7 +127,7 @@ const tail = function(parsedInput) {
     }
     if(existsSync(files[index]) == true){
       contents[index] = (createFileHeader(files[index])+'\n'
-        +getTail(readFileSync(files[index],'utf-8'),option,count)) 
+        +getTail(readContent(files[index]),option,count)) 
       if(index != files.length-1){
         contents[index] = contents[index] + delimiter;
       }
@@ -144,17 +144,17 @@ const tailOutput = function(fs, inputArgs) {
   let readContent = readFile.bind(null,readFileSync)
   if(checkValidation(inputArgs) != true)
     return checkValidation(inputArgs);
-  let parsedInput = { files, readFileSync, existsSync, option,count};
+  let parsedInput = { files, readContent, existsSync, option,count};
   return tail(parsedInput).join('\n');
 };
 
-const output = function(fs, inputArgs) {
+const headOutput = function(fs, inputArgs) {
   let { files, option, count } = extractInputs(inputArgs);
   let { readFileSync , existsSync } = fs;
   let readContent = readFile.bind(null,readFileSync)
   if(checkValidation(inputArgs) != true)
     return checkValidation(inputArgs);
-  let parsedInput = { files, readFileSync, existsSync, option,count};
+  let parsedInput = { files, readContent, existsSync, option, count};
   return head(parsedInput).join('\n');
 };
 
@@ -210,7 +210,7 @@ module.exports = {
   extractInputs,
   head,
   createFileHeader,
-  output,
+  headOutput,
   filterOptionAndCount,
   validateOption,
   isValidCount,

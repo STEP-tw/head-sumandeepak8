@@ -1,9 +1,9 @@
 const fs = require('fs');
-const { output } = require('./src/library.js');
+const { headOutput } = require('./src/library.js');
 
 const main = function() {
   let input = process.argv.slice(2);
-  console.log(output(fs, input));
+  console.log(headOutput(fs, input));
 };
 
 main();

@@ -43,6 +43,7 @@ describe('getHead',function(){
     expectedOutput = 'hello w';
     deepEqual(getHead(fileContent,'c',7),expectedOutput);
   });
+
 });
 
 describe('extractOptionAndCount',function(){

@@ -78,26 +78,18 @@ const head = function(parsedInput) {
   let contents = [];
 
   if (files.length == 1) {
-    if (existsSync(files[0]) != true) {
-      contents.push(errorMessageForFileInHead(files[0]));
-      return contents;
-    }
-    contents.push(getHead(readContent(files[0]), option, count));
+    existsSync(files[0]) && 
+      contents.push(getHead(readContent(files[0]), option, count));
+    contents.push(errorMessageForFileInHead(files[0]));
     return contents;
   }
 
   files.map(function(file, index) {
-    !existsSync(files[index]) &&
-      contents.push(errorMessageForFileInHead(files[index]));
+    !existsSync(files[index]) && contents.push(errorMessageForFileInHead(files[index]));
 
-    existsSync(files[index]) &&
-      contents.push(
-        createFileHeader(files[index]) +
-          "\n" +
-          getHead(readContent(files[index]), option, count)
-      ) &&
-      index != files.length - 1 &&
-      contents.push(contents.pop() + delimiter);
+    existsSync(files[index]) && contents.push(createFileHeader(files[index]) + '\n' +
+        getHead(readContent(files[index]), option, count)) &&
+      (index != files.length - 1) && contents.push(contents.pop()+delimiter);
   });
 
   return contents;
@@ -126,27 +118,19 @@ const tail = function(parsedInput) {
   let delimiter = selectDelimiter(option);
   let contents = [];
 
-  if (files.length == 1) {
-    if (existsSync(files[0]) != true) {
-      contents.push(errorMessageForFileInTail(files[0]));
-      return contents;
-    }
-    contents.push(getTail(readContent(files[0]), option, count));
+  if(files.length == 1){
+    existsSync(files[0]) &&
+      contents.push(getTail(readContent(files[0]), option, count));
+    contents.push(errorMessageForFileInTail(files[0]));
     return contents;
   }
 
   files.map(function(file, index) {
-    !existsSync(files[index]) &&
-      contents.push(errorMessageForFileInTail(files[index]));
+    !existsSync(files[index]) && contents.push(errorMessageForFileInTail(files[index]));
 
-    existsSync(files[index]) &&
-      contents.push(
-        createFileHeader(files[index]) +
-          "\n" +
-          getTail(readContent(files[index]), option, count)
-      ) &&
-      index != files.length - 1 &&
-      contents.push(contents.pop() + delimiter);
+    existsSync(files[index]) && contents.push(createFileHeader(files[index])+'\n'+
+      getTail(readContent(files[index]), option, count)) &&
+      (index != files.length - 1) && contents.push(contents.pop()+delimiter);
   });
 
   return contents;

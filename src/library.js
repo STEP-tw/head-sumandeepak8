@@ -79,7 +79,7 @@ const head = function(parsedInput) {
 
   if(files.length == 1){
     if(existsSync(files[0]) != true){
-      contents.push('head: ' + files[0] + ': No such file or directory');
+      contents.push(errorMessageForFileInHead(files[0]));
       return contents;
     }
     contents.push(getHead(readContent(files[0]),option,count));
@@ -87,9 +87,9 @@ const head = function(parsedInput) {
   }
 
   files.map(function(file,index){
-    if(existsSync(files[index]) != true){
-      contents.push('head: ' + files[index] + ': No such file or directory');
-    }
+    !existsSync(files[index]) && 
+      contents.push(errorMessageForFileInHead(files[index]));
+  
     if(existsSync(files[index]) == true){
       contents[index] = (createFileHeader(files[index])+'\n'
         +getHead(readContent(files[index]),option,count)) 
@@ -107,6 +107,14 @@ const getTail = function(file, option, count = 10) {
   return file.split(delimiter).reverse().slice(0, count).reverse().join(delimiter);
 };
 
+const errorMessageForFileInHead = function(file) {
+  return 'head: ' + file + ': No such file or directory';
+};
+
+const errorMessageForFileInTail = function(file) {
+  return 'tail: ' + file + ': No such file or directory';
+};
+
 const tail = function(parsedInput) {
   let { files ,readContent, existsSync, option, count } = parsedInput;
   let delimiter = selectDelimiter(option);
@@ -114,7 +122,8 @@ const tail = function(parsedInput) {
 
   if(files.length == 1){
     if(existsSync(files[0]) != true){
-      contents.push('head: ' + files[0] + ': No such file or directory');
+      contents.push(errorMessageForFileInTail(files[0]));
+      console.log('hello');
       return contents;
     }
     contents.push(getTail(readContent(files[0]),option,count));
@@ -122,9 +131,9 @@ const tail = function(parsedInput) {
   }
 
   files.map(function(file,index){
-    if(existsSync(files[index]) != true){
-      contents.push('head: ' + files[index] + ': No such file or directory');
-    }
+    !existsSync(files[index]) &&
+      contents.push(errorMessageForFileInTail(files[index]));
+    
     if(existsSync(files[index]) == true){
       contents[index] = (createFileHeader(files[index])+'\n'
         +getTail(readContent(files[index]),option,count)) 

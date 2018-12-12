@@ -1,27 +1,10 @@
-const createFileHeader = function (fileName) {
-  return '==> ' + fileName + ' <==';
-};
-
-const selectDelimiter = function (option = 'n') {
-  let delimiter = {
-    n: '\n',
-    c: ''
-  };
-  return delimiter[option];
-};
-
-const readFile = function (readFileSync, file) {
-  return readFileSync(file, 'utf-8');
-};
-
-const errorMessageForFileInHead = function (file) {
-  return 'head: ' + file + ': No such file or directory';
-};
-
-const errorMessageForFileInTail = function (file) {
-  return 'tail: ' + file + ': No such file or directory';
-};
-
+const {
+  createFileHeader,
+  selectDelimiter,
+  readFile,
+  errorMessageForFileInHead,
+  errorMessageForFileInTail,
+} = require('./utilLib.js');
 
 const getHead = function (file, option, count = 10) {
   let delimiter = selectDelimiter(option);
@@ -33,7 +16,6 @@ const getHead = function (file, option, count = 10) {
 
 const filterOptionAndCount = function (inputArgs) {
   let options = inputArgs.slice(0, 2);
-
   return options.filter(function (element, index) {
     let result = options[0].includes('-');
     if (result && index == 1 && (options[0].length > 2 || !isNaN(+options[0])))
@@ -241,13 +223,11 @@ const checkValidation = function (input) {
 };
 
 module.exports = {
-  selectDelimiter,
   getHead,
   extractOptionAndCount,
   extractFiles,
   extractInputs,
   head,
-  createFileHeader,
   headOutput,
   filterOptionAndCount,
   validateOption,

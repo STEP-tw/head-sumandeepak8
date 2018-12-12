@@ -1,25 +1,23 @@
 const { equal, deepEqual, deepStrictEqual } = require('assert');
 
-const { selectDelimiter, 
+const { 
   getHead,
-  extractOptionAndCount,
   extractFiles,
   extractInputs,
-  head,
   filterOptionAndCount,
+  extractOptionAndCount,
   validateOption,
-  isValidCount
+  isValidCount,
+  head,
 } = require('../src/library.js');
 
-describe('selectDelimiter',function(){
-  it('should return empty string for c(byte) option ',function(){
-    equal(selectDelimiter('c'),'');
-  });
+const readContent = function(file) {
+  return file;
+};
 
-  it('should return "\n" string for n(lines) option ',function(){
-    equal(selectDelimiter('n'),'\n');
-  });
-});
+const existsSync = function(file) {
+  return true;
+};
 
 describe('getHead',function(){
   let fileContent = "hello world\nyour welcome\ngood bye";
@@ -88,7 +86,7 @@ describe('extractFiles',function(){
     let inputArgs = ['-n7','-n5','5','file.txt','file4.js']
     deepEqual(extractFiles(inputArgs),['-n5','5','file.txt','file4.js']);
   });
-  
+
   it('should return the files if options are not given in inputArgs',function(){
     let inputArgs = ['file.txt','file4.js']
     deepEqual(extractFiles(inputArgs),['file.txt','file4.js']);
@@ -133,9 +131,17 @@ describe('extractInputs',function(){
 });
 
 describe('filterOptionAndCount',function(){
-  it('should return an array of option elements',function(){
+  it('should return an empty array for the given options',function(){
     let options = ['n5','file'];
     deepStrictEqual(filterOptionAndCount(options),[]);
+  });
+
+  it('should return an array of option elements',function(){
+    let options = ['-c5','file',23];
+    deepStrictEqual(filterOptionAndCount(options),['-c5']);
+
+    options = ['-c','8','file',23];
+    deepStrictEqual(filterOptionAndCount(options),['-c','8']);
   });
 });
 
@@ -163,3 +169,28 @@ describe('isValidCount',function(){
   });
 
 });
+
+describe('head',function(){
+
+  describe('single inputArgs file',function(){
+    it('should return 5 lines when the option is n and value of count is 5',function(){
+      let inputArgs = { files : ['hello\n\nworld\ngoodbye\nhii'], option : 'n', count : 5 ,existsSync, readContent };
+      deepStrictEqual(head(inputArgs),['hello\n\nworld\ngoodbye\nhii']);
+    });
+
+    it('should return 5 characters ,option is c(byte) and value of count is 5',function(){
+      inputArgs = { files : ['hello\n\nworld\ngoodbye'], option : 'c', count : 5, existsSync, readContent };
+      deepStrictEqual(head(inputArgs),['hello']);
+    });
+  });
+
+  describe('mutliple inputArgs file',function(){ 
+    it('should return max.10 lines if files has ,when the option and value of count is not given ',function(){
+      inputArgs = { files : ['file.txt','file1.txt','file3.txt'], existsSync, readContent };
+      deepStrictEqual(head(inputArgs),['==> file.txt <==\nfile.txt\n','==> file1.txt <==\nfile1.txt\n','==> file3.txt <==\nfile3.txt']);
+    });
+  });
+
+});
+
+

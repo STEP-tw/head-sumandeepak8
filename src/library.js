@@ -3,7 +3,10 @@ const createFileHeader = function (fileName) {
 };
 
 const selectDelimiter = function (option = 'n') {
-  let delimiter = { n: '\n', c: '' };
+  let delimiter = {
+    n: '\n',
+    c: ''
+  };
   return delimiter[option];
 };
 
@@ -104,17 +107,17 @@ const extractMultipleFileData = function (details, funcRef, errorMessageRef) {
     option,
     count,
     readContent,
-    contents,
     delimiter
   } = details;
-  
-  files.map(function (file, index) {
-    !existsSync(file) && contents.push(errorMessageRef(file));
-    existsSync(file) && contents.push(createFileHeader(file) + '\n' +
-        funcRef(readContent(file), option, count)) &&
-      (index != files.length - 1) && contents.push(contents.pop() + delimiter);
-  });
-  return contents;
+
+  return files.map(function (file, index) {
+    if (!existsSync(file)) return errorMessageRef(file);
+
+    let fileContent = createFileHeader(file) + '\n' + funcRef(readContent(file), option, count);
+    if (index != files.length - 1) return fileContent + delimiter;
+    return fileContent;
+   });
+
 };
 
 const head = function (parsedInput) {
@@ -126,14 +129,12 @@ const head = function (parsedInput) {
     readContent
   } = parsedInput;
   let delimiter = selectDelimiter(option);
-  let contents = [];
   let details = {
     files,
     existsSync,
     option,
     count,
     readContent,
-    contents,
     delimiter
   };
   if (files.length == 1) {
@@ -161,14 +162,12 @@ const tail = function (parsedInput) {
     count
   } = parsedInput;
   let delimiter = selectDelimiter(option);
-  let contents = [];
   let details = {
     files,
     existsSync,
     option,
     count,
     readContent,
-    contents,
     delimiter
   };
   if (files.length == 1) {

@@ -161,17 +161,20 @@ describe('validateOption',function(){
 });
 
 describe('isValidCount',function(){
-
   it('should show an error message on screen as expected output',function(){
-    let number = 0;
-    let expectedOutput = { isValid : false, error_message : 'head: illegal line count -- ' + number};
-    deepEqual(isValidCount(number),expectedOutput);
+    let count = 0;
+    let expectedOutput = { isValid : false, error_message : 'head: illegal line count -- ' + count};
+    deepEqual(isValidCount(count),expectedOutput);
   });
 
+  it('should return expectedOutput if option is -c',function(){
+    let count = -2;
+    let expectedOutput = { isValid : false, error_message : 'head: illegal byte count -- ' + count};
+    deepEqual(isValidCount(count,'-c'),expectedOutput);
+  });
 });
 
 describe('head',function(){
-
   describe('single inputArgs file',function(){
     it('should return 5 lines when the option is n and value of count is 5',function(){
       let inputArgs = { files : ['hello\n\nworld\ngoodbye\nhii'], option : 'n', count : 5 ,existsSync, readContent };
@@ -190,7 +193,6 @@ describe('head',function(){
       deepStrictEqual(head(inputArgs),['==> file.txt <==\nfile.txt\n','==> file1.txt <==\nfile1.txt\n','==> file3.txt <==\nfile3.txt']);
     });
   });
-
 });
 
 describe('validateOption',function(){

@@ -12,11 +12,24 @@ const readFile = function (readFileSync, file) {
 };
 
 const errorMessageForFileInHead = function (file) {
-    return 'head: ' + file + ': No such file or directory';
+  return 'head: ' + file + ': No such file or directory';
 };
 
 const errorMessageForFileInTail = function (file) {
-    return 'tail: ' + file + ': No such file or directory';
+  return 'tail: ' + file + ': No such file or directory';
+};
+
+const errorMessageForOption = function(option) {
+  return  'head: illegal option -- ' + option[1] +
+    '\n' + 'usage: head [-n lines | -c bytes] [file ...]';
+};
+
+const errorMessageForBytes = function(count){
+  return 'head: illegal byte count -- ' + count;
+};
+
+const errorMessageForLines = function(count) {
+  return 'head: illegal line count -- ' + count;
 };
 
 
@@ -26,4 +39,7 @@ module.exports = {
   readFile,
   errorMessageForFileInTail,
   errorMessageForFileInHead,
+  errorMessageForOption,
+  errorMessageForBytes,
+  errorMessageForLines,
 };

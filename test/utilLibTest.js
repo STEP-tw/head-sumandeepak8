@@ -5,6 +5,9 @@ const { selectDelimiter,
   readFile,
   errorMessageForFileInHead,
   errorMessageForFileInTail,
+  errorMessageForOption,
+  errorMessageForBytes,
+  errorMessageForLines,
 } = require('../src/utilLib.js');
 
 
@@ -50,5 +53,29 @@ describe('errorMessageForFileInTail',function(){
   it('should return error message when the given file is not found',function(){
     equal(errorMessageForFileInTail('file.txt'),('tail: '+'file.txt'+': No such file or directory'));
     equal(errorMessageForFileInTail('file1.txt'),('tail: '+'file1.txt'+': No such file or directory'));
+  });
+});
+
+describe('errorMessageForOption',function(){
+  it('should return an error message with an given option',function(){
+    let expectedOutput =  'head: illegal option -- ' + 'a' +
+      '\n' + 'usage: head [-n lines | -c bytes] [file ...]';
+    equal(errorMessageForOption('-a'),expectedOutput);
+  });
+});
+
+describe('errorMessageForLines',function(){
+  it('should return an error message for count less than 1',function(){
+    let expectedOutput = 'head: illegal line count -- ';
+      equal(errorMessageForLines(-2),expectedOutput + -2);
+      equal(errorMessageForLines(0),expectedOutput + 0);
+  });
+});
+
+describe('errorMessageForBytes',function(){
+  it('should return an error message for count less than 1',function(){
+    let expectedOutput = 'head: illegal byte count -- ';
+      equal(errorMessageForBytes(-2),expectedOutput + -2);
+      equal(errorMessageForBytes(0),expectedOutput + 0);
   });
 });

@@ -9,7 +9,7 @@ const { selectDelimiter,
   filterOptionAndCount,
   validateOption,
   isValidCount
-} = require('../src/headLibrary.js');
+} = require('../src/library.js');
 
 describe('selectDelimiter',function(){
   it('should return empty string for c(byte) option ',function(){

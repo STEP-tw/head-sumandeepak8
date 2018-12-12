@@ -1,8 +1,8 @@
 const fs = require('fs');
-const { tailOutput } = require('./src/headLibrary.js');
+const { tailOutput } = require('./src/library.js');
 
 const main = function() {
-  let input = process.argv.slice(2);
+  let input = process.argv;
   console.log(tailOutput(fs, input));
 };
 

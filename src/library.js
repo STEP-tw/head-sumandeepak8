@@ -11,7 +11,7 @@ const selectDelimiter = function(option = "n") {
 const readFile = function(readFileSync,file) {
   return readFileSync(file,'utf-8');
 };
-
+  
 const getHead = function(file, option, count = 10) {
   let delimiter = selectDelimiter(option);
   return file
@@ -75,7 +75,7 @@ const extractInputs = function(inputArgs) {
 const head = function(parsedInput) {
   let { files ,readFileSync, existsSync, option, count } = parsedInput;
   let delimiter = selectDelimiter(option);
-  let contents=[];
+  let contents = [];
 
   if(files.length == 1){
     if(existsSync(files[0]) != true){
@@ -138,7 +138,8 @@ const tail = function(parsedInput) {
 };
 
 const tailOutput = function(fs, inputArgs) {
-  let { files, option, count } = extractInputs(inputArgs);
+  let funcRef = inputArgs[2];
+  let { files, option, count } = extractInputs(inputArgs.slice(2));
   let { readFileSync , existsSync } = fs;
   let readContent = readFile.bind(null,readFileSync)
   if(checkValidation(inputArgs) != true)

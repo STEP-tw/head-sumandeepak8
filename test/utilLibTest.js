@@ -5,7 +5,6 @@ const { selectDelimiter,
   readFile,
   errorMessageForFileInHead,
   errorMessageForFileInTail,
-  head,
 } = require('../src/utilLib.js');
 
 

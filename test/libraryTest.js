@@ -193,4 +193,20 @@ describe('head',function(){
 
 });
 
+describe('validateOption',function(){
+  it('should return { isvalid : true, error_message : undefined } for -n and -c ',function(){
+    let expectedOutput = { isValid : true, error_message : undefined };
+    deepEqual(validateOption('-n'),expectedOutput);
+    deepEqual(validateOption('-c'),expectedOutput);
+  });
 
+  it('should return { isvalid : false, error_message : some error message } for other than -n and -c ',function(){
+    let expectedOutput = { isValid : false, 
+      error_message : 'head: illegal option -- a\nusage: head [-n lines | -c bytes] [file ...]' };
+    deepEqual(validateOption('-a'),expectedOutput);
+
+    expectedOutput = { isValid : false, 
+      error_message : 'head: illegal option -- s\nusage: head [-n lines | -c bytes] [file ...]' };
+    deepEqual(validateOption('-s'),expectedOutput);
+  });
+});

@@ -101,14 +101,15 @@ const tail = function (parsedInput) {
   return extractMultipleFileData(parsedInput, getTail, errorMessageForFileInTail);
 };
 
-const output = function (inputArgs, fs, funcRef) {
-  let func = { head : head, tail : tail };
+
+const output = function (inputArgs, fs, partRef) {
+  let parts = { head : head, tail : tail };
   let { files, option, count } = extractInputs(inputArgs);
   let { readFileSync, existsSync } = fs;
   let readContent = readFile.bind(null, readFileSync);
   let parsedInput = { files, readContent, existsSync, option, count };
   if (checkValidation(inputArgs) != true) return checkValidation(inputArgs);
-  return func[funcRef](parsedInput).join('\n');
+  return parts[partRef](parsedInput).join('\n');
 };
 
 const validateOption = function (option) {

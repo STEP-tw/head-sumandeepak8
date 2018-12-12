@@ -8,10 +8,10 @@ const selectDelimiter = function(option = "n") {
   return delimiter[option];
 };
 
-const readFile = function(readFileSync,file) {
-  return readFileSync(file,'utf-8');
+const readFile = function(readFileSync, file) {
+  return readFileSync(file, "utf-8");
 };
-  
+
 const getHead = function(file, option, count = 10) {
   let delimiter = selectDelimiter(option);
   return file
@@ -73,30 +73,31 @@ const extractInputs = function(inputArgs) {
 };
 
 const head = function(parsedInput) {
-  let { files , existsSync, option, count, readContent } = parsedInput;
+  let { files, existsSync, option, count, readContent } = parsedInput;
   let delimiter = selectDelimiter(option);
   let contents = [];
 
-  if(files.length == 1){
-    if(existsSync(files[0]) != true){
+  if (files.length == 1) {
+    if (existsSync(files[0]) != true) {
       contents.push(errorMessageForFileInHead(files[0]));
       return contents;
     }
-    contents.push(getHead(readContent(files[0]),option,count));
+    contents.push(getHead(readContent(files[0]), option, count));
     return contents;
   }
 
-  files.map(function(file,index){
-    !existsSync(files[index]) && 
+  files.map(function(file, index) {
+    !existsSync(files[index]) &&
       contents.push(errorMessageForFileInHead(files[index]));
-  
-    if(existsSync(files[index]) == true){
-      contents[index] = (createFileHeader(files[index])+'\n'
-        +getHead(readContent(files[index]),option,count)) 
-      if(index != files.length-1){
-        contents[index] = contents[index] + delimiter;
-      }
-    }
+
+    existsSync(files[index]) &&
+      contents.push(
+        createFileHeader(files[index]) +
+          "\n" +
+          getHead(readContent(files[index]), option, count)
+      ) &&
+      index != files.length - 1 &&
+      contents.push(contents.pop() + delimiter);
   });
 
   return contents;
@@ -104,43 +105,48 @@ const head = function(parsedInput) {
 
 const getTail = function(file, option, count = 10) {
   let delimiter = selectDelimiter(option);
-  return file.split(delimiter).reverse().slice(0, count).reverse().join(delimiter);
+  return file
+    .split(delimiter)
+    .reverse()
+    .slice(0, count)
+    .reverse()
+    .join(delimiter);
 };
 
 const errorMessageForFileInHead = function(file) {
-  return 'head: ' + file + ': No such file or directory';
+  return "head: " + file + ": No such file or directory";
 };
 
 const errorMessageForFileInTail = function(file) {
-  return 'tail: ' + file + ': No such file or directory';
+  return "tail: " + file + ": No such file or directory";
 };
 
 const tail = function(parsedInput) {
-  let { files ,readContent, existsSync, option, count } = parsedInput;
+  let { files, readContent, existsSync, option, count } = parsedInput;
   let delimiter = selectDelimiter(option);
   let contents = [];
 
-  if(files.length == 1){
-    if(existsSync(files[0]) != true){
+  if (files.length == 1) {
+    if (existsSync(files[0]) != true) {
       contents.push(errorMessageForFileInTail(files[0]));
-      console.log('hello');
       return contents;
     }
-    contents.push(getTail(readContent(files[0]),option,count));
+    contents.push(getTail(readContent(files[0]), option, count));
     return contents;
   }
 
-  files.map(function(file,index){
+  files.map(function(file, index) {
     !existsSync(files[index]) &&
       contents.push(errorMessageForFileInTail(files[index]));
-    
-    if(existsSync(files[index]) == true){
-      contents[index] = (createFileHeader(files[index])+'\n'
-        +getTail(readContent(files[index]),option,count)) 
-      if(index != files.length-1){
-        contents[index] = contents[index] + delimiter;
-      }
-    }
+
+    existsSync(files[index]) &&
+      contents.push(
+        createFileHeader(files[index]) +
+          "\n" +
+          getTail(readContent(files[index]), option, count)
+      ) &&
+      index != files.length - 1 &&
+      contents.push(contents.pop() + delimiter);
   });
 
   return contents;
@@ -149,67 +155,67 @@ const tail = function(parsedInput) {
 const tailOutput = function(fs, inputArgs) {
   let funcRef = inputArgs[2];
   let { files, option, count } = extractInputs(inputArgs.slice(2));
-  let { readFileSync , existsSync } = fs;
-  let readContent = readFile.bind(null,readFileSync)
-  if(checkValidation(inputArgs) != true)
-    return checkValidation(inputArgs);
-  let parsedInput = { files, readContent, existsSync, option,count};
-  return tail(parsedInput).join('\n');
+  let { readFileSync, existsSync } = fs;
+  let readContent = readFile.bind(null, readFileSync);
+  if (checkValidation(inputArgs) != true) return checkValidation(inputArgs);
+  let parsedInput = { files, readContent, existsSync, option, count };
+  return tail(parsedInput).join("\n");
 };
 
 const headOutput = function(fs, inputArgs) {
   let { files, option, count } = extractInputs(inputArgs);
-  let { readFileSync , existsSync } = fs;
-  let readContent = readFile.bind(null,readFileSync)
-  if(checkValidation(inputArgs) != true)
-    return checkValidation(inputArgs);
-  let parsedInput = { files, readContent, existsSync, option, count};
-  return head(parsedInput).join('\n');
+  let { readFileSync, existsSync } = fs;
+  let readContent = readFile.bind(null, readFileSync);
+  if (checkValidation(inputArgs) != true) return checkValidation(inputArgs);
+  let parsedInput = { files, readContent, existsSync, option, count };
+  return head(parsedInput).join("\n");
 };
 
 const validateOption = function(option) {
   let error_message;
-  let isValid = option.includes("-") &&
-    (option[1] == 'n' || option[1] == 'c');
+  let isValid = option.includes("-") && (option[1] == "n" || option[1] == "c");
 
-  if (!isValid) { error_message = "head: illegal option -- " +
-      option[1] + "\n" + "usage: head [-n lines | -c bytes] [file ...]";
+  if (!isValid) {
+    error_message =
+      "head: illegal option -- " +
+      option[1] +
+      "\n" +
+      "usage: head [-n lines | -c bytes] [file ...]";
   }
   return { isValid, error_message };
 };
 
-const isValidCount = function(count,option) {
+const isValidCount = function(count, option) {
   let error_message;
   let isValid = count >= 1;
   if (!isValid) {
     error_message = "head: illegal line count -- " + count;
-    if(option == '-c')
-      error_message = "head: illegal byte count -- " + count;
+    if (option == "-c") error_message = "head: illegal byte count -- " + count;
   }
   return { isValid, error_message };
 };
 
 const checkValidation = function(input) {
   let optionCount = filterOptionAndCount(input);
-  if(optionCount[0] == undefined) optionCount = ['-n',10];
+  if (optionCount[0] == undefined) optionCount = ["-n", 10];
 
-  if(optionCount[1] == undefined && !isNaN(optionCount[0].slice(0,2)))
-    optionCount = ['-n',optionCount[0].slice(1)];
+  if (optionCount[1] == undefined && !isNaN(optionCount[0].slice(0, 2)))
+    optionCount = ["-n", optionCount[0].slice(1)];
 
-  if(optionCount[1] == undefined && isNaN(optionCount[0].slice(0,2))){
+  if (optionCount[1] == undefined && isNaN(optionCount[0].slice(0, 2))) {
     optionCount[1] = optionCount[0].slice(2);
-    optionCount[0] = optionCount[0].slice(0,2);
+    optionCount[0] = optionCount[0].slice(0, 2);
   }
 
   let isValidOptionResult = validateOption(optionCount[0]);
-  if(isValidOptionResult['isValid'] == false)
-    return isValidOptionResult['error_message'];
+  if (isValidOptionResult["isValid"] == false)
+    return isValidOptionResult["error_message"];
 
-  let isValidCountResult = isValidCount(optionCount[1],optionCount[0]);
-  if(isValidCountResult['isValid'] == false)
-    return isValidCountResult['error_message'];
+  let isValidCountResult = isValidCount(optionCount[1], optionCount[0]);
+  if (isValidCountResult["isValid"] == false)
+    return isValidCountResult["error_message"];
   return true;
-}
+};
 
 module.exports = {
   selectDelimiter,

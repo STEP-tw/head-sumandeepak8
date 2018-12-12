@@ -8,10 +8,7 @@ const {
 
 const getHead = function (file, option, count = 10) {
   let delimiter = selectDelimiter(option);
-  return file
-    .split(delimiter)
-    .slice(0, count)
-    .join(delimiter);
+  return file.split(delimiter).slice(0, count).join(delimiter);
 };
 
 const filterOptionAndCount = function (inputArgs) {
@@ -62,34 +59,18 @@ const extractInputs = function (inputArgs) {
   let option = options[0];
   let count = +options[1];
   let files = extractFiles(inputArgs);
-  return {
-    files,
-    option,
-    count
-  };
+  return { files, option, count };
 };
 
 const extractSingleFileData = function (details, funcRef, errorMessageRef) {
-  let {
-    files,
-    existsSync,
-    option,
-    count,
-    readContent
-  } = details;
-  if (!existsSync(files[0]))
+  let { files, existsSync, option, count, readContent } = details;
+  if(!existsSync(files[0]))
     return [errorMessageRef(files[0])];
   return [funcRef(readContent(files[0]), option, count)];
 };
 
-const extractMultipleFileData = function (parsedInput, funcRef, errorMessageRef) {
-  let {
-    files,
-    existsSync,
-    option,
-    count,
-    readContent,
-  } = parsedInput;
+const extractMultipleFileData = function (details, funcRef, errorMessageRef) {
+  let { files, existsSync, option, count, readContent } = details;
   let delimiter = selectDelimiter(option);
 
   return files.map(function (file, index) {
@@ -97,7 +78,7 @@ const extractMultipleFileData = function (parsedInput, funcRef, errorMessageRef)
     let fileContent = createFileHeader(file) + '\n' + funcRef(readContent(file), option, count);
     if (index != files.length - 1) return fileContent + delimiter;
     return fileContent;
-   });
+  });
 
 };
 
@@ -110,12 +91,7 @@ const head = function (parsedInput){
 
 const getTail = function (file, option, count = 10) {
   let delimiter = selectDelimiter(option);
-  return file
-    .split(delimiter)
-    .reverse()
-    .slice(0, count)
-    .reverse()
-    .join(delimiter);
+  return file.split(delimiter).reverse().slice(0, count).reverse().join(delimiter);
 };
 
 const tail = function (parsedInput) {
@@ -125,66 +101,23 @@ const tail = function (parsedInput) {
   return extractMultipleFileData(parsedInput, getTail, errorMessageForFileInTail);
 };
 
-const tailOutput = function (fs, inputArgs) {
-  let funcRef = inputArgs[2];
-  let {
-    files,
-    option,
-    count
-  } = extractInputs(inputArgs.slice(2));
-  let {
-    readFileSync,
-    existsSync
-  } = fs;
+const output = function (inputArgs, fs, funcRef) {
+  let func = { head : head, tail : tail };
+  let { files, option, count } = extractInputs(inputArgs);
+  let { readFileSync, existsSync } = fs;
   let readContent = readFile.bind(null, readFileSync);
+  let parsedInput = { files, readContent, existsSync, option, count };
   if (checkValidation(inputArgs) != true) return checkValidation(inputArgs);
-  let parsedInput = {
-    files,
-    readContent,
-    existsSync,
-    option,
-    count
-  };
-  return tail(parsedInput).join('\n');
-};
-
-const headOutput = function (fs, inputArgs) {
-  let {
-    files,
-    option,
-    count
-  } = extractInputs(inputArgs);
-  let {
-    readFileSync,
-    existsSync
-  } = fs;
-  let readContent = readFile.bind(null, readFileSync);
-  if (checkValidation(inputArgs) != true) return checkValidation(inputArgs);
-  let parsedInput = {
-    files,
-    readContent,
-    existsSync,
-    option,
-    count
-  };
-  return head(parsedInput).join('\n');
+  return func[funcRef](parsedInput).join('\n');
 };
 
 const validateOption = function (option) {
   let error_message;
   let isValid = option.includes('-') && (option[1] == 'n' || option[1] == 'c');
-
-  if (!isValid) {
-    error_message =
-      'head: illegal option -- ' +
-      option[1] +
-      '\n' +
-      'usage: head [-n lines | -c bytes] [file ...]';
+  if (!isValid) { error_message = 'head: illegal option -- ' + option[1] +
+      '\n' + 'usage: head [-n lines | -c bytes] [file ...]';
   }
-  return {
-    isValid,
-    error_message
-  };
+  return { isValid, error_message };
 };
 
 const isValidCount = function (count, option) {
@@ -194,10 +127,7 @@ const isValidCount = function (count, option) {
     error_message = 'head: illegal line count -- ' + count;
     if (option == '-c') error_message = 'head: illegal byte count -- ' + count;
   }
-  return {
-    isValid,
-    error_message
-  };
+  return { isValid, error_message };
 };
 
 const checkValidation = function (input) {
@@ -228,9 +158,9 @@ module.exports = {
   extractFiles,
   extractInputs,
   head,
-  headOutput,
+  output,
   filterOptionAndCount,
   validateOption,
   isValidCount,
-  tailOutput
+  output
 };

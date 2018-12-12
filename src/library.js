@@ -84,17 +84,11 @@ const head = function(parsedInput) {
   }
 
   files.map(function(file, index) {
-    !existsSync(files[index]) &&
-      contents.push(errorMessageForFileInHead(files[index]));
+    !existsSync(files[index]) && contents.push(errorMessageForFileInHead(files[index]));
 
-    existsSync(files[index]) &&
-      contents.push(
-        createFileHeader(files[index]) +
-          "\n" +
-          getHead(readContent(files[index]), option, count)
-      ) &&
-      index != files.length - 1 &&
-      contents.push(contents.pop() + delimiter);
+    existsSync(files[index]) && contents.push(createFileHeader(files[index])+'\n'+
+      getHead(readContent(files[index]), option, count)) &&
+      (index != files.length - 1) && contents.push(contents.pop() + delimiter);
   });
 
   return contents;
@@ -130,17 +124,11 @@ const tail = function(parsedInput) {
   }
 
   files.map(function(file, index) {
-    !existsSync(files[index]) &&
-      contents.push(errorMessageForFileInTail(files[index]));
+    !existsSync(files[index]) && contents.push(errorMessageForFileInTail(files[index]));
 
-    existsSync(files[index]) &&
-      contents.push(
-        createFileHeader(files[index]) +
-          "\n" +
-          getTail(readContent(files[index]), option, count)
-      ) &&
-      index != files.length - 1 &&
-      contents.push(contents.pop() + delimiter);
+    existsSync(files[index]) && contents.push(createFileHeader(files[index])+'\n'+
+      getTail(readContent(files[index]), option, count)) &&
+      (index != files.length - 1) && contents.push(contents.pop() + delimiter);
   });
 
   return contents;

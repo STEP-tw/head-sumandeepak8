@@ -29,12 +29,7 @@ const extractFiles = function (inputArgs) {
 const extractOptionAndCount = function (inputArgs) {
   let output = filterOptionAndCount(inputArgs);
 
-  if (
-    output[0] != undefined &&
-    output[0][1] != 'n' &&
-    output[0][1] != 'c' &&
-    !isNaN(+output[0][1])
-  ) {
+  if( output[0] != undefined && output[0][1] != 'n' && output[0][1] != 'c' && !isNaN(+output[0][1]) ){
     output[1] = output[0].slice(1);
     output[0] = '-n';
   }
@@ -60,34 +55,18 @@ const extractInputs = function (inputArgs) {
   let option = options[0];
   let count = +options[1];
   let files = extractFiles(inputArgs);
-  return {
-    files,
-    option,
-    count
-  };
+  return { files, option, count };
 };
 
 const extractSingleFileData = function (details, funcRef, partRef) {
-  let {
-    files,
-    existsSync,
-    option,
-    count,
-    readContent
-  } = details;
+  let { files, existsSync, option, count, readContent } = details;
   if (!existsSync(files[0]))
     return [errorMessageForMissingFile(files[0],partRef)];
   return [funcRef(readContent(files[0]), option, count)];
-  };
+};
 
 const extractMultipleFileData = function (details, funcRef, partRef) {
-  let {
-    files,
-    existsSync,
-    option,
-    count,
-    readContent
-  } = details;
+  let { files, existsSync, option, count, readContent } = details;
   let delimiter = selectDelimiter(option);
 
   return files.map(function (file, index) {
@@ -100,9 +79,7 @@ const extractMultipleFileData = function (details, funcRef, partRef) {
 };
 
 const head = function (parsedInput) {
-  let {
-    files
-  } = parsedInput;
+  let { files } = parsedInput;
   if (files.length == 1)
     return extractSingleFileData(parsedInput, getHead, 'head');
   return extractMultipleFileData(parsedInput, getHead, 'head');
@@ -114,9 +91,7 @@ const getTail = function (file, option, count = 10) {
 };
 
 const tail = function (parsedInput) {
-  let {
-    files
-  } = parsedInput;
+  let { files } = parsedInput;
   if (files.length == 1)
     return extractSingleFileData(parsedInput, getTail, 'tail');
   return extractMultipleFileData(parsedInput, getTail, 'tail');
@@ -124,76 +99,56 @@ const tail = function (parsedInput) {
 
 
 const output = function (inputArgs, fs, partRef) {
-  let parts = {
-    head: head,
-    tail: tail
-  };
-  let {
-    files,
-    option,
-    count
-  } = extractInputs(inputArgs);
+  let parts = { head: head, tail: tail };
+  let { files, option, count } = extractInputs(inputArgs);
   if(partRef == 'tail')
-  count = Math.abs(count);
-  let {
-    readFileSync,
-    existsSync
-  } = fs;
+    count = Math.abs(count);
+  let { readFileSync, existsSync } = fs;
   let readContent = readFile.bind(null, readFileSync);
-  let parsedInput = {
-    files,
-    readContent,
-    existsSync,
-    option,
-    count
-  };
-  if (checkValidation(inputArgs, partRef) != true) return checkValidation(inputArgs, partRef);
+  let parsedInput = { files, readContent, existsSync, option, count };
+  if (checkValidation(inputArgs, partRef) != true)
+    return checkValidation(inputArgs, partRef);
+
   return parts[partRef](parsedInput).join('\n');
 };
 
 const validateOption = function (option, partRef) {
   let error_message;
-  let isValid = option.includes('-') && (option[1] == 'n' || option[1] == 'c');
-  if (!isValid) {
+  let isValid = option.includes('-') && ( option[1] == 'n' || option[1] == 'c' );
+  if ( !isValid ) {
     error_message = errorMessageForOption(option, partRef);
   }
-  return {
-    isValid,
-    error_message
-  };
+  return { isValid, error_message };
 };
 
 const validateCount = function (count, option ,partRef) {
   let error_message;
   let isValid = { head : (count >= 1), tail : (!isNaN(+count)) };
-  if (!isValid[partRef]) {
-    error_message = errorMessageForLinesAndBytes(count,option,partRef);
+  if ( !isValid[partRef] ) {
+    error_message = errorMessageForLinesAndBytes(count, option, partRef);
   }
-  return {
-    isValid,
-    error_message
-  };
+  return { isValid, error_message };
 };
 
-const checkValidation = function (input,partRef) {
+const checkValidation = function (input, partRef) {
   let optionCount = filterOptionAndCount(input);
-  if (optionCount[0] == undefined) optionCount = ['-n', 10];
+  if ( optionCount[0] == undefined ) optionCount = ['-n', 10];
 
-  if (optionCount[1] == undefined && !isNaN(optionCount[0].slice(0, 2)))
+  if ( optionCount[1] == undefined && !isNaN(optionCount[0].slice(0, 2)) )
     optionCount = ['-n', optionCount[0].slice(1)];
 
-  if (optionCount[1] == undefined && isNaN(optionCount[0].slice(0, 2))) {
+  if ( optionCount[1] == undefined && isNaN(optionCount[0].slice(0, 2)) ) {
     optionCount[1] = optionCount[0].slice(2);
     optionCount[0] = optionCount[0].slice(0, 2);
   }
 
   let isValidOptionResult = validateOption(optionCount[0], partRef);
-  if (isValidOptionResult['isValid'] == false)
+  if ( isValidOptionResult['isValid'] == false )
     return isValidOptionResult['error_message'];
 
   let validateCountResult = validateCount(optionCount[1], optionCount[0], partRef);
-   if (validateCountResult['isValid'][partRef] == false) 
-      return validateCountResult['error_message'];
+  if ( validateCountResult['isValid'][partRef] == false ) 
+    return validateCountResult['error_message'];
 
   return true;
 };

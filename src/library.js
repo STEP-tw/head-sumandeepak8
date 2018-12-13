@@ -78,7 +78,7 @@ const extractSingleFileData = function (details, funcRef, partRef) {
   if (!existsSync(files[0]))
     return [errorMessageForMissingFile(files[0],partRef)];
   return [funcRef(readContent(files[0]), option, count)];
-};
+  };
 
 const extractMultipleFileData = function (details, funcRef, partRef) {
   let {
@@ -149,11 +149,11 @@ const output = function (inputArgs, fs, partRef) {
   return parts[partRef](parsedInput).join('\n');
 };
 
-const validateOption = function (option) {
+const validateOption = function (option, partRef) {
   let error_message;
   let isValid = option.includes('-') && (option[1] == 'n' || option[1] == 'c');
   if (!isValid) {
-    error_message = errorMessageForOption(option);
+    error_message = errorMessageForOption(option, partRef);
   }
   return {
     isValid,
@@ -185,7 +185,7 @@ const checkValidation = function (input,partRef) {
     optionCount[0] = optionCount[0].slice(0, 2);
   }
 
-  let isValidOptionResult = validateOption(optionCount[0]);
+  let isValidOptionResult = validateOption(optionCount[0], partRef);
   if (isValidOptionResult['isValid'] == false)
     return isValidOptionResult['error_message'];
 

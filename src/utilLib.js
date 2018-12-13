@@ -17,13 +17,19 @@ const errorMessageForMissingFile = function (file,partRef) {
   return partRef + ': ' + file + ': No such file or directory';
 };
 
-const errorMessageForOption = function(option) {
-  return  'head: illegal option -- ' + option[1] +
-    '\n' + 'usage: head [-n lines | -c bytes] [file ...]';
+const errorMessageForOption = function(option ,partRef) {
+  let messages = { head : 'head: illegal option -- '+ option[1] + '\n' 
+    + 'usage: head [-n lines | -c bytes] [file ...]',
+    tail : 'tail: illegal option -- '+ option[1] + '\n' 
+    + 'usage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]' 
+  };
+ return messages[partRef];
 };
 
 const errorMessageForLinesAndBytes = function(count,option,partRef) {
-  return partRef + ': illegal '+ options[option] + ' count -- ' + count;
+  let messages = { head : 'head: illegal ' + options[option] + ' count -- ' + count,
+    tail : 'tail: illegal offset -- ' + count };
+  return messages[partRef];
 };
 
 

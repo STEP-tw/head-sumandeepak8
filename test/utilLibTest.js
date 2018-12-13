@@ -53,20 +53,26 @@ describe('errorMessageForMissingFile',function(){
 });
 
 describe('errorMessageForOption',function(){
-  it('should return an error message with an given option',function(){
+  it('should return an error message with an given option for head command',function(){
     let expectedOutput =  'head: illegal option -- ' + 'a' +
       '\n' + 'usage: head [-n lines | -c bytes] [file ...]';
-    equal(errorMessageForOption('-a'),expectedOutput);
+    equal(errorMessageForOption('-a','head'),expectedOutput);
+  });
+
+  it('should return an error message with an given option for tail command',function(){
+    let expectedOutput =  'tail: illegal option -- ' + 'a' + '\n' +
+     'usage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]';
+    equal(errorMessageForOption('-a','tail'),expectedOutput);
   });
 });
 
 describe('errorMessageForLinesAndBytes',function(){
   it('should return an error message for count less than 1',function(){
-    equal(errorMessageForLinesAndBytes(-2,'-n','head'),'head: illegal line count -- -2');
-    equal(errorMessageForLinesAndBytes(0,'-n','tail'),'tail: illegal line count -- 0');
+    equal(errorMessageForLinesAndBytes('-2','-n','head'),'head: illegal line count -- -2');
+    equal(errorMessageForLinesAndBytes('3s','-n','tail'),'tail: illegal offset -- 3s');
 
-    equal(errorMessageForLinesAndBytes(-2,'-c','head'),'head: illegal byte count -- -2');
-    equal(errorMessageForLinesAndBytes(0,'-c','tail'),'tail: illegal byte count -- 0');
+    equal(errorMessageForLinesAndBytes('-2','-c','head'),'head: illegal byte count -- -2');
+    equal(errorMessageForLinesAndBytes('a','-c','tail'),'tail: illegal offset -- a');
   });
 });
 

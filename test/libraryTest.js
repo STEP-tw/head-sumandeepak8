@@ -160,8 +160,8 @@ describe('validateOption',function(){
   });
 
   it('should return false value for input other than -n and -c',function(){
-    deepEqual(validateOption('-s'),{ isValid : false, error_message : 'head: illegal option -- s\nusage: head [-n lines | -c bytes] [file ...]'});
-    deepEqual(validateOption('-u'),{isValid : false, error_message : 'head: illegal option -- u\nusage: head [-n lines | -c bytes] [file ...]'});
+    deepEqual(validateOption('-s','head'),{ isValid : false, error_message : 'head: illegal option -- s\nusage: head [-n lines | -c bytes] [file ...]'});
+    deepEqual(validateOption('-u','head'),{isValid : false, error_message : 'head: illegal option -- u\nusage: head [-n lines | -c bytes] [file ...]'});
   });
 
 });
@@ -176,11 +176,11 @@ describe('isValidCount',function(){
   });
 
   it('should return expectedOutput if option is -c',function(){
-    let expectedOutput = { isValid : false, error_message : 'tail: illegal line count -- ' + -2};
-    deepEqual(isValidCount(-2,'-n','tail'),expectedOutput);
+    let expectedOutput = { isValid : false, error_message : 'tail: illegal offset -- a' };
+    deepEqual(isValidCount('a','-n','tail'),expectedOutput);
 
-    expectedOutput = { isValid : false, error_message : 'tail: illegal byte count -- ' + -5};
-    deepEqual(isValidCount(-5,'-c','tail'),expectedOutput);
+    expectedOutput = { isValid : false, error_message : 'tail: illegal offset -- -2a'};
+    deepEqual(isValidCount('-2a','-c','tail'),expectedOutput);
   });
 });
 

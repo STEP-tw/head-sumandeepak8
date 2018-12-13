@@ -4,6 +4,9 @@ const {
   readFile,
   errorMessageForFileInHead,
   errorMessageForFileInTail,
+  errorMessageForOption,
+  errorMessageForLines,
+  errorMessageForBytes,
 } = require('./utilLib.js');
 
 const getHead = function (file, option, count = 10) {
@@ -59,18 +62,34 @@ const extractInputs = function (inputArgs) {
   let option = options[0];
   let count = +options[1];
   let files = extractFiles(inputArgs);
-  return { files, option, count };
+  return {
+    files,
+    option,
+    count
+  };
 };
 
 const extractSingleFileData = function (details, funcRef, errorMessageRef) {
-  let { files, existsSync, option, count, readContent } = details;
-  if(!existsSync(files[0]))
+  let {
+    files,
+    existsSync,
+    option,
+    count,
+    readContent
+  } = details;
+  if (!existsSync(files[0]))
     return [errorMessageRef(files[0])];
   return [funcRef(readContent(files[0]), option, count)];
 };
 
 const extractMultipleFileData = function (details, funcRef, errorMessageRef) {
-  let { files, existsSync, option, count, readContent } = details;
+  let {
+    files,
+    existsSync,
+    option,
+    count,
+    readContent
+  } = details;
   let delimiter = selectDelimiter(option);
 
   return files.map(function (file, index) {
@@ -82,8 +101,10 @@ const extractMultipleFileData = function (details, funcRef, errorMessageRef) {
 
 };
 
-const head = function (parsedInput){
-  let { files } = parsedInput;
+const head = function (parsedInput) {
+  let {
+    files
+  } = parsedInput;
   if (files.length == 1)
     return extractSingleFileData(parsedInput, getHead, errorMessageForFileInHead);
   return extractMultipleFileData(parsedInput, getHead, errorMessageForFileInHead);
@@ -95,19 +116,37 @@ const getTail = function (file, option, count = 10) {
 };
 
 const tail = function (parsedInput) {
-  let { files } = parsedInput;
-  if (files.length == 1) 
+  let {
+    files
+  } = parsedInput;
+  if (files.length == 1)
     return extractSingleFileData(parsedInput, getTail, errorMessageForFileInTail);
   return extractMultipleFileData(parsedInput, getTail, errorMessageForFileInTail);
 };
 
 
 const output = function (inputArgs, fs, partRef) {
-  let parts = { head : head, tail : tail };
-  let { files, option, count } = extractInputs(inputArgs);
-  let { readFileSync, existsSync } = fs;
+  let parts = {
+    head: head,
+    tail: tail
+  };
+  let {
+    files,
+    option,
+    count
+  } = extractInputs(inputArgs);
+  let {
+    readFileSync,
+    existsSync
+  } = fs;
   let readContent = readFile.bind(null, readFileSync);
-  let parsedInput = { files, readContent, existsSync, option, count };
+  let parsedInput = {
+    files,
+    readContent,
+    existsSync,
+    option,
+    count
+  };
   if (checkValidation(inputArgs) != true) return checkValidation(inputArgs);
   return parts[partRef](parsedInput).join('\n');
 };
@@ -115,20 +154,26 @@ const output = function (inputArgs, fs, partRef) {
 const validateOption = function (option) {
   let error_message;
   let isValid = option.includes('-') && (option[1] == 'n' || option[1] == 'c');
-  if (!isValid) { error_message = 'head: illegal option -- ' + option[1] +
-      '\n' + 'usage: head [-n lines | -c bytes] [file ...]';
+  if (!isValid) {
+    error_message = errorMessageForOption(option);
   }
-  return { isValid, error_message };
+  return {
+    isValid,
+    error_message
+  };
 };
 
-const isValidCount = function (count, option) {
+const isValidCount = function (count, option ) {
   let error_message;
-  let isValid = count >= 1;
-  if (!isValid) {
-    error_message = 'head: illegal line count -- ' + count;
-    if (option == '-c') error_message = 'head: illegal byte count -- ' + count;
+  let isValid = (count >= 1);
+    if (!isValid) {
+    error_message = errorMessageForLines(count);
+    if (option == '-c') error_message = errorMessageForBytes(count);
   }
-  return { isValid, error_message };
+  return {
+    isValid,
+    error_message
+  };
 };
 
 const checkValidation = function (input) {
@@ -148,8 +193,9 @@ const checkValidation = function (input) {
     return isValidOptionResult['error_message'];
 
   let isValidCountResult = isValidCount(optionCount[1], optionCount[0]);
-  if (isValidCountResult['isValid'] == false)
-    return isValidCountResult['error_message'];
+  if (isValidCountResult['isValid'] == false) 
+      return isValidCountResult['error_message'];
+  
   return true;
 };
 
@@ -163,5 +209,5 @@ module.exports = {
   filterOptionAndCount,
   validateOption,
   isValidCount,
-  output
+  getTail,
 };

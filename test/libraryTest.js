@@ -9,6 +9,7 @@ const {
   validateOption,
   isValidCount,
   head,
+  getTail,
 } = require('../src/library.js');
 
 const readContent = function(file) {
@@ -17,6 +18,11 @@ const readContent = function(file) {
 
 const existsSync = function(file) {
   return true;
+};
+
+const selectDelimiter = function (option = 'n') {
+  let delimiter = { n: '\n', c: '' };
+  return delimiter[option];
 };
 
 describe('getHead',function(){
@@ -195,20 +201,24 @@ describe('head',function(){
   });
 });
 
-describe('validateOption',function(){
-  it('should return { isvalid : true, error_message : undefined } for -n and -c ',function(){
-    let expectedOutput = { isValid : true, error_message : undefined };
-    deepEqual(validateOption('-n'),expectedOutput);
-    deepEqual(validateOption('-c'),expectedOutput);
+describe('getHead',function(){
+  it('should return the lines or characters based on option input',function(){
+     let fileContent = 'hello\nworld\nwelcome\n';   
+    let expectedOutput = 'hello\nworld';
+    equal(getHead(fileContent,'n',2),expectedOutput);
+  
+    expectedOutput = 'hello\nw';
+    equal(getHead(fileContent,'c',7),expectedOutput);
   });
+});
 
-  it('should return { isvalid : false, error_message : some error message } for other than -n and -c ',function(){
-    let expectedOutput = { isValid : false, 
-      error_message : 'head: illegal option -- a\nusage: head [-n lines | -c bytes] [file ...]' };
-    deepEqual(validateOption('-a'),expectedOutput);
+describe('getTail',function(){
+  it('should return lines or characters from the bottom of file',function(){
+    let fileContent = 'hello\nworld\nwelcome';
+      let expectedOutput = 'world\nwelcome';
+    equal(getTail(fileContent,'n',2),expectedOutput);
 
-    expectedOutput = { isValid : false, 
-      error_message : 'head: illegal option -- s\nusage: head [-n lines | -c bytes] [file ...]' };
-    deepEqual(validateOption('-s'),expectedOutput);
+    expectedOutput = 'lcome';
+    equal(getTail(fileContent,'c',5),expectedOutput);  
   });
 });

@@ -42,9 +42,9 @@ describe('readFile',function(){
   });
 });
 
-describe('errorMessageForFileInHead',function(){
+describe('errorMessageForFile',function(){
   it('should return error message when the given file is not found',function(){
-    equal(errorMessageForFileInHead('file.txt'),('head: '+'file.txt'+': No such file or directory'));
+      equal(errorMessageForFileInHead('file.txt'),('head: '+'file.txt'+': No such file or directory'));
     equal(errorMessageForFileInHead('file1.txt'),('head: '+'file1.txt'+': No such file or directory'));
   });
 });

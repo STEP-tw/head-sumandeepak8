@@ -7,7 +7,7 @@ const {
   filterOptionAndCount,
   extractOptionAndCount,
   validateOption,
-  isValidCount,
+  validateCount,
   head,
   getTail,
 } = require('../src/library.js');
@@ -91,7 +91,7 @@ describe('extractFiles',function(){
   it('should return elements from index 1 of inputArgs if the first element is valid option and it also includes count  in it',function(){
     let inputArgs = ['-n7','-n5','5','file.txt','file4.js']
     deepEqual(extractFiles(inputArgs),['-n5','5','file.txt','file4.js']);
-  });
+    });
 
   it('should return the files if options are not given in inputArgs',function(){
     let inputArgs = ['file.txt','file4.js']
@@ -166,21 +166,21 @@ describe('validateOption',function(){
 
 });
 
-describe('isValidCount',function(){
+describe('validateCount',function(){
   it('should show an error message on screen as expected output',function(){
-    let expectedOutput = { isValid : false, error_message : 'head: illegal line count -- ' + -2};
-    deepEqual(isValidCount(-2,'-n','head'),expectedOutput);
+    let expectedOutput = { isValid : { head : false, tail : true }, error_message : 'head: illegal line count -- ' + -2};
+    deepEqual(validateCount(-2,'-n','head'),expectedOutput);
 
-    expectedOutput = { isValid : false, error_message : 'head: illegal byte count -- ' + -5};
-    deepEqual(isValidCount(-5,'-c','head'),expectedOutput);
+    expectedOutput = { isValid : { head : false, tail : true }, error_message : 'head: illegal byte count -- ' + -5};
+    deepEqual(validateCount(-5,'-c','head'),expectedOutput);
   });
 
   it('should return expectedOutput if option is -c',function(){
-    let expectedOutput = { isValid : false, error_message : 'tail: illegal offset -- a' };
-    deepEqual(isValidCount('a','-n','tail'),expectedOutput);
+    let expectedOutput = { isValid : { head : false, tail : false }, error_message : 'tail: illegal offset -- a' };
+    deepEqual(validateCount('a','-n','tail'),expectedOutput);
 
-    expectedOutput = { isValid : false, error_message : 'tail: illegal offset -- -2a'};
-    deepEqual(isValidCount('-2a','-c','tail'),expectedOutput);
+    expectedOutput = { isValid : { head : false, tail : false }, error_message : 'tail: illegal offset -- -2a'};
+    deepEqual(validateCount('-2a','-c','tail'),expectedOutput);
   });
 });
 
@@ -225,4 +225,4 @@ describe('getTail',function(){
     expectedOutput = 'lcome';
     equal(getTail(fileContent,'c',5),expectedOutput);  
   });
-  });
+});

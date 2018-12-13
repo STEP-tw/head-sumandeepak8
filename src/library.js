@@ -133,6 +133,8 @@ const output = function (inputArgs, fs, partRef) {
     option,
     count
   } = extractInputs(inputArgs);
+  if(partRef == 'tail')
+  count = Math.abs(count);
   let {
     readFileSync,
     existsSync
@@ -161,10 +163,10 @@ const validateOption = function (option, partRef) {
   };
 };
 
-const isValidCount = function (count, option ,partRef) {
+const validateCount = function (count, option ,partRef) {
   let error_message;
-  let isValid = (count >= 1);
-    if (!isValid) {
+  let isValid = { head : (count >= 1), tail : (!isNaN(+count)) };
+  if (!isValid[partRef]) {
     error_message = errorMessageForLinesAndBytes(count,option,partRef);
   }
   return {
@@ -189,10 +191,10 @@ const checkValidation = function (input,partRef) {
   if (isValidOptionResult['isValid'] == false)
     return isValidOptionResult['error_message'];
 
-  let isValidCountResult = isValidCount(optionCount[1], optionCount[0], partRef);
-  if (isValidCountResult['isValid'] == false) 
-      return isValidCountResult['error_message'];
-  
+  let validateCountResult = validateCount(optionCount[1], optionCount[0], partRef);
+   if (validateCountResult['isValid'][partRef] == false) 
+      return validateCountResult['error_message'];
+
   return true;
 };
 
@@ -205,6 +207,6 @@ module.exports = {
   output,
   filterOptionAndCount,
   validateOption,
-  isValidCount,
+  validateCount,
   getTail,
 };

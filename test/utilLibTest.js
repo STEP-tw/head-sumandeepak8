@@ -3,11 +3,9 @@ const { equal, deepEqual } = require('assert');
 const { selectDelimiter,
   createFileHeader,
   readFile,
-  errorMessageForFileInHead,
-  errorMessageForFileInTail,
+  errorMessageForMissingFile,
   errorMessageForOption,
-  errorMessageForBytes,
-  errorMessageForLines,
+  errorMessageForLinesAndBytes,
 } = require('../src/utilLib.js');
 
 
@@ -42,17 +40,15 @@ describe('readFile',function(){
   });
 });
 
-describe('errorMessageForFile',function(){
+describe('errorMessageForMissingFile',function(){
   it('should return error message when the given file is not found',function(){
-      equal(errorMessageForFileInHead('file.txt'),('head: '+'file.txt'+': No such file or directory'));
-    equal(errorMessageForFileInHead('file1.txt'),('head: '+'file1.txt'+': No such file or directory'));
-  });
-});
+    let partRef = 'head';
+    let fileName = 'file.txt';
+    equal(errorMessageForMissingFile('file.txt',partRef),('head: '+'file.txt'+': No such file or directory'));
 
-describe('errorMessageForFileInTail',function(){
-  it('should return error message when the given file is not found',function(){
-    equal(errorMessageForFileInTail('file.txt'),('tail: '+'file.txt'+': No such file or directory'));
-    equal(errorMessageForFileInTail('file1.txt'),('tail: '+'file1.txt'+': No such file or directory'));
+    partRef = 'tail';
+    fileName = 'file1.txt';
+    equal(errorMessageForMissingFile('file1.txt',partRef),('tail: '+'file1.txt'+': No such file or directory'));
   });
 });
 
@@ -64,18 +60,14 @@ describe('errorMessageForOption',function(){
   });
 });
 
-describe('errorMessageForLines',function(){
+describe('errorMessageForLinesAndBytes',function(){
   it('should return an error message for count less than 1',function(){
-    let expectedOutput = 'head: illegal line count -- ';
-      equal(errorMessageForLines(-2),expectedOutput + -2);
-      equal(errorMessageForLines(0),expectedOutput + 0);
+    equal(errorMessageForLinesAndBytes(-2,'-n','head'),'head: illegal line count -- -2');
+    equal(errorMessageForLinesAndBytes(0,'-n','tail'),'tail: illegal line count -- 0');
+
+    equal(errorMessageForLinesAndBytes(-2,'-c','head'),'head: illegal byte count -- -2');
+    equal(errorMessageForLinesAndBytes(0,'-c','tail'),'tail: illegal byte count -- 0');
   });
 });
 
-describe('errorMessageForBytes',function(){
-  it('should return an error message for count less than 1',function(){
-    let expectedOutput = 'head: illegal byte count -- ';
-      equal(errorMessageForBytes(-2),expectedOutput + -2);
-      equal(errorMessageForBytes(0),expectedOutput + 0);
-  });
-});
+

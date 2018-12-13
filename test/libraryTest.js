@@ -168,15 +168,19 @@ describe('validateOption',function(){
 
 describe('isValidCount',function(){
   it('should show an error message on screen as expected output',function(){
-    let count = 0;
-    let expectedOutput = { isValid : false, error_message : 'head: illegal line count -- ' + count};
-    deepEqual(isValidCount(count),expectedOutput);
+    let expectedOutput = { isValid : false, error_message : 'head: illegal line count -- ' + -2};
+    deepEqual(isValidCount(-2,'-n','head'),expectedOutput);
+
+    expectedOutput = { isValid : false, error_message : 'head: illegal byte count -- ' + -5};
+    deepEqual(isValidCount(-5,'-c','head'),expectedOutput);
   });
 
   it('should return expectedOutput if option is -c',function(){
-    let count = -2;
-    let expectedOutput = { isValid : false, error_message : 'head: illegal byte count -- ' + count};
-    deepEqual(isValidCount(count,'-c'),expectedOutput);
+    let expectedOutput = { isValid : false, error_message : 'tail: illegal line count -- ' + -2};
+    deepEqual(isValidCount(-2,'-n','tail'),expectedOutput);
+
+    expectedOutput = { isValid : false, error_message : 'tail: illegal byte count -- ' + -5};
+    deepEqual(isValidCount(-5,'-c','tail'),expectedOutput);
   });
 });
 
@@ -221,4 +225,4 @@ describe('getTail',function(){
     expectedOutput = 'lcome';
     equal(getTail(fileContent,'c',5),expectedOutput);  
   });
-});
+  });

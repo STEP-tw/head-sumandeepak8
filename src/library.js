@@ -2,11 +2,9 @@ const {
   createFileHeader,
   selectDelimiter,
   readFile,
-  errorMessageForFileInHead,
-  errorMessageForFileInTail,
+  errorMessageForMissingFile,
   errorMessageForOption,
-  errorMessageForLines,
-  errorMessageForBytes,
+  errorMessageForLinesAndBytes,
 } = require('./utilLib.js');
 
 const getHead = function (file, option, count = 10) {
@@ -69,7 +67,7 @@ const extractInputs = function (inputArgs) {
   };
 };
 
-const extractSingleFileData = function (details, funcRef, errorMessageRef) {
+const extractSingleFileData = function (details, funcRef, partRef) {
   let {
     files,
     existsSync,
@@ -78,11 +76,11 @@ const extractSingleFileData = function (details, funcRef, errorMessageRef) {
     readContent
   } = details;
   if (!existsSync(files[0]))
-    return [errorMessageRef(files[0])];
+    return [errorMessageForMissingFile(files[0],partRef)];
   return [funcRef(readContent(files[0]), option, count)];
 };
 
-const extractMultipleFileData = function (details, funcRef, errorMessageRef) {
+const extractMultipleFileData = function (details, funcRef, partRef) {
   let {
     files,
     existsSync,
@@ -93,7 +91,7 @@ const extractMultipleFileData = function (details, funcRef, errorMessageRef) {
   let delimiter = selectDelimiter(option);
 
   return files.map(function (file, index) {
-    if (!existsSync(file)) return errorMessageRef(file);
+    if (!existsSync(file)) return errorMessageForMissingFile(file,partRef);
     let fileContent = createFileHeader(file) + '\n' + funcRef(readContent(file), option, count);
     if (index != files.length - 1) return fileContent + delimiter;
     return fileContent;
@@ -106,8 +104,8 @@ const head = function (parsedInput) {
     files
   } = parsedInput;
   if (files.length == 1)
-    return extractSingleFileData(parsedInput, getHead, errorMessageForFileInHead);
-  return extractMultipleFileData(parsedInput, getHead, errorMessageForFileInHead);
+    return extractSingleFileData(parsedInput, getHead, 'head');
+  return extractMultipleFileData(parsedInput, getHead, 'head');
 };
 
 const getTail = function (file, option, count = 10) {
@@ -120,8 +118,8 @@ const tail = function (parsedInput) {
     files
   } = parsedInput;
   if (files.length == 1)
-    return extractSingleFileData(parsedInput, getTail, errorMessageForFileInTail);
-  return extractMultipleFileData(parsedInput, getTail, errorMessageForFileInTail);
+    return extractSingleFileData(parsedInput, getTail, 'tail');
+  return extractMultipleFileData(parsedInput, getTail, 'tail');
 };
 
 
@@ -147,7 +145,7 @@ const output = function (inputArgs, fs, partRef) {
     option,
     count
   };
-  if (checkValidation(inputArgs) != true) return checkValidation(inputArgs);
+  if (checkValidation(inputArgs, partRef) != true) return checkValidation(inputArgs, partRef);
   return parts[partRef](parsedInput).join('\n');
 };
 
@@ -163,12 +161,11 @@ const validateOption = function (option) {
   };
 };
 
-const isValidCount = function (count, option ) {
+const isValidCount = function (count, option ,partRef) {
   let error_message;
   let isValid = (count >= 1);
     if (!isValid) {
-    error_message = errorMessageForLines(count);
-    if (option == '-c') error_message = errorMessageForBytes(count);
+    error_message = errorMessageForLinesAndBytes(count,option,partRef);
   }
   return {
     isValid,
@@ -176,7 +173,7 @@ const isValidCount = function (count, option ) {
   };
 };
 
-const checkValidation = function (input) {
+const checkValidation = function (input,partRef) {
   let optionCount = filterOptionAndCount(input);
   if (optionCount[0] == undefined) optionCount = ['-n', 10];
 
@@ -192,7 +189,7 @@ const checkValidation = function (input) {
   if (isValidOptionResult['isValid'] == false)
     return isValidOptionResult['error_message'];
 
-  let isValidCountResult = isValidCount(optionCount[1], optionCount[0]);
+  let isValidCountResult = isValidCount(optionCount[1], optionCount[0], partRef);
   if (isValidCountResult['isValid'] == false) 
       return isValidCountResult['error_message'];
   

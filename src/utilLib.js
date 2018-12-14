@@ -1,4 +1,4 @@
-const options = { '-n' : 'line', '-c' : 'byte' };
+const options = { 'n' : 'line', 'c' : 'byte' };
 
 const createFileHeader = function (fileName) {
     return '==> ' + fileName + ' <==';
@@ -18,9 +18,9 @@ const errorMessageForMissingFile = function (file,partRef) {
 };
 
 const errorMessageForOption = function(option ,partRef) {
-  let messages = { head : 'head: illegal option -- '+ option[1] + '\n' 
+  let messages = { head : 'head: illegal option -- '+ option + '\n' 
     + 'usage: head [-n lines | -c bytes] [file ...]',
-    tail : 'tail: illegal option -- '+ option[1] + '\n' 
+    tail : 'tail: illegal option -- '+ option + '\n' 
     + 'usage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]' 
   };
  return messages[partRef];

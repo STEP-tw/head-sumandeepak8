@@ -120,32 +120,31 @@ describe('extractFiles',function(){
 describe('extractInputs',function(){
   it('should return object which contains two keys options and files',function(){
     let inputArgs = ['-n','5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(inputArgs),{ files : ['fileContent','file1Content'], option : 'n', count : 5 });
+    deepStrictEqual(extractInputs(inputArgs),{ files : ['fileContent','file1Content'], option : 'n', count : '5' });
   });
   it('should return as -n as option and -5 as count and an array of other elements as files',function(){
     inputArgs = ['-n','-5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(inputArgs),{ files : ['fileContent','file1Content'], option : 'n', count : -5 });
+    deepStrictEqual(extractInputs(inputArgs),{ files : ['fileContent','file1Content'], option : 'n', count : '-5' });
   });
   it('should return -n as option and 5 as count and it should take 5 as a file',function(){
     inputArgs = ['-n5','5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(inputArgs),{ files : ['5','fileContent','file1Content'], option : 'n', count : 5 });
+    deepStrictEqual(extractInputs(inputArgs),{ files : ['5','fileContent','file1Content'], option : 'n', count : '5' });
   });
   it('should return -a as option and 5 as count ,from second element to last as files',function(){
     inputArgs = ['-a5','5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(inputArgs),{ files : ['5','fileContent','file1Content'], option : 'a', count : 5 });
+    deepStrictEqual(extractInputs(inputArgs),{ files : ['5','fileContent','file1Content'], option : 'a', count : '5' });
   });
   it('should return -b as option and 6 as count and other elements as files',function(){
     inputArgs = ['-b','6','fileContent','file1Content']
-    deepStrictEqual(extractInputs(inputArgs),{ files : ['fileContent','file1Content'], option : 'b', count : 6 });
+    deepStrictEqual(extractInputs(inputArgs),{ files : ['fileContent','file1Content'], option : 'b', count : '6' });
   });
-  it('should return n count of lines when option is not given',function(){
+  it('should return n count of lines when option is not given and count as a number not a string',function(){
     let inputArgs = ['fileContent','file1Content'];
-    deepStrictEqual(extractInputs(inputArgs), { files : ['fileContent','file1Content'] , option : 'n',count : 10 });
-
+    deepStrictEqual(extractInputs(inputArgs), { files : ['fileContent','file1Content'] , option : 'n', count : 10 });
   });
   it('should return and option n when only count is given',function(){
     let inputArgs = ['-2','file','file1','file2'];
-    deepStrictEqual(extractInputs(inputArgs),{ files : ['file','file1','file2'], option : 'n', count : 2 });
+    deepStrictEqual(extractInputs(inputArgs),{ files : ['file','file1','file2'], option : 'n', count : '2' });
   });
 });
 
@@ -166,37 +165,37 @@ describe('filterOptionAndCount',function(){
 
 
 describe('validateOption for head command',function(){
-  it('should return object whose isValid contain true value and error_message as undefined for -n',function(){
-    deepEqual(validateOption('-n','head'),{ isValid : true, error_message : undefined });
+  it('should return object whose isValid contain true value and error_message as undefined for n',function(){
+    deepEqual(validateOption('n','head'),{ isValid : true, error_message : undefined });
   });
-  it('should return object whose isValid contain true value and error_message as undefined for -c',function(){
-    deepEqual(validateOption('-c','head'),{ isValid : true, error_message : undefined });
+  it('should return object whose isValid contain true value and error_message as undefined for c',function(){
+    deepEqual(validateOption('c','head'),{ isValid : true, error_message : undefined });
   });
-  it('should return object whose isValid key should contain false value and error_message should contain an error message for -s option',function(){
-    deepEqual(validateOption('-s','head'),{ isValid : false, error_message : 'head: illegal option -- s\nusage: head [-n lines | -c bytes] [file ...]'});
+  it('should return object whose isValid key should contain false value and error_message should contain an error message for s option',function(){
+    deepEqual(validateOption('s','head'),{ isValid : false, error_message : 'head: illegal option -- s\nusage: head [-n lines | -c bytes] [file ...]'});
   });
-  it('should return object whose isValid key should contain false value and error_message should contain an error message for -u option',function(){
-    deepEqual(validateOption('-u','head'),{isValid : false, error_message : 'head: illegal option -- u\nusage: head [-n lines | -c bytes] [file ...]'});
+  it('should return object whose isValid key should contain false value and error_message should contain an error message for u option',function(){
+    deepEqual(validateOption('u','head'),{isValid : false, error_message : 'head: illegal option -- u\nusage: head [-n lines | -c bytes] [file ...]'});
   });
 });
 
 describe('validateOption for tail command',function(){
   it('should return true value for isValid key and undefined error_message',function(){ 
-    deepEqual(validateOption('-n','tail'),{ isValid : true, error_message : undefined}); 
+    deepEqual(validateOption('n','tail'),{ isValid : true, error_message : undefined}); 
   });
   it('should return true value for isValid and undefined message',function(){
-    deepEqual(validateOption('-c','tail'),{ isValid : true, error_message : undefined});
+    deepEqual(validateOption('c','tail'),{ isValid : true, error_message : undefined});
   });
 });
 
 describe('validateCount for command head',function(){
   it('should show an error message on screen as expected output',function(){
     let expectedOutput = { isValid : { head : false, tail : true }, error_message : 'head: illegal line count -- ' + -2};
-    deepEqual(validateCount(-2,'-n','head'),expectedOutput);
+    deepEqual(validateCount(-2,'n','head'),expectedOutput);
   });
   it('should return an error message for -5 count as expectedOutput',function(){
     expectedOutput = { isValid : { head : false, tail : true }, error_message : 'head: illegal byte count -- ' + -5};
-    deepEqual(validateCount(-5,'-c','head'),expectedOutput);
+    deepEqual(validateCount(-5,'c','head'),expectedOutput);
   });
 });
 

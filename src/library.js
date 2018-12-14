@@ -114,7 +114,7 @@ const output = function (inputArgs, fs, partRef) {
 
 const validateOption = function (option, partRef) {
   let error_message;
-  let isValid = ( option[0] == 'n' || option[0] == 'c' );
+  let isValid = ( option == 'n' || option == 'c' );
   if ( !isValid ) 
     error_message = errorMessageForOption(option, partRef);
   return { isValid, error_message };

@@ -68,7 +68,7 @@ const extractSingleFileData = function (details, funcRef, partRef) {
 const extractMultipleFileData = function (details, funcRef, partRef) {
   let { files, existsSync, option, count, readContent } = details;
   let delimiter = selectDelimiter(option);
-
+   
   return files.map(function (file, index) {
     if (!existsSync(file)) return errorMessageForMissingFile(file,partRef);
     let fileContent = createFileHeader(file) + '\n' + funcRef(readContent(file), option, count);

@@ -55,16 +55,24 @@ describe('extractOptionAndCount',function(){
   it("should return max. first two element if it includes, where second element should be inputArgsnumber - ",function(){
     let inputArgs = ['-n','file.txt','hello world','12'];
     deepEqual(extractOptionAndCount(inputArgs),['n','file.txt']);
+  });
 
+  it('should give return an array whose first element is n and second is 5',function(){
     inputArgs = ['-n5','file.txt','hello world','12'];
     deepEqual(extractOptionAndCount(inputArgs),['n','5']);
+  });
 
+  it('should return first element as n and second -5',function(){
     inputArgs = ['-n','-5','file.txt','hello world','12'];
     deepEqual(extractOptionAndCount(inputArgs),['n','-5']);
+  });
 
+  it('should return first element as c and second as 5',function(){
     inputArgs = ['-c5','file.txt','hello world','12'];
     deepEqual(extractOptionAndCount(inputArgs),['c','5']);
+  });
 
+  it('should return first element as c and second as 5 , even input is different than previous one',function(){
     inputArgs = ['-c','5','file.txt','hello world','12'];
     deepEqual(extractOptionAndCount(inputArgs),['c','5']);
   });
@@ -80,10 +88,14 @@ describe('extractFiles',function(){
   it('should return inputArgs elements from index 2 if option is given',function(){
     let inputArgs = ['-n','-c','file1','file2','file3.txt']
     deepEqual(extractFiles(inputArgs),['file1','file2','file3.txt']);
+  });
 
+  it('should return files from 3rd place to end if first element is a valid option and it does not count portion',function(){
     inputArgs = ['-n','file1','file2','file3.txt']
     deepEqual(extractFiles(inputArgs),['file2','file3.txt']);
+  });
 
+  it('should return all elements as file if it does not contain any valid option and count',function(){
     inputArgs = ['file1','file2','file3.txt']
     deepEqual(extractFiles(inputArgs),['file1','file2','file3.txt']);
   });
@@ -91,7 +103,7 @@ describe('extractFiles',function(){
   it('should return elements from index 1 of inputArgs if the first element is valid option and it also includes count  in it',function(){
     let inputArgs = ['-n7','-n5','5','file.txt','file4.js']
     deepEqual(extractFiles(inputArgs),['-n5','5','file.txt','file4.js']);
-    });
+  });
 
   it('should return the files if options are not given in inputArgs',function(){
     let inputArgs = ['file.txt','file4.js']
@@ -110,15 +122,20 @@ describe('extractInputs',function(){
     let inputArgs = ['-n','5','fileContent','file1Content']
     deepStrictEqual(extractInputs(inputArgs),{ files : ['fileContent','file1Content'], option : 'n', count : 5 });
 
+  });
+    it('should return as -n as option and -5 as count and an array of other elements as files',function(){
     inputArgs = ['-n','-5','fileContent','file1Content']
     deepStrictEqual(extractInputs(inputArgs),{ files : ['fileContent','file1Content'], option : 'n', count : -5 });
-
+    });
+    it('should return -n as option and 5 as count and it should take 5 as a file',function(){
     inputArgs = ['-n5','5','fileContent','file1Content']
     deepStrictEqual(extractInputs(inputArgs),{ files : ['5','fileContent','file1Content'], option : 'n', count : 5 });
-
+    });
+     it('should return -a as option and 5 as count ,from second element to last as files',function(){
     inputArgs = ['-a5','5','fileContent','file1Content']
     deepStrictEqual(extractInputs(inputArgs),{ files : ['5','fileContent','file1Content'], option : 'a', count : 5 });
-
+     });
+  it('should return -b as option and 6 as count and other elements as files',function(){
     inputArgs = ['-b','6','fileContent','file1Content']
     deepStrictEqual(extractInputs(inputArgs),{ files : ['fileContent','file1Content'], option : 'b', count : 6 });
   });
@@ -207,10 +224,10 @@ describe('head',function(){
 
 describe('getHead',function(){
   it('should return the lines or characters based on option input',function(){
-     let fileContent = 'hello\nworld\nwelcome\n';   
+    let fileContent = 'hello\nworld\nwelcome\n';   
     let expectedOutput = 'hello\nworld';
     equal(getHead(fileContent,'n',2),expectedOutput);
-  
+
     expectedOutput = 'hello\nw';
     equal(getHead(fileContent,'c',7),expectedOutput);
   });
@@ -219,7 +236,7 @@ describe('getHead',function(){
 describe('getTail',function(){
   it('should return lines or characters from the bottom of file',function(){
     let fileContent = 'hello\nworld\nwelcome';
-      let expectedOutput = 'world\nwelcome';
+    let expectedOutput = 'world\nwelcome';
     equal(getTail(fileContent,'n',2),expectedOutput);
 
     expectedOutput = 'lcome';

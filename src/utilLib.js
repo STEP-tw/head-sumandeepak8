@@ -13,23 +13,23 @@ const readFile = function (readFileSync, file) {
     return readFileSync(file, 'utf-8');
 };
 
-const errorMessageForMissingFile = function (file,partRef) {
-  return partRef + ': ' + file + ': No such file or directory';
+const errorMessageForMissingFile = function (file,context) {
+  return context + ': ' + file + ': No such file or directory';
 };
 
-const errorMessageForOption = function(option ,partRef) {
+const errorMessageForOption = function(option ,context) {
   let messages = { head : 'head: illegal option -- '+ option + '\n' 
     + 'usage: head [-n lines | -c bytes] [file ...]',
     tail : 'tail: illegal option -- '+ option + '\n' 
     + 'usage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]' 
   };
- return messages[partRef];
+ return messages[context];
 };
 
-const errorMessageForLinesAndBytes = function(count,option,partRef) {
+const errorMessageForLinesAndBytes = function(count,option,context) {
   let messages = { head : 'head: illegal ' + options[option] + ' count -- ' + count,
     tail : 'tail: illegal offset -- ' + count };
-  return messages[partRef];
+  return messages[context];
 };
 
 

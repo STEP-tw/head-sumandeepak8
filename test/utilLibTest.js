@@ -45,17 +45,17 @@ describe('readFile',function(){
 
 describe('errorMessageForMissingFile for head command',function(){
   it('should return error message when the given file is not found',function(){
-    let partRef = 'head';
+    let context = 'head';
     let fileName = 'file.txt';
-    equal(errorMessageForMissingFile('file.txt',partRef),('head: '+'file.txt'+': No such file or directory'));
+    equal(errorMessageForMissingFile('file.txt',context),('head: '+'file.txt'+': No such file or directory'));
   });
 });
 
 describe('errorMessageForMissingFile for tail command',function(){
   it('should return error message when the given file is not found',function(){
-    let partRef = 'tail';
+    let context = 'tail';
     let fileName = 'file1.txt';
-    equal(errorMessageForMissingFile('file1.txt',partRef),('tail: '+'file1.txt'+': No such file or directory'));
+    equal(errorMessageForMissingFile('file1.txt',context),('tail: '+'file1.txt'+': No such file or directory'));
   });
 });
 

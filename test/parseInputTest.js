@@ -1,10 +1,15 @@
-const { extractOptionAndCount, 
+const {
+    extractOptionAndCount,
     extractFiles,
     filterOptionAndCount,
     parseInput,
+    optionCountMethod,
 } = require('../src/parseInput.js');
 
-const { deepEqual, deepStrictEqual } = require('assert');
+const {
+    deepEqual,
+    deepStrictEqual
+} = require('assert');
 
 describe('extractOptionAndCount', function () {
 
@@ -35,7 +40,7 @@ describe('extractOptionAndCount', function () {
 
     it('should return the default values of option and count when it is not given', function () {
         inputArgs = ['file', 'file1'];
-        deepStrictEqual(extractOptionAndCount(inputArgs), ['n', 10]);
+        deepStrictEqual(extractOptionAndCount(inputArgs), ['n', '10']);
     });
 
 });
@@ -130,7 +135,7 @@ describe('parseInput', function () {
         let expectedOutput = {
             files: ['fileContent', 'file1Content'],
             option: 'n',
-            count: 10
+            count: '10'
         };
         deepStrictEqual(parseInput(inputArgs), expectedOutput);
     });
@@ -146,16 +151,28 @@ describe('parseInput', function () {
 });
 
 describe('filterOptionAndCount', function () {
-    it('should return an empty array for the given options', function () {
+    it('should return an empty array for the given options',()=>{
         let options = ['n5', 'file'];
         deepStrictEqual(filterOptionAndCount(options), []);
     });
-    it('should return an array of option elements', function () {
+    it('should return an array of option elements',()=>{
         let options = ['-c5', 'file', 23];
         deepStrictEqual(filterOptionAndCount(options), ['-c5']);
     });
-    it('should return first two elements of options', function () {
+    it('should return first two elements of options',()=>{
         options = ['-c', '8', 'file', 23];
         deepStrictEqual(filterOptionAndCount(options), ['-c', '8']);
+    });
+});
+
+describe('optioCountMethod', function () {
+    it('should return an array of two element,first element should be n and second 3', function () {
+        deepEqual(optionCountMethod(['-n3']), ['n', '3']);
+    });
+    it('should return first element as c and second element as 5', () => {
+        deepEqual(optionCountMethod(['-c5']), ['c', '5']);
+    });
+    it('should return first element as d and second as 8', () => {
+        deepEqual(optionCountMethod(['-d', '8']), ['d', '8']);
     });
 });

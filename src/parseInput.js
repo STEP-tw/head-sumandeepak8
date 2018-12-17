@@ -14,32 +14,20 @@ const extractFiles = function (inputArgs) {
     return inputArgs.slice(filterOptionAndCount(inputArgs).length);
 };
 
+const optionCountMethod = function (optionAndCount) {
+    let options = { 
+        '1' : [optionAndCount[0][1], optionAndCount[0].slice(2)],
+        '2' : [optionAndCount[0][1],optionAndCount[1]],
+    };
+    return options[optionAndCount.length];
+}
+
 const extractOptionAndCount = function (inputArgs) {
     let optionAndCount = filterOptionAndCount(inputArgs);
-
-    let isOnlyNumber = (optionAndCount[0] != undefined &&
-        optionAndCount[0][1].match('n|c') == null &&
-        isFinite(optionAndCount[0][1]));
-
-    if (isOnlyNumber) {
-        optionAndCount[1] = optionAndCount[0].slice(1);
-        optionAndCount[0] = '-n';
-    }
-
-    if (optionAndCount[0] == undefined) {
-        optionAndCount[0] = '-n';
-        optionAndCount[1] = 10;
-    }
-
-    optionAndCount[0] = optionAndCount[0].slice(1);
-    let length = optionAndCount[0].length;
-
-    if (length > 1) {
-        optionAndCount[1] = optionAndCount[0].slice(1);
-        optionAndCount[0] = optionAndCount[0][0];
-    }
-
-    return optionAndCount;
+   optionAndCount[0] == undefined && optionAndCount.push('-n10');
+    if (isFinite(optionAndCount[0][1]))
+        return ['n', optionAndCount[0].slice(1)];
+    return optionCountMethod(optionAndCount);
 };
 
 const parseInput = function (inputArgs) {
@@ -59,4 +47,5 @@ module.exports = {
     extractFiles,
     extractOptionAndCount,
     parseInput,
+    optionCountMethod,
 };

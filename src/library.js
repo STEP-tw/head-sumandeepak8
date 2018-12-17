@@ -121,7 +121,7 @@ const tail = function (parsedInput) {
   return hasSingleFile[condition](parsedInput, sliceFromBottom, 'tail');
 };
 
-const output = function (inputArgs, fs, context) {
+  const organizeCommandOutput = function (inputArgs, fs, context) {
   let parts = {
     head: head,
     tail: tail
@@ -138,8 +138,8 @@ const output = function (inputArgs, fs, context) {
   } = fs;
   let readContent = readFile.bind(null, readFileSync);
 
-  if (checkValidation(inputArgs, context) != true)
-    return checkValidation(inputArgs, context);
+  if (inputValidation(inputArgs, context) != true)
+    return inputValidation(inputArgs, context);
 
   let parsedInput = {
     files,
@@ -176,7 +176,7 @@ const validateCount = function (count, option, context) {
   };
 };
 
-const checkValidation = function (input, context) {
+const inputValidation = function (input, context) {
   let {
     count,
     option
@@ -197,7 +197,7 @@ module.exports = {
   extractFiles,
   parseInput,
   head,
-  output,
+  organizeCommandOutput,
   filterOptionAndCount,
   validateOption,
   validateCount,

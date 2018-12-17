@@ -7,7 +7,7 @@ const {
   errorMessageForLinesAndBytes,
 } = require('./utilLib.js');
 
-const getHead = function (file, option, count = 10) {
+const sliceFromTop = function (file, option, count = 10) {
   let delimiter = selectDelimiter(option);
   return file.split(delimiter).slice(0, count).join(delimiter);
 };
@@ -83,10 +83,11 @@ const filesDataExtractingFunctions = { 'true' : extractSingleFileData, 'false' :
 const head = function (parsedInput) {
   let { files } = parsedInput;
   let isSingleFile  = (files.length == 1);
-   return filesDataExtractingFunctions[isSingleFile](parsedInput, getHead, 'head');
+   return filesDataExtractingFunctions[isSingleFile](parsedInput, 
+  sliceFromTop, 'head');
 };
 
-const getTail = function (file, option, count = 10) {
+const sliceFromBottom = function (file, option, count = 10) {
   let delimiter = selectDelimiter(option);
   return file.split(delimiter).reverse().slice(0, count).reverse().join(delimiter);
 };
@@ -94,7 +95,8 @@ const getTail = function (file, option, count = 10) {
 const tail = function (parsedInput) {
   let { files } = parsedInput;
   let isSingleFile = (files.length == 1);
-  return filesDataExtractingFunctions[isSingleFile](parsedInput, getTail, 'tail');
+  return filesDataExtractingFunctions[isSingleFile](parsedInput, sliceFromBottom
+, 'tail');
 };
 
 const output = function (inputArgs, fs, context) {
@@ -139,7 +141,8 @@ const checkValidation = function (input, context) {
 };
 
 module.exports = {
-  getHead,
+  
+sliceFromTop,
   extractOptionAndCount,
   extractFiles,
   extractInputs,
@@ -148,5 +151,5 @@ module.exports = {
   filterOptionAndCount,
   validateOption,
   validateCount,
-  getTail,
+  sliceFromBottom,
 };

@@ -1,7 +1,7 @@
 const { equal, deepEqual, deepStrictEqual } = require('assert');
 
 const { 
-  getHead,
+  sliceFromTop,
   extractFiles,
   extractInputs,
   filterOptionAndCount,
@@ -9,7 +9,7 @@ const {
   validateOption,
   validateCount,
   head,
-  getTail,
+  sliceFromBottom,
 } = require('../src/library.js');
 
 const readContent = function(file) {
@@ -25,27 +25,27 @@ const selectDelimiter = function (option = 'n') {
   return delimiter[option];
 };
 
-describe('getHead',function(){
+describe('sliceFromTop',function(){
   let fileContent = "hello world\nyour welcome\ngood bye";
   let expectedOutput = "hello world";
 
   it('should return expectedOutput',function(){
-    deepEqual(getHead(fileContent,'n',1),expectedOutput);
+    deepEqual(sliceFromTop(fileContent,'n',1),expectedOutput);
   });
 
   it('should return expectedOutput as given below',function(){
     expectedOutput = "hello world\nyour welcome";
-    deepEqual(getHead(fileContent,'n',2),expectedOutput);
+    deepEqual(sliceFromTop(fileContent,'n',2),expectedOutput);
   });
 
   it('should return first 2 character of fileContent',function(){
     expectedOutput ='he';
-    deepEqual(getHead(fileContent,'c',2),expectedOutput);
+    deepEqual(sliceFromTop(fileContent,'c',2),expectedOutput);
   });
 
   it('should return first 7 character of fileContent',function(){
     expectedOutput = 'hello w';
-    deepEqual(getHead(fileContent,'c',7),expectedOutput);
+    deepEqual(sliceFromTop(fileContent,'c',7),expectedOutput);
   });
 
 });
@@ -230,30 +230,30 @@ describe('head',function(){
   });
 });
 
-describe('getHead',function(){
+describe('sliceFromTop',function(){
   it('should return the lines or characters based on option input',function(){
     let fileContent = 'hello\nworld\nwelcome\n';   
     let expectedOutput = 'hello\nworld';
-    equal(getHead(fileContent,'n',2),expectedOutput);
+    equal(sliceFromTop(fileContent,'n',2),expectedOutput);
   });
   it('should return first 7 characters includind \n',function(){
     let fileContent = 'hello\nworld\nwelcome\n';   
     let expectedOutput = 'hello\nworld';
     expectedOutput = 'hello\nw';
-    equal(getHead(fileContent,'c',7),expectedOutput);
+    equal(sliceFromTop(fileContent,'c',7),expectedOutput);
   });
 });
 
-describe('getTail',function(){
+describe('sliceFromBottom',function(){
   it('should return last two lines from the bottom of file',function(){
     let fileContent = 'hello\nworld\nwelcome';
     let expectedOutput = 'world\nwelcome';
-    equal(getTail(fileContent,'n',2),expectedOutput);
+    equal(sliceFromBottom(fileContent,'n',2),expectedOutput);
   });
   it('should return last five characters',function(){
     let fileContent = 'hello\nworld\nwelcome';
     let expectedOutput = 'world\nwelcome';
     expectedOutput = 'lcome';
-    equal(getTail(fileContent,'c',5),expectedOutput);  
+    equal(sliceFromBottom(fileContent,'c',5),expectedOutput);  
   });
 });

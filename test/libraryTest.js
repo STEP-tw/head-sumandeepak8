@@ -3,7 +3,7 @@ const { equal, deepEqual, deepStrictEqual } = require('assert');
 const { 
   sliceFromTop,
   extractFiles,
-  extractInputs,
+  parseInput,
   filterOptionAndCount,
   extractOptionAndCount,
   validateOption,
@@ -117,34 +117,34 @@ describe('extractFiles',function(){
 
 });
 
-describe('extractInputs',function(){
+describe('parseInput',function(){
   it('should return object which contains two keys options and files',function(){
     let inputArgs = ['-n','5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(inputArgs),{ files : ['fileContent','file1Content'], option : 'n', count : '5' });
+    deepStrictEqual(parseInput(inputArgs),{ files : ['fileContent','file1Content'], option : 'n', count : '5' });
   });
   it('should return as -n as option and -5 as count and an array of other elements as files',function(){
     inputArgs = ['-n','-5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(inputArgs),{ files : ['fileContent','file1Content'], option : 'n', count : '-5' });
+    deepStrictEqual(parseInput(inputArgs),{ files : ['fileContent','file1Content'], option : 'n', count : '-5' });
   });
   it('should return -n as option and 5 as count and it should take 5 as a file',function(){
     inputArgs = ['-n5','5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(inputArgs),{ files : ['5','fileContent','file1Content'], option : 'n', count : '5' });
+    deepStrictEqual(parseInput(inputArgs),{ files : ['5','fileContent','file1Content'], option : 'n', count : '5' });
   });
   it('should return -a as option and 5 as count ,from second element to last as files',function(){
     inputArgs = ['-a5','5','fileContent','file1Content']
-    deepStrictEqual(extractInputs(inputArgs),{ files : ['5','fileContent','file1Content'], option : 'a', count : '5' });
+    deepStrictEqual(parseInput(inputArgs),{ files : ['5','fileContent','file1Content'], option : 'a', count : '5' });
   });
   it('should return -b as option and 6 as count and other elements as files',function(){
     inputArgs = ['-b','6','fileContent','file1Content']
-    deepStrictEqual(extractInputs(inputArgs),{ files : ['fileContent','file1Content'], option : 'b', count : '6' });
+    deepStrictEqual(parseInput(inputArgs),{ files : ['fileContent','file1Content'], option : 'b', count : '6' });
   });
   it('should return n count of lines when option is not given and count as a number not a string',function(){
     let inputArgs = ['fileContent','file1Content'];
-    deepStrictEqual(extractInputs(inputArgs), { files : ['fileContent','file1Content'] , option : 'n', count : 10 });
+    deepStrictEqual(parseInput(inputArgs), { files : ['fileContent','file1Content'] , option : 'n', count : 10 });
   });
   it('should return and option n when only count is given',function(){
     let inputArgs = ['-2','file','file1','file2'];
-    deepStrictEqual(extractInputs(inputArgs),{ files : ['file','file1','file2'], option : 'n', count : '2' });
+    deepStrictEqual(parseInput(inputArgs),{ files : ['file','file1','file2'], option : 'n', count : '2' });
   });
 });
 

@@ -7,59 +7,12 @@ const {
   errorMessageForLinesAndBytes,
 } = require('./utilLib.js');
 
-const sliceFromTop = function (file, option, count = 10) {
+const { parseInput } = require('./parseInput.js');
+const { inputValidation } = require('./inputValidation.js');
+
+const take = function (file, option, count = 10) {
   let delimiter = selectDelimiter(option);
   return file.split(delimiter).slice(0, count).join(delimiter);
-};
-
-const filterOptionAndCount = function (inputArgs) {
-  let options = inputArgs.slice(0, 2);
-  return options.filter(function (element, index) {
-    let result = options[0].includes('-');
-    if (result && index == 1 && (options[0].length > 2 || !isNaN(+options[0])))
-      result = false;
-    return result;
-  });
-};
-
-const extractFiles = function (inputArgs) {
-  return inputArgs.slice(filterOptionAndCount(inputArgs).length);
-};
-
-const extractOptionAndCount = function (inputArgs) {
-  let optionAndCount = filterOptionAndCount(inputArgs);
-
-  if (optionAndCount[0] != undefined && optionAndCount[0][1] != 'n' && optionAndCount[0][1] != 'c' && !isNaN(+optionAndCount[0][1])) {
-    optionAndCount[1] = optionAndCount[0].slice(1);
-    optionAndCount[0] = '-n';
-  }
-
-  if (optionAndCount[0] == undefined) {
-    optionAndCount[0] = '-n';
-    optionAndCount[1] = 10;
-  }
-
-  optionAndCount[0] = optionAndCount[0].slice(1);
-  let length = optionAndCount[0].length;
-
-  if (length > 1) {
-    optionAndCount[1] = optionAndCount[0].slice(1);
-    optionAndCount[0] = optionAndCount[0][0];
-  }
-
-  return optionAndCount;
-};
-
-const parseInput = function (inputArgs) {
-  let options = extractOptionAndCount(inputArgs);
-  let option = options[0];
-  let count = options[1];
-  let files = extractFiles(inputArgs);
-  return {
-    files,
-    option,
-    count
-  };
 };
 
 const extractSingleFileData = function (details, commandFunction, command) {
@@ -95,8 +48,8 @@ const extractMultipleFileData = function (details, commandFunction, command) {
 };
 
 const hasSingleFile = {
-  true : extractSingleFileData,
-  false : extractMultipleFileData
+  true: extractSingleFileData,
+  false: extractMultipleFileData
 };
 
 const head = function (parsedInput) {
@@ -105,10 +58,10 @@ const head = function (parsedInput) {
   } = parsedInput;
   let condition = (files.length == 1);
   return hasSingleFile[condition](parsedInput,
-    sliceFromTop, 'head');
+    take, 'head');
 };
 
-const sliceFromBottom = function (file, option, count = 10) {
+const last = function (file, option, count = 10) {
   let delimiter = selectDelimiter(option);
   return file.split(delimiter).reverse().slice(0, count).reverse().join(delimiter);
 };
@@ -118,10 +71,10 @@ const tail = function (parsedInput) {
     files
   } = parsedInput;
   let condition = (files.length == 1);
-  return hasSingleFile[condition](parsedInput, sliceFromBottom, 'tail');
+  return hasSingleFile[condition](parsedInput, last, 'tail');
 };
 
-  const organizeCommandOutput = function (inputArgs, fs, command) {
+const organizeCommandOutput = function (inputArgs, fs, command) {
   let commands = {
     head: head,
     tail: tail
@@ -151,55 +104,9 @@ const tail = function (parsedInput) {
   return commands[command](parsedInput).join('\n');
 };
 
-const validateOption = function (option, command) {
-  let error_message;
-  let isValid = (option == 'n' || option == 'c');
-  if (!isValid)
-    error_message = errorMessageForOption(option, command);
-  return {
-    isValid,
-    error_message
-  };
-};
-
-const validateCount = function (count, option, command) {
-  let error_message;
-  let isValid = {
-    head: (count >= 1),
-    tail: (!isNaN(+count))
-  };
-  if (!isValid[command])
-    error_message = errorMessageForLinesAndBytes(count, option, command);
-  return {
-    isValid,
-    error_message
-  };
-};
-
-const inputValidation = function (input, command) {
-  let {
-    count,
-    option
-  } = parseInput(input);
-  let isValidOptionResult = validateOption(option, command);
-  if (isValidOptionResult['isValid'] == false)
-    return isValidOptionResult['error_message'];
-  let validateCountResult = validateCount(count, option, command);
-  if (validateCountResult['isValid'][command] == false)
-    return validateCountResult['error_message'];
-  return true;
-};
-
 module.exports = {
-
-  sliceFromTop,
-  extractOptionAndCount,
-  extractFiles,
-  parseInput,
+  take,
   head,
   organizeCommandOutput,
-  filterOptionAndCount,
-  validateOption,
-  validateCount,
-  sliceFromBottom,
+  last,
 };

@@ -1,6 +1,10 @@
-const { equal, deepEqual } = require('assert');
+const {
+  equal,
+  deepEqual
+} = require('assert');
 
-const { selectDelimiter,
+const {
+  selectDelimiter,
   createFileHeader,
   readFile,
   errorMessageForMissingFile,
@@ -9,83 +13,85 @@ const { selectDelimiter,
 } = require('../src/utilLib.js');
 
 
-const readFileSync = function(file) {
+const readFileSync = function (file) {
   return (file + 'output');
 }
 
-describe('selectDelimiter',function(){
-  it('should return empty string for c(byte) option ',function(){
-    equal(selectDelimiter('c'),'');
+describe('selectDelimiter', function () {
+  it('should return empty string for c(byte) option ', function () {
+    equal(selectDelimiter('c'), '');
   });
 
-  it('should return "\n" string for n(lines) option ',function(){
-    equal(selectDelimiter('n'),'\n');
+  it('should return "\n" string for n(lines) option ', function () {
+    equal(selectDelimiter('n'), '\n');
   });
 });
 
-describe('createFileHeader',function(){
-  it('should return the output like, ==> file.txt <== ',function(){
-    equal(createFileHeader('file.txt'),'==> file.txt <==');
+describe('createFileHeader', function () {
+  it('should return the output like, ==> file.txt <== ', function () {
+    let expectedOutput = "==> file.txt <==";
+    equal(createFileHeader('file.txt'), expectedOutput);
   });
-  it('should return the output like, ==> file1.txt <== ',function(){
-    equal(createFileHeader('file1.txt'),'==> file1.txt <==');
+  it('should return the output like, ==> file1.txt <== ', function () {
+    let expectedOutput = '==> file1.txt <==';
+    equal(createFileHeader('file1.txt'), expectedOutput);
   });
 });
 
-describe('readFile',function(){
-  it('should return the expectedOutput',function(){
+describe('readFile', function () {
+  it('should return the expectedOutput', function () {
     let expectedOutput = 'fileoutput';
-    equal(readFile(readFileSync,'file'),'fileoutput');
+    equal(readFile(readFileSync, 'file'), expectedOutput);
   });
-  it('should return the expectedOutput',function(){
+  it('should return the expectedOutput', function () {
     let expectedOutput = 'file1output';
-    equal(readFile(readFileSync,'file1'),'file1output');
+    equal(readFile(readFileSync, 'file1'), expectedOutput);
   });
 });
 
-describe('errorMessageForMissingFile for head command',function(){
-  it('should return error message when the given file is not found',function(){
+describe('errorMessageForMissingFile for head command', function () {
+  it('should return error message when the given file is not found', function () {
     let context = 'head';
     let fileName = 'file.txt';
-    equal(errorMessageForMissingFile('file.txt',context),('head: '+'file.txt'+': No such file or directory'));
+    equal(errorMessageForMissingFile(fileName, context), (`head: ${fileName}: No such file or directory`));
   });
 });
 
-describe('errorMessageForMissingFile for tail command',function(){
-  it('should return error message when the given file is not found',function(){
+describe('errorMessageForMissingFile for tail command', function () {
+  it('should return error message when the given file is not found', function () {
     let context = 'tail';
     let fileName = 'file1.txt';
-    equal(errorMessageForMissingFile('file1.txt',context),('tail: '+'file1.txt'+': No such file or directory'));
+    equal(errorMessageForMissingFile(fileName, context), (`tail: ${fileName}: No such file or directory`));
   });
 });
 
-describe('errorMessageForOption',function(){
-  it('should return an error message with an given option for head command',function(){
-    let expectedOutput =  'head: illegal option -- ' + 'a' +
-      '\n' + 'usage: head [-n lines | -c bytes] [file ...]';
-    equal(errorMessageForOption('a','head'),expectedOutput);
+describe('errorMessageForOption', function () {
+  it('should return an error message with an given option for head command', function () {
+    let expectedOutput = `head: illegal option -- a\nusage: head [-n lines | -c bytes] [file ...]`;
+    equal(errorMessageForOption('a', 'head'), expectedOutput);
   });
 
-  it('should return an error message with an given option for tail command',function(){
-    let expectedOutput =  'tail: illegal option -- ' + 'a' + '\n' +
-     'usage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]';
-    equal(errorMessageForOption('a','tail'),expectedOutput);
+  it('should return an error message with an given option for tail command', function () {
+    let expectedOutput = `tail: illegal option -- a\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]`;
+    equal(errorMessageForOption('a', 'tail'), expectedOutput);
   });
 });
 
-describe('errorMessageForLinesAndBytes',function(){
-  it('should return an error message for line count less than 1',function(){
-    equal(errorMessageForLinesAndBytes('-2','n','head'),'head: illegal line count -- -2');
+describe('errorMessageForLinesAndBytes', function () {
+  it('should return an error message for line count less than 1', function () {
+    let expectedOutput = 'head: illegal line count -- -2';
+    equal(errorMessageForLinesAndBytes('-2', 'n', 'head'), expectedOutput);
   });
-  it('should return an error message for invalid line count 3s',function(){
-    equal(errorMessageForLinesAndBytes('3s','n','tail'),'tail: illegal offset -- 3s');
+  it('should return an error message for invalid line count 3s', function () {
+   let expectedOutput = 'tail: illegal offset -- 3s';
+     equal(errorMessageForLinesAndBytes('3s', 'n', 'tail'), expectedOutput);
   });
-  it('should return an error message for byte count less than 1',function(){
-    equal(errorMessageForLinesAndBytes('-2','c','head'),'head: illegal byte count -- -2');
+  it('should return an error message for byte count less than 1', function () {
+   let expectedOutput = 'head: illegal byte count -- -2';
+    equal(errorMessageForLinesAndBytes('-2', 'c', 'head'), expectedOutput);
   });
-  it('should return an error message for invalid byte count',function(){
-    equal(errorMessageForLinesAndBytes('a','c','tail'),'tail: illegal offset -- a');
+  it('should return an error message for invalid byte count', function () {
+    let expectedOutput = 'tail: illegal offset -- a';
+    equal(errorMessageForLinesAndBytes('a', 'c', 'tail'), expectedOutput);
   });
 });
-
-

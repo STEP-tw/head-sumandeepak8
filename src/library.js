@@ -62,7 +62,7 @@ const parseInput = function (inputArgs) {
   };
 };
 
-const extractSingleFileData = function (details, funcRef, context) {
+const extractSingleFileData = function (details, commandFunction, command) {
   let {
     files,
     existsSync,
@@ -71,11 +71,11 @@ const extractSingleFileData = function (details, funcRef, context) {
     readContent
   } = details;
   if (!existsSync(files[0]))
-    return [errorMessageForMissingFile(files[0], context)];
-  return [funcRef(readContent(files[0]), option, count)];
+    return [errorMessageForMissingFile(files[0], command)];
+  return [commandFunction(readContent(files[0]), option, count)];
 };
 
-const extractMultipleFileData = function (details, funcRef, context) {
+const extractMultipleFileData = function (details, commandFunction, command) {
   let {
     files,
     existsSync,
@@ -86,8 +86,8 @@ const extractMultipleFileData = function (details, funcRef, context) {
   let delimiter = selectDelimiter(option);
 
   return files.map(function (file, index) {
-    if (!existsSync(file)) return errorMessageForMissingFile(file, context);
-    let fileContent = createFileHeader(file) + '\n' + funcRef(readContent(file), option, count);
+    if (!existsSync(file)) return errorMessageForMissingFile(file, command);
+    let fileContent = createFileHeader(file) + '\n' + commandFunction(readContent(file), option, count);
     if (index != files.length - 1) return fileContent + delimiter;
     return fileContent;
   });
@@ -121,8 +121,8 @@ const tail = function (parsedInput) {
   return hasSingleFile[condition](parsedInput, sliceFromBottom, 'tail');
 };
 
-  const organizeCommandOutput = function (inputArgs, fs, context) {
-  let parts = {
+  const organizeCommandOutput = function (inputArgs, fs, command) {
+  let commands = {
     head: head,
     tail: tail
   };
@@ -131,15 +131,15 @@ const tail = function (parsedInput) {
     option,
     count
   } = parseInput(inputArgs);
-  if (context == 'tail') count = Math.abs(count);
+  if (command == 'tail') count = Math.abs(count);
   let {
     readFileSync,
     existsSync
   } = fs;
   let readContent = readFile.bind(null, readFileSync);
 
-  if (inputValidation(inputArgs, context) != true)
-    return inputValidation(inputArgs, context);
+  if (inputValidation(inputArgs, command) != true)
+    return inputValidation(inputArgs, command);
 
   let parsedInput = {
     files,
@@ -148,44 +148,44 @@ const tail = function (parsedInput) {
     option,
     count
   };
-  return parts[context](parsedInput).join('\n');
+  return commands[command](parsedInput).join('\n');
 };
 
-const validateOption = function (option, context) {
+const validateOption = function (option, command) {
   let error_message;
   let isValid = (option == 'n' || option == 'c');
   if (!isValid)
-    error_message = errorMessageForOption(option, context);
+    error_message = errorMessageForOption(option, command);
   return {
     isValid,
     error_message
   };
 };
 
-const validateCount = function (count, option, context) {
+const validateCount = function (count, option, command) {
   let error_message;
   let isValid = {
     head: (count >= 1),
     tail: (!isNaN(+count))
   };
-  if (!isValid[context])
-    error_message = errorMessageForLinesAndBytes(count, option, context);
+  if (!isValid[command])
+    error_message = errorMessageForLinesAndBytes(count, option, command);
   return {
     isValid,
     error_message
   };
 };
 
-const inputValidation = function (input, context) {
+const inputValidation = function (input, command) {
   let {
     count,
     option
   } = parseInput(input);
-  let isValidOptionResult = validateOption(option, context);
+  let isValidOptionResult = validateOption(option, command);
   if (isValidOptionResult['isValid'] == false)
     return isValidOptionResult['error_message'];
-  let validateCountResult = validateCount(count, option, context);
-  if (validateCountResult['isValid'][context] == false)
+  let validateCountResult = validateCount(count, option, command);
+  if (validateCountResult['isValid'][command] == false)
     return validateCountResult['error_message'];
   return true;
 };

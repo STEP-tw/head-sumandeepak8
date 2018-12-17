@@ -3,8 +3,6 @@ const {
   selectDelimiter,
   readFile,
   errorMessageForMissingFile,
-  errorMessageForOption,
-  errorMessageForLinesAndBytes,
 } = require('./utilLib.js');
 
 const { parseInput } = require('./parseInput.js');
@@ -16,26 +14,14 @@ const take = function (file, option, count = 10) {
 };
 
 const extractSingleFileData = function (details, commandFunction, command) {
-  let {
-    files,
-    existsSync,
-    option,
-    count,
-    readContent
-  } = details;
+  let { files, existsSync, option, count, readContent } = details;
   if (!existsSync(files[0]))
     return [errorMessageForMissingFile(files[0], command)];
   return [commandFunction(readContent(files[0]), option, count)];
 };
 
 const extractMultipleFileData = function (details, commandFunction, command) {
-  let {
-    files,
-    existsSync,
-    option,
-    count,
-    readContent
-  } = details;
+  let { files, existsSync, option, count, readContent } = details;
   let delimiter = selectDelimiter(option);
 
   return files.map(function (file, index) {
@@ -47,18 +33,10 @@ const extractMultipleFileData = function (details, commandFunction, command) {
 
 };
 
-const hasSingleFile = {
-  true: extractSingleFileData,
-  false: extractMultipleFileData
-};
-
 const head = function (parsedInput) {
-  let {
-    files
-  } = parsedInput;
+  let { files } = parsedInput;
   let condition = (files.length == 1);
-  return hasSingleFile[condition](parsedInput,
-    take, 'head');
+  return hasSingleFile[condition](parsedInput, take, 'head');
 };
 
 const last = function (file, option, count = 10) {
@@ -67,40 +45,36 @@ const last = function (file, option, count = 10) {
 };
 
 const tail = function (parsedInput) {
-  let {
-    files
-  } = parsedInput;
+  let { files } = parsedInput;
   let condition = (files.length == 1);
   return hasSingleFile[condition](parsedInput, last, 'tail');
 };
 
+const parseCount = function(count,command){
+  parsedCount = { 'head' : count, 'tail' : Math.abs(count) };
+  return parsedCount[command];
+};
+
+const hasSingleFile = {
+  true: extractSingleFileData,
+  false: extractMultipleFileData
+};
+
+const commands = { 
+  'head' : head,
+  'tail' : tail 
+};
+
 const organizeCommandOutput = function (inputArgs, fs, command) {
-  let commands = {
-    head: head,
-    tail: tail
-  };
-  let {
-    files,
-    option,
-    count
-  } = parseInput(inputArgs);
-  if (command == 'tail') count = Math.abs(count);
-  let {
-    readFileSync,
-    existsSync
-  } = fs;
+  let { files, option, count } = parseInput(inputArgs);
+  count = parseCount(count, command);  
+  let { readFileSync, existsSync } = fs;
   let readContent = readFile.bind(null, readFileSync);
 
   if (inputValidation(inputArgs, command) != true)
     return inputValidation(inputArgs, command);
 
-  let parsedInput = {
-    files,
-    readContent,
-    existsSync,
-    option,
-    count
-  };
+  let parsedInput = { files, readContent, existsSync, option, count };
   return commands[command](parsedInput).join('\n');
 };
 

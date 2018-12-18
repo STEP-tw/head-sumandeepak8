@@ -23,13 +23,20 @@ const take = function (file, option, count = 10) {
   return file.split(delimiter).slice(0, count).join(delimiter);
 };
 
+const last = function (file, option, count = 10) {
+  let delimiter = selectDelimiter(option);
+  return file.split(delimiter).reverse().slice(0, count
+    ).reverse().join(delimiter);
+};
+
 const extractFileData = function (details, commandFunction, command) {
   let { files, existsSync, option, count, readContent } = details;
   let delimiter = selectDelimiter(option);
 
   return files.map(function (file, index) {
     if (!existsSync(file)) return errorMessageForMissingFile(file, command);
-    let fileContent = createFileHeader(file, files.length) + commandFunction(readContent(file), option, count);
+    let fileContent = createFileHeader(file, files.length) +
+     commandFunction(readContent(file), option, count);
     if (index != files.length - 1) return fileContent + delimiter;
     return fileContent;
   });
@@ -38,11 +45,6 @@ const extractFileData = function (details, commandFunction, command) {
 
 const head = function (parsedInput) {
   return extractFileData(parsedInput, take, 'head');
-};
-
-const last = function (file, option, count = 10) {
-  let delimiter = selectDelimiter(option);
-  return file.split(delimiter).reverse().slice(0, count).reverse().join(delimiter);
 };
 
 const tail = function (parsedInput) {

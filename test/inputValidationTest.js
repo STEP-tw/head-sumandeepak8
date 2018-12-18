@@ -6,6 +6,7 @@ const {
 const {
     validateOption,
     validateCount,
+    isValidCount,
     errorMessageForMissingFile,
     errorMessageForLinesAndBytes,
     errorMessageForOption,
@@ -114,20 +115,14 @@ describe('validateOption for tail command', function () {
 describe('validateCount for command head', function () {
     it('should show an error message on screen as expected output', function () {
         let expectedOutput = {
-            isValid: {
-                head: false,
-                tail: true
-            },
+            isValid: false,
             error_message: 'head: illegal line count -- ' + -2
         };
         deepEqual(validateCount(-2, 'n', 'head'), expectedOutput);
     });
     it('should return an error message for -5 count as expectedOutput', function () {
         let expectedOutput = {
-            isValid: {
-                head: false,
-                tail: true
-            },
+            isValid: false,
             error_message: 'head: illegal byte count -- ' + -5
         };
         deepEqual(validateCount(-5, 'c', 'head'), expectedOutput);
@@ -137,22 +132,38 @@ describe('validateCount for command head', function () {
 describe('validateCount for command tail', function () {
     it('should return expectedOutput if option is -c', function () {
         let expectedOutput = {
-            isValid: {
-                head: false,
-                tail: false
-            },
+            isValid: false,
             error_message: 'tail: illegal offset -- a'
         };
         deepEqual(validateCount('a', '-n', 'tail'), expectedOutput);
     });
     it('should return the given expectedOutput as given below for -2a count', function () {
         let expectedOutput = {
-            isValid: {
-                head: false,
-                tail: false
-            },
+            isValid: false,
             error_message: 'tail: illegal offset -- -2a'
         };
         deepEqual(validateCount('-2a', '-c', 'tail'), expectedOutput);
     });
+});
+
+describe('isValidCount', function () {
+    it('should return true, when command is head and count is 2', function () {
+        equal(isValidCount(2, 'head'), true);
+    });
+    it('should return false when count is 0 and command is head', function () {
+        equal(isValidCount(0, 'head'), false);
+    });
+    it('should return true when count is 5 and command is tail', function () {
+        equal(isValidCount(5, 'tail'), true);
+    });
+    it('should return true when count is negative value like -1 and command is tail', function () {
+        equal(isValidCount(-1, 'tail'), true);
+    });
+    it('should return false for any non-numeric count value and command is head', function () {
+        equal(isValidCount('s', 'head'), false);
+    });
+    it('should return false for any non numeric count when command is tail', function () {
+        equal(isValidCount('p', 'tail'), false);
+    })
+
 });

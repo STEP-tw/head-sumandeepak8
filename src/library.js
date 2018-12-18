@@ -1,16 +1,20 @@
 const { errorMessageForMissingFile } = require('./inputValidation.js');
 
 const { parseInput } = require('./parseInput.js');
+
 const { inputValidation } = require('./inputValidation.js');
 
 const createFileHeader = function (fileName, filesLength) {
- if(filesLength > 1)
-  return `==> ${fileName} <==\n`;
+  if (filesLength > 1)
+    return `==> ${fileName} <==\n`;
   return '';
 };
 
 const selectDelimiter = function (option = 'n') {
-  let delimiter = { n: '\n', c: '' };
+  let delimiter = {
+    n : '\n',
+    c : ''
+  };
   return delimiter[option];
 };
 
@@ -25,8 +29,7 @@ const take = function (file, option, count = 10) {
 
 const last = function (file, option, count = 10) {
   let delimiter = selectDelimiter(option);
-  return file.split(delimiter).reverse().slice(0, count
-    ).reverse().join(delimiter);
+  return file.split(delimiter).reverse().slice(0, count).reverse().join(delimiter);
 };
 
 const extractFileData = function (details, commandFunction, command) {
@@ -36,7 +39,7 @@ const extractFileData = function (details, commandFunction, command) {
   return files.map(function (file, index) {
     if (!existsSync(file)) return errorMessageForMissingFile(file, command);
     let fileContent = createFileHeader(file, files.length) +
-     commandFunction(readContent(file), option, count);
+      commandFunction(readContent(file), option, count);
     if (index != files.length - 1) return fileContent + delimiter;
     return fileContent;
   });
@@ -51,26 +54,31 @@ const tail = function (parsedInput) {
   return extractFileData(parsedInput, last, 'tail');
 };
 
-const parseCount = function(count,command){
-  parsedCount = { 'head' : count, 'tail' : Math.abs(count) };
+const parseCount = function (count, command) {
+  parsedCount = {
+    'head': count,
+    'tail': Math.abs(count)
+  };
   return parsedCount[command];
 };
 
-const commands = { 
-  'head' : head,
-  'tail' : tail 
+const commands = {
+  'head': head,
+  'tail': tail
 };
 
 const organizeCommandOutput = function (inputArgs, fs, command) {
   let { files, option, count } = parseInput(inputArgs);
-  count = parseCount(count, command);  
+  count = parseCount(count, command);
   let { readFileSync, existsSync } = fs;
   let readContent = readFile.bind(null, readFileSync);
-
+  let parsedInput = { files, readContent, existsSync, option, count };
   if (inputValidation(inputArgs, command) != true)
     return inputValidation(inputArgs, command);
 
-  let parsedInput = { files, readContent, existsSync, option, count };
+  if(count == 0)
+    return '';
+    
   return commands[command](parsedInput).join('\n');
 };
 

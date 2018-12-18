@@ -116,7 +116,7 @@ describe('head', function () {
         readContent
       };
       let expectedOutput = ['==> file.txt <==\nfile.txt\n', '==> file1.txt <==\nfile1.txt\n', '==> file3.txt <==\nfile3.txt'];
-      deepStrictEqual(head(inputArgs),expectedOutput);
+      deepStrictEqual(head(inputArgs), expectedOutput);
     });
   });
 });
@@ -144,5 +144,51 @@ describe('last', function () {
     let fileContent = 'hello\nworld\nwelcome';
     let expectedOutput = 'lcome';
     equal(last(fileContent, 'c', 5), expectedOutput);
+  });
+});
+
+describe('tail', function () {
+  it('should return last 1 line of single file when option is n and count is 1', function(){
+    let input = {
+      files: ['file.txt'],
+      option: 'n',
+      count: 1,
+      existsSync,
+      readContent
+    }; 
+    let expectedOutput = [ 'file.txt' ];
+    deepEqual(tail(input),expectedOutput);
+  })
+  it('should return last 1 line of all files when option is n and count is 1', function () {
+    let input = {
+      files: ['file.txt', 'file1.txt', 'file2.txt'],
+      option: 'n',
+      count: 1,
+      existsSync,
+      readContent
+    };
+    let expectedOutput = ['==> file.txt <==\nfile.txt\n', '==> file1.txt <==\nfile1.txt\n', '==> file2.txt <==\nfile2.txt'];
+    deepEqual(tail(input), expectedOutput);
+  });
+  it('should return last 2 characters of single file when option is c and count is 2', function(){
+    let input = {
+    files: ['file'],
+    option: 'c',
+    count: 2,
+    existsSync,
+    readContent
+  };
+  deepEqual(tail(input), ['le']);
+  })
+  it('should return last 4 characters of multiple file when option is c and count is 4',function() {
+   let input =  {
+    files: ['file', 'file1', 'file2'],
+    option: 'n',
+    count: 1,
+    existsSync,
+    readContent
+  };
+  let expectedOutput = ['==> file <==\nfile\n', '==> file1 <==\nfile1\n', '==> file2 <==\nfile2']
+  deepEqual(tail(input),expectedOutput);  
   });
 });

@@ -9,43 +9,49 @@ const {
 
 describe('validateOption for head command', function () {
     it('should return object whose isValid contain true value and error_message as undefined for n', function () {
-        deepEqual(validateOption('n', 'head'), {
+        let expectedOutput = {
             isValid: true,
             error_message: undefined
-        });
+        };
+        deepEqual(validateOption('n', 'head'), expectedOutput);
     });
     it('should return object whose isValid contain true value and error_message as undefined for c', function () {
-        deepEqual(validateOption('c', 'head'), {
+        let expectedOutput = {
             isValid: true,
             error_message: undefined
-        });
+        };
+        deepEqual(validateOption('c', 'head'), expectedOutput);
     });
     it('should return object whose isValid key should contain false value and error_message should contain an error message for s option', function () {
-        deepEqual(validateOption('s', 'head'), {
+        let expectedOutput = {
             isValid: false,
             error_message: 'head: illegal option -- s\nusage: head [-n lines | -c bytes] [file ...]'
-        });
+        };
+        deepEqual(validateOption('s', 'head'), expectedOutput);
     });
     it('should return object whose isValid key should contain false value and error_message should contain an error message for u option', function () {
-        deepEqual(validateOption('u', 'head'), {
+        let expectedOutput = {
             isValid: false,
             error_message: 'head: illegal option -- u\nusage: head [-n lines | -c bytes] [file ...]'
-        });
+        };
+        deepEqual(validateOption('u', 'head'), expectedOutput);
     });
 });
 
 describe('validateOption for tail command', function () {
     it('should return true value for isValid key and undefined error_message', function () {
-        deepEqual(validateOption('n', 'tail'), {
+        let expectedOutput = {
             isValid: true,
             error_message: undefined
-        });
+        };
+        deepEqual(validateOption('n', 'tail'), expectedOutput);
     });
     it('should return true value for isValid and undefined message', function () {
-        deepEqual(validateOption('c', 'tail'), {
+        let expectedOutput =  {
             isValid: true,
             error_message: undefined
-        });
+        };
+        deepEqual(validateOption('c', 'tail'), expectedOutput);
     });
 });
 
@@ -61,7 +67,7 @@ describe('validateCount for command head', function () {
         deepEqual(validateCount(-2, 'n', 'head'), expectedOutput);
     });
     it('should return an error message for -5 count as expectedOutput', function () {
-        expectedOutput = {
+        let expectedOutput = {
             isValid: {
                 head: false,
                 tail: true
@@ -84,7 +90,7 @@ describe('validateCount for command tail', function () {
         deepEqual(validateCount('a', '-n', 'tail'), expectedOutput);
     });
     it('should return the given expectedOutput as given below for -2a count', function () {
-        expectedOutput = {
+        let expectedOutput = {
             isValid: {
                 head: false,
                 tail: false

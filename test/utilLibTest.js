@@ -1,7 +1,4 @@
-const {
-  equal,
-  deepEqual
-} = require('assert');
+const { equal } = require('assert');
 
 const {
   selectDelimiter,
@@ -39,11 +36,11 @@ describe('createFileHeader', function () {
 });
 
 describe('readFile', function () {
-  it('should return the expectedOutput', function () {
+  it('should return the expectedOutput as fileoutput', function () {
     let expectedOutput = 'fileoutput';
     equal(readFile(readFileSync, 'file'), expectedOutput);
   });
-  it('should return the expectedOutput', function () {
+  it('should return the expectedOutput as file1output', function () {
     let expectedOutput = 'file1output';
     equal(readFile(readFileSync, 'file1'), expectedOutput);
   });
@@ -53,7 +50,9 @@ describe('errorMessageForMissingFile for head command', function () {
   it('should return error message when the given file is not found', function () {
     let context = 'head';
     let fileName = 'file.txt';
-    equal(errorMessageForMissingFile(fileName, context), (`head: ${fileName}: No such file or directory`));
+    let expectedOutput = `head: ${fileName}: No such file or directory`;
+
+    equal(errorMessageForMissingFile(fileName, context), expectedOutput);
   });
 });
 
@@ -61,7 +60,9 @@ describe('errorMessageForMissingFile for tail command', function () {
   it('should return error message when the given file is not found', function () {
     let context = 'tail';
     let fileName = 'file1.txt';
-    equal(errorMessageForMissingFile(fileName, context), (`tail: ${fileName}: No such file or directory`));
+    let expectedOutput = `tail: ${fileName}: No such file or directory`;
+
+    equal(errorMessageForMissingFile(fileName, context), expectedOutput);
   });
 });
 
@@ -71,7 +72,7 @@ describe('errorMessageForOption', function () {
     equal(errorMessageForOption('a', 'head'), expectedOutput);
   });
 
-  it('should return an error message with an given option for tail command', function () {
+  it('should return an error message when option is a, for tail command', function () {
     let expectedOutput = `tail: illegal option -- a\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]`;
     equal(errorMessageForOption('a', 'tail'), expectedOutput);
   });

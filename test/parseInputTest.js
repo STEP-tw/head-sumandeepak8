@@ -19,34 +19,34 @@ describe('extractOptionAndCount', function () {
     });
 
     it('should return an array whose first element is n and second is 5', function () {
-        inputArgs = ['-n5', 'file.txt', 'hello world', '12'];
+        let inputArgs = ['-n5', 'file.txt', 'hello world', '12'];
         deepEqual(extractOptionAndCount(inputArgs), ['n', '5']);
     });
 
     it('should return first element as n and second -5', function () {
-        inputArgs = ['-n', '-5', 'file.txt', 'hello world', '12'];
+        let inputArgs = ['-n', '-5', 'file.txt', 'hello world', '12'];
         deepEqual(extractOptionAndCount(inputArgs), ['n', '-5']);
     });
 
     it('should return first element as c and second as 5', function () {
-        inputArgs = ['-c5', 'file.txt', 'hello world', '12'];
+        let inputArgs = ['-c5', 'file.txt', 'hello world', '12'];
         deepEqual(extractOptionAndCount(inputArgs), ['c', '5']);
     });
 
     it('should return first element as c and second as 5', function () {
-        inputArgs = ['-c', '5', 'file.txt', 'hello world', '12'];
+        let inputArgs = ['-c', '5', 'file.txt', 'hello world', '12'];
         deepEqual(extractOptionAndCount(inputArgs), ['c', '5']);
     });
 
     it('should return the default values of option and count when it is not given', function () {
-        inputArgs = ['file', 'file1'];
+        let inputArgs = ['file', 'file1'];
         deepStrictEqual(extractOptionAndCount(inputArgs), ['n', '10']);
     });
 
 });
 
 describe('extractFiles', function () {
-    it('should return inputArgs elements from index 2 if option is given', function () {
+    it('should return inputArgs elements from index 2 if only option is given as first element', function () {
         let inputArgs = ['-n', '-c', 'file1', 'file2', 'file3.txt'];
         let expectedOutput = ['file1', 'file2', 'file3.txt'];
         deepEqual(extractFiles(inputArgs), expectedOutput);
@@ -70,7 +70,7 @@ describe('extractFiles', function () {
         deepEqual(extractFiles(inputArgs), expectedOutput);
     });
 
-    it('should return the files if options are not given in inputArgs', function () {
+    it('should return all elements if options are not given in inputArgs', function () {
         let inputArgs = ['file.txt', 'file4.js'];
         let expectedOutput = ['file.txt', 'file4.js'];
         deepEqual(extractFiles(inputArgs), expectedOutput);
@@ -139,7 +139,7 @@ describe('parseInput', function () {
         };
         deepStrictEqual(parseInput(inputArgs), expectedOutput);
     });
-    it('should return and option n when only count is given', function () {
+    it('should return all elements from 1 index when only count is given', function () {
         let inputArgs = ['-2', 'file', 'file1', 'file2'];
         let expectedOutput = {
             files: ['file', 'file1', 'file2'],
@@ -151,16 +151,16 @@ describe('parseInput', function () {
 });
 
 describe('filterOptionAndCount', function () {
-    it('should return an empty array for the given options',()=>{
+    it('should return an empty array, when option is not given',()=>{
         let options = ['n5', 'file'];
         deepStrictEqual(filterOptionAndCount(options), []);
     });
-    it('should return an array of option elements',()=>{
+    it('should return an array of option elements when option is given',()=>{
         let options = ['-c5', 'file', 23];
         deepStrictEqual(filterOptionAndCount(options), ['-c5']);
     });
-    it('should return first two elements of options',()=>{
-        options = ['-c', '8', 'file', 23];
+    it('should return first two elements of options when first element is option and second is count',()=>{
+        let options = ['-c', '8', 'file', 23];
         deepStrictEqual(filterOptionAndCount(options), ['-c', '8']);
     });
 });

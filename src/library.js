@@ -23,14 +23,7 @@ const take = function (file, option, count = 10) {
   return file.split(delimiter).slice(0, count).join(delimiter);
 };
 
-const extractSingleFileData = function (details, commandFunction, command) {
-  let { files, existsSync, option, count, readContent } = details;
-  if (!existsSync(files[0]))
-    return [errorMessageForMissingFile(files[0], command)];
-  return [commandFunction(readContent(files[0]), option, count)];
-};
-
-const extractMultipleFileData = function (details, commandFunction, command) {
+const extractFileData = function (details, commandFunction, command) {
   let { files, existsSync, option, count, readContent } = details;
   let delimiter = selectDelimiter(option);
 
@@ -44,7 +37,7 @@ const extractMultipleFileData = function (details, commandFunction, command) {
 };
 
 const head = function (parsedInput) {
-  return extractMultipleFileData(parsedInput, take, 'head');
+  return extractFileData(parsedInput, take, 'head');
 };
 
 const last = function (file, option, count = 10) {
@@ -53,17 +46,12 @@ const last = function (file, option, count = 10) {
 };
 
 const tail = function (parsedInput) {
-  return extractMultipleFileData(parsedInput, last, 'tail');
+  return extractFileData(parsedInput, last, 'tail');
 };
 
 const parseCount = function(count,command){
   parsedCount = { 'head' : count, 'tail' : Math.abs(count) };
   return parsedCount[command];
-};
-
-const hasSingleFile = {
-  true: extractSingleFileData,
-  false: extractMultipleFileData
 };
 
 const commands = { 

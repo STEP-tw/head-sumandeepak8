@@ -37,14 +37,17 @@ describe('selectDelimiter', function () {
 });
 
 describe('createFileHeader', function () {
-  it('should return the output like, ==> file.txt <== ', function () {
-    let expectedOutput = "==> file.txt <==";
-    equal(createFileHeader('file.txt'), expectedOutput);
+  it('should return the output like where filesLength is 2, ==> file.txt <== ', function () {
+    let expectedOutput = "==> file.txt <==\n";
+    equal(createFileHeader('file.txt',2), expectedOutput);
   });
-  it('should return the output like, ==> file1.txt <== ', function () {
-    let expectedOutput = '==> file1.txt <==';
-    equal(createFileHeader('file1.txt'), expectedOutput);
+  it('should return the output like where filesLength is greater the 2, ==> file1.txt <== ', function () {
+    let expectedOutput = '==> file1.txt <==\n';
+    equal(createFileHeader('file1.txt',2), expectedOutput);
   });
+  it('should return an empty string if filesLength is less then 2', function(){
+    deepEqual(createFileHeader('file',1),'');
+  })
 });
 
 describe('readFile', function () {
@@ -148,16 +151,16 @@ describe('last', function () {
 });
 
 describe('tail', function () {
-  it('should return last 1 line of single file when option is n and count is 1', function(){
+  it('should return last 1 line of single file when option is n and count is 1', function () {
     let input = {
       files: ['file.txt'],
       option: 'n',
       count: 1,
       existsSync,
       readContent
-    }; 
-    let expectedOutput = [ 'file.txt' ];
-    deepEqual(tail(input),expectedOutput);
+    };
+    let expectedOutput = ['file.txt'];
+    deepEqual(tail(input), expectedOutput);
   })
   it('should return last 1 line of all files when option is n and count is 1', function () {
     let input = {
@@ -170,25 +173,25 @@ describe('tail', function () {
     let expectedOutput = ['==> file.txt <==\nfile.txt\n', '==> file1.txt <==\nfile1.txt\n', '==> file2.txt <==\nfile2.txt'];
     deepEqual(tail(input), expectedOutput);
   });
-  it('should return last 2 characters of single file when option is c and count is 2', function(){
+  it('should return last 2 characters of single file when option is c and count is 2', function () {
     let input = {
-    files: ['file'],
-    option: 'c',
-    count: 2,
-    existsSync,
-    readContent
-  };
-  deepEqual(tail(input), ['le']);
+      files: ['file'],
+      option: 'c',
+      count: 2,
+      existsSync,
+      readContent
+    };
+    deepEqual(tail(input), ['le']);
   })
-  it('should return last 4 characters of multiple file when option is c and count is 4',function() {
-   let input =  {
-    files: ['file', 'file1', 'file2'],
-    option: 'n',
-    count: 1,
-    existsSync,
-    readContent
-  };
-  let expectedOutput = ['==> file <==\nfile\n', '==> file1 <==\nfile1\n', '==> file2 <==\nfile2']
-  deepEqual(tail(input),expectedOutput);  
+  it('should return last 4 characters of multiple file when option is c and count is 4', function () {
+    let input = {
+      files: ['file', 'file1', 'file2'],
+      option: 'n',
+      count: 1,
+      existsSync,
+      readContent
+    };
+    let expectedOutput = ['==> file <==\nfile\n', '==> file1 <==\nfile1\n', '==> file2 <==\nfile2']
+    deepEqual(tail(input), expectedOutput);
   });
 });

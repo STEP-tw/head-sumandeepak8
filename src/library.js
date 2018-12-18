@@ -3,8 +3,10 @@ const { errorMessageForMissingFile } = require('./inputValidation.js');
 const { parseInput } = require('./parseInput.js');
 const { inputValidation } = require('./inputValidation.js');
 
-const createFileHeader = function (fileName) {
-  return '==> ' + fileName + ' <==';
+const createFileHeader = function (fileName, filesLength) {
+ if(filesLength > 1)
+  return `==> ${fileName} <==\n`;
+  return '';
 };
 
 const selectDelimiter = function (option = 'n') {
@@ -34,7 +36,7 @@ const extractMultipleFileData = function (details, commandFunction, command) {
 
   return files.map(function (file, index) {
     if (!existsSync(file)) return errorMessageForMissingFile(file, command);
-    let fileContent = createFileHeader(file) + '\n' + commandFunction(readContent(file), option, count);
+    let fileContent = createFileHeader(file, files.length) + commandFunction(readContent(file), option, count);
     if (index != files.length - 1) return fileContent + delimiter;
     return fileContent;
   });
@@ -42,9 +44,7 @@ const extractMultipleFileData = function (details, commandFunction, command) {
 };
 
 const head = function (parsedInput) {
-  let { files } = parsedInput;
-  let condition = (files.length == 1);
-  return hasSingleFile[condition](parsedInput, take, 'head');
+  return extractMultipleFileData(parsedInput, take, 'head');
 };
 
 const last = function (file, option, count = 10) {
@@ -53,9 +53,7 @@ const last = function (file, option, count = 10) {
 };
 
 const tail = function (parsedInput) {
-  let { files } = parsedInput;
-  let condition = (files.length == 1);
-  return hasSingleFile[condition](parsedInput, last, 'tail');
+  return extractMultipleFileData(parsedInput, last, 'tail');
 };
 
 const parseCount = function(count,command){

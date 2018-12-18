@@ -1,12 +1,20 @@
-const {
-  createFileHeader,
-  selectDelimiter,
-  readFile,
-  errorMessageForMissingFile,
-} = require('./utilLib.js');
+const { errorMessageForMissingFile } = require('./inputValidation.js');
 
 const { parseInput } = require('./parseInput.js');
 const { inputValidation } = require('./inputValidation.js');
+
+const createFileHeader = function (fileName) {
+  return '==> ' + fileName + ' <==';
+};
+
+const selectDelimiter = function (option = 'n') {
+  let delimiter = { n: '\n', c: '' };
+  return delimiter[option];
+};
+
+const readFile = function (readFileSync, file) {
+  return readFileSync(file, 'utf-8');
+};
 
 const take = function (file, option, count = 10) {
   let delimiter = selectDelimiter(option);
@@ -81,6 +89,10 @@ const organizeCommandOutput = function (inputArgs, fs, command) {
 module.exports = {
   take,
   head,
-  organizeCommandOutput,
+  tail,
   last,
+  readFile,
+  selectDelimiter,
+  createFileHeader,
+  organizeCommandOutput,
 };

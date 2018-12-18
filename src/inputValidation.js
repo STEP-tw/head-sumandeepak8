@@ -2,9 +2,32 @@ const {
     parseInput
 } = require('./parseInput.js');
 
-const { errorMessageForOption,
-    errorMessageForLinesAndBytes,
- } = require('./utilLib.js'); 
+const options = {
+    'n': 'line',
+    'c': 'byte'
+};
+
+const errorMessageForMissingFile = function (file, context) {
+    return context + ': ' + file + ': No such file or directory';
+};
+
+const errorMessageForOption = function (option, context) {
+    let messages = {
+        head: 'head: illegal option -- ' + option + '\n' +
+            'usage: head [-n lines | -c bytes] [file ...]',
+        tail: 'tail: illegal option -- ' + option + '\n' +
+            'usage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]'
+    };
+    return messages[context];
+};
+
+const errorMessageForLinesAndBytes = function (count, option, context) {
+    let messages = {
+        head: 'head: illegal ' + options[option] + ' count -- ' + count,
+        tail: 'tail: illegal offset -- ' + count
+    };
+    return messages[context];
+};
 
 const validateOption = function (option, command) {
     let error_message;
@@ -44,8 +67,13 @@ const inputValidation = function (input, command) {
         return validateCountResult['error_message'];
     return true;
 };
+
+
 module.exports = {
     inputValidation,
     validateCount,
-    validateOption
+    validateOption,
+    errorMessageForMissingFile,
+    errorMessageForOption,
+    errorMessageForLinesAndBytes,  
 };

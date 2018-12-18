@@ -8,15 +8,55 @@ const {
   take,
   head,
   last,
+  tail,
+  createFileHeader,
+  selectDelimiter,
+  readFile,
 } = require('../src/library.js');
+
+const existsSync = function (file) {
+  return true;
+};
+
+const readFileSync = function (file) {
+  return (file + 'output');
+};
 
 const readContent = function (file) {
   return file;
 };
 
-const existsSync = function (file) {
-  return true;
-};
+describe('selectDelimiter', function () {
+  it('should return empty string for c(byte) option ', function () {
+    equal(selectDelimiter('c'), '');
+  });
+
+  it('should return "\n" string for n(lines) option ', function () {
+    equal(selectDelimiter('n'), '\n');
+  });
+});
+
+describe('createFileHeader', function () {
+  it('should return the output like, ==> file.txt <== ', function () {
+    let expectedOutput = "==> file.txt <==";
+    equal(createFileHeader('file.txt'), expectedOutput);
+  });
+  it('should return the output like, ==> file1.txt <== ', function () {
+    let expectedOutput = '==> file1.txt <==';
+    equal(createFileHeader('file1.txt'), expectedOutput);
+  });
+});
+
+describe('readFile', function () {
+  it('should return the expectedOutput as fileoutput', function () {
+    let expectedOutput = 'fileoutput';
+    equal(readFile(readFileSync, 'file'), expectedOutput);
+  });
+  it('should return the expectedOutput as file1output', function () {
+    let expectedOutput = 'file1output';
+    equal(readFile(readFileSync, 'file1'), expectedOutput);
+  });
+});
 
 describe('take', function () {
   let fileContent = "hello world\nyour welcome\ngood bye";

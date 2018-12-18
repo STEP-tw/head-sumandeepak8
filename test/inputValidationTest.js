@@ -11,6 +11,8 @@ const {
     errorMessageForLinesAndBytes,
     errorMessageForOption,
     inputValidation,
+    optionErrorMessage,
+    countErrorMessage,
 } = require('../src/inputValidation.js');
 
 
@@ -160,5 +162,31 @@ describe('inputValidation', function () {
         let input = ['-c', '5a'];
         let expectedOutput = 'tail: illegal offset -- 5a';
         equal(inputValidation(input, 'tail'), expectedOutput);
+    });
+});
+
+describe('optionErrorMessage',function(){
+    it('should return an undefined error for option n when command is head',function(){
+        equal(optionErrorMessage('true', 'n', 'head'), undefined);
+    });
+    it('should return undefined for option c when command is tail',function(){
+        equal(optionErrorMessage('true', 'c', 'tail'), undefined);
+    });
+    it('should return an error message for option n when value of first arguement is false',function(){
+        let expectedOutput = 'head: illegal option -- n\nusage: head [-n lines | -c bytes] [file ...]';
+        equal(optionErrorMessage('false', 'n', 'head'),expectedOutput);
+    });
+});
+
+describe('countErrorMessage',function(){
+    it('should return an undefined error for option n when first input arguement is true, command is head',function(){
+        equal(countErrorMessage('true', 2, 'n', 'head'), undefined);
+    });
+    it('should return an error message, first args is false and second is 0 where command is head',function(){
+        let expectedOutput = 'head: illegal line count -- 0';
+        equal(countErrorMessage('false', 0, 'n', 'head'),expectedOutput);
+    });
+    it('should return undefined error for option n or c when first args is true and second is 0 for tail command',function(){
+        equal(countErrorMessage('true', 0, 'c', 'tail'),undefined);
     });
 });

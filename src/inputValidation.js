@@ -2,32 +2,32 @@ const { parseInput } = require('./parseInput.js');
 
 const options = { 'n': 'line', 'c': 'byte' };
 
-const errorMessageForMissingFile = function (file, context) {
-    return `${context}: ${file}: No such file or directory`;
+const errorMessageForMissingFile = function (file, command) {
+    return `${command}: ${file}: No such file or directory`;
 };
 
-const errorMessageForOption = function (option, context) {
+const errorMessageForOption = function (option, command) {
     let messages = {
         head: `head: illegal option -- ${option}\nusage: head [-n lines | -c bytes] [file ...]`,
         tail: `tail: illegal option -- ${option}\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]`
     };
-    return messages[context];
+    return messages[command];
 };
 
-const errorMessageForLinesAndBytes = function (count, option, context) {
+const errorMessageForLinesAndBytes = function (count, option, command) {
     let messages = {
         head: `head: illegal ${options[option]} count -- ${count}`,
         tail: `tail: illegal offset -- ${count}`
     };
-    return messages[context];
+    return messages[command];
 };
 
-const validateOption = function (option, command) {
-    let error_message;
-    let isValid = (option == 'n' || option == 'c');
-    if (!isValid)
-        error_message = errorMessageForOption(option, command);
-    return error_message;
+const optionErrorMessage = function(isValid, option, command){
+  let messages = {
+      'true' : undefined,
+      'false' : errorMessageForOption(option, command)
+  }
+  return messages[isValid];
 };
 
 const isValidCount = function (count, command) {
@@ -36,14 +36,24 @@ const isValidCount = function (count, command) {
         tail: (isFinite(count))
     };
     return countObject[command];
-}
+};
+
+const countErrorMessage = function(isValid, count, option, command){
+   let messages = { 
+       'true' : undefined,
+       'false' : errorMessageForLinesAndBytes(count, option, command)
+   };
+   return messages[isValid];
+};
+
+const validateOption = function (option, command) {
+    let isValid = (option == 'n' || option == 'c');
+    return optionErrorMessage(isValid, option, command);
+;}
 
 const validateCount = function (count, option, command) {
-    let error_message;
     let isValid = isValidCount(count, command);
-    if (!isValid)
-        error_message = errorMessageForLinesAndBytes(count, option, command);
-    return error_message;
+    return countErrorMessage(isValid, count, option, command);
 };
 
 const inputValidation = function (input, command) {
@@ -66,4 +76,6 @@ module.exports = {
     errorMessageForOption,
     errorMessageForLinesAndBytes,
     inputValidation,
+    optionErrorMessage,
+    countErrorMessage,
 };

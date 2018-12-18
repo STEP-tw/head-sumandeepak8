@@ -1,7 +1,6 @@
 const { errorMessageForMissingFile } = require('./inputValidation.js');
 
 const { parseInput } = require('./parseInput.js');
-
 const { inputValidation } = require('./inputValidation.js');
 
 const createFileHeader = function (fileName, filesLength) {
@@ -11,10 +10,7 @@ const createFileHeader = function (fileName, filesLength) {
 };
 
 const selectDelimiter = function (option = 'n') {
-  let delimiter = {
-    n : '\n',
-    c : ''
-  };
+  let delimiter = { n : '\n', c : '' };
   return delimiter[option];
 };
 
@@ -62,10 +58,7 @@ const parseCount = function (count, command) {
   return parsedCount[command];
 };
 
-const commands = {
-  'head': head,
-  'tail': tail
-};
+const commands = { 'head': head, 'tail': tail };
 
 const organizeCommandOutput = function (inputArgs, fs, command) {
   let { files, option, count } = parseInput(inputArgs);
@@ -78,7 +71,7 @@ const organizeCommandOutput = function (inputArgs, fs, command) {
 
   if(count == 0)
     return '';
-    
+
   return commands[command](parsedInput).join('\n');
 };
 

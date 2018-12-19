@@ -3,6 +3,7 @@ const {
     extractFiles,
     filterOptionAndCount,
     parseInput,
+    parseCount,
     optionCountMethod,
 } = require('../src/parseInput.js');
 
@@ -175,4 +176,19 @@ describe('optionCountMethod', function () {
     it('should return first element as d and second as 8', () => {
         deepEqual(optionCountMethod(['-d', '8']), ['d', '8']);
     });
+});
+
+describe('parseCount',function(){
+  it('should return same count value for command head where count is 4',function(){
+    let count = 4;
+    let command = 'head';
+    let expectedOutput = 4;
+  deepEqual(parseCount(count, command),expectedOutput);
+});
+ it('should return absolute count even the given count is -3 for command tail',()=>{
+    let count = -3;
+    let command = 'tail';
+    let expectedOutput = 3;
+    deepEqual(parseCount(count, command), expectedOutput); 
+ })
 });

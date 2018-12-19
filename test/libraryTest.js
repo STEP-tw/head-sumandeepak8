@@ -12,18 +12,25 @@ const {
   createFileHeader,
   selectDelimiter,
   readFile,
+  organizeCommandOutput,
 } = require('../src/library.js');
 
-const existsSync = function (file) {
-  return true;
+const fileData = {
+  file : 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj\nk\nl',
+  file1 : '1\n2\n3\n4\n5\n',
+  file2 : 'hello\nworld\njavascript\npython'
 };
 
 const readFileSync = function (file) {
-  return (file + 'output');
+  return fileData[file];
+};
+
+const existsSync = function (file) {
+  return Object.keys(fileData).includes(file); 
 };
 
 const readContent = function (file) {
-  return file;
+  return readFileSync(file);
 };
 
 describe('selectDelimiter', function () {
@@ -39,24 +46,24 @@ describe('selectDelimiter', function () {
 describe('createFileHeader', function () {
   it('should return the output like where filesLength is 2, ==> file.txt <== ', function () {
     let expectedOutput = "==> file.txt <==\n";
-    equal(createFileHeader('file.txt',2), expectedOutput);
+    equal(createFileHeader('file.txt', 2), expectedOutput);
   });
   it('should return the output like where filesLength is greater the 2, ==> file1.txt <== ', function () {
     let expectedOutput = '==> file1.txt <==\n';
-    equal(createFileHeader('file1.txt',2), expectedOutput);
+    equal(createFileHeader('file1.txt', 2), expectedOutput);
   });
-  it('should return an empty string if filesLength is less then 2', function(){
-    deepEqual(createFileHeader('file',1),'');
+  it('should return an empty string if filesLength is less then 2', function () {
+    deepEqual(createFileHeader('file', 1), '');
   })
 });
 
 describe('readFile', function () {
   it('should return the expectedOutput as fileoutput', function () {
-    let expectedOutput = 'fileoutput';
+    let expectedOutput = 'a\nb\nc\nd\ne\nf\ng\nh\ni\nj\nk\nl';
     equal(readFile(readFileSync, 'file'), expectedOutput);
   });
   it('should return the expectedOutput as file1output', function () {
-    let expectedOutput = 'file1output';
+    let expectedOutput = '1\n2\n3\n4\n5\n';
     equal(readFile(readFileSync, 'file1'), expectedOutput);
   });
 });
@@ -90,37 +97,37 @@ describe('head', function () {
   describe('single inputArgs file', function () {
     it('should return 5 lines when the option is n and value of count is 5', function () {
       let inputArgs = {
-        files: ['hello\n\nworld\ngoodbye\nhii'],
+        files: ['file'],
         option: 'n',
         count: 5,
         existsSync,
         readContent
       };
-      let expectedOutput = ['hello\n\nworld\ngoodbye\nhii'];
+      let expectedOutput = ['a\nb\nc\nd\ne'];
       deepStrictEqual(head(inputArgs), expectedOutput);
     });
     it('should return 5 characters ,option is c(byte) and value of count is 5', function () {
       let inputArgs = {
-        files: ['hello\n\nworld\ngoodbye'],
+        files: ['file'],
         option: 'c',
         count: 5,
         existsSync,
         readContent
       };
-      deepStrictEqual(head(inputArgs), ['hello']);
+      deepStrictEqual(head(inputArgs), ['a\nb\nc']);
     });
   });
 
   describe('mutliple inputArgs file', function () {
     it('should return 1 line if files has', function () {
       let inputArgs = {
-        files: ['file.txt', 'file1.txt', 'file3.txt'],
-        option : 'n',
-        count : 1,
+        files: ['file', 'file1', 'file2'],
+        option: 'n',
+        count: 1,
         existsSync,
         readContent
       };
-      let expectedOutput = ['==> file.txt <==\nfile.txt\n', '==> file1.txt <==\nfile1.txt\n', '==> file3.txt <==\nfile3.txt'];
+      let expectedOutput = ['==> file <==\na\n', '==> file1 <==\n1\n', '==> file2 <==\nhello'];
       deepStrictEqual(head(inputArgs), expectedOutput);
     });
   });
@@ -155,45 +162,62 @@ describe('last', function () {
 describe('tail', function () {
   it('should return last 1 line of single file when option is n and count is 1', function () {
     let input = {
-      files: ['file.txt'],
+      files: ['file'],
       option: 'n',
-      count: 1,
+      count: 3,
       existsSync,
       readContent
     };
-    let expectedOutput = ['file.txt'];
+    let expectedOutput = ['j\nk\nl'];
     deepEqual(tail(input), expectedOutput);
   })
   it('should return last 1 line of all files when option is n and count is 1', function () {
     let input = {
-      files: ['file.txt', 'file1.txt', 'file2.txt'],
+      files: ['file', 'file1', 'file2'],
       option: 'n',
-      count: 1,
+      count: 2,
       existsSync,
       readContent
     };
-    let expectedOutput = ['==> file.txt <==\nfile.txt\n', '==> file1.txt <==\nfile1.txt\n', '==> file2.txt <==\nfile2.txt'];
+    let expectedOutput = ['==> file <==\nk\nl\n', '==> file1 <==\n5\n\n', '==> file2 <==\njavascript\npython'];
     deepEqual(tail(input), expectedOutput);
   });
   it('should return last 2 characters of single file when option is c and count is 2', function () {
     let input = {
       files: ['file'],
       option: 'c',
-      count: 2,
+      count: 5,
       existsSync,
       readContent
     };
-    deepEqual(tail(input), ['le']);
+    deepEqual(tail(input), ['j\nk\nl']);
   })
   it('should return last 4 characters of multiple file when option is c and count is 4', function () {
     let input = {
       files: ['file', 'file1', 'file2'],
       option: 'n',
-      count: 1,
+      count: 5,
       existsSync,
       readContent
     };
-    let expectedOutput = ['==> file <==\nfile\n', '==> file1 <==\nfile1\n', '==> file2 <==\nfile2']
+    let expectedOutput = ['==> file <==\nh\ni\nj\nk\nl\n', '==> file1 <==\n2\n3\n4\n5\n\n', '==> file2 <==\nhello\nworld\njavascript\npython']
     deepEqual(tail(input), expectedOutput);
+  });
+});
+
+describe('organizeCommandOutput', function () {
+  it('should return an error message for invalid option a', function () {
+  let inputArgs = ['-a', '12', 'file1', 'file2'];
+  let command = 'head';
+  let fs = { readFileSync, existsSync };
+  let expectedOutput = `head: illegal option -- a\nusage: head [-n lines | -c bytes] [file ...]`;
+  deepEqual(organizeCommandOutput(inputArgs, command, fs), expectedOutput);
+  });
+  it('should return file content for count 3 and option n',()=>{
+    let inputArgs = ['-n', '3', 'file1', 'file2'];
+    let command = 'head'; 
+    let fs = { readFileSync, existsSync };
+    let expectedOutput = `==> file1 <==\n1\n2\n3\n\n==> file2 <==\nhello\nworld\njavascript`;
+    deepEqual(organizeCommandOutput(inputArgs, command, fs), expectedOutput);
   });
 });

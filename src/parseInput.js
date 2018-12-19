@@ -37,7 +37,7 @@ const parseCount = function (count, command) {
       'head': count,
       'tail': Math.abs(count)
     };
-    return parsedCount[command];
+   return parsedCount[command];
 };
   
 const parseInput = function (inputArgs) {

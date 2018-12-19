@@ -141,6 +141,7 @@ describe('isValidCount', function () {
 });
 
 describe('inputValidation', function () {
+    describe('for count only',()=>{
     it("should return true for input ['-n','3','file'] where command is head", function () {
         let input = ['-n', '3'];
         equal(inputValidation(input, 'head'), true);
@@ -163,8 +164,20 @@ describe('inputValidation', function () {
         let expectedOutput = 'tail: illegal offset -- 5a';
         equal(inputValidation(input, 'tail'), expectedOutput);
     });
+   });
+   describe('for option only',function(){
+   it('should return an error message for invalid option for head command and given option is a',function(){
+       let input = ['-a', '5a'];
+       let expectedOutput = `head: illegal option -- a\nusage: head [-n lines | -c bytes] [file ...]`;
+        equal(inputValidation(input, 'head'),expectedOutput); 
+    });
+   });
+   it('should return error message when command is tail and option is b',()=>{
+       let input = ['-b', '12'];
+       let expectedOutput = `tail: illegal option -- b\nusage: tail [-F | -f | -r] [-q] [-b # | -c # | -n #] [file ...]`; 
+       equal(inputValidation(input,'tail'),expectedOutput);    
+    });
 });
-
 describe('optionErrorMessage',function(){
     it('should return an undefined error for option n when command is head',function(){
         equal(optionErrorMessage('true', 'n', 'head'), undefined);

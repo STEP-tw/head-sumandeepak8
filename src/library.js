@@ -49,7 +49,7 @@ const tail = function (parsedInput) {
   return extractFileData(parsedInput, last, 'tail');
 };
 
-const organizeCommandOutput = function (inputArgs, fs, command) {
+const organizeCommandOutput = function (inputArgs, command, fs) {
   let { files, option, count } = parseInput(inputArgs, command);
   const commands = { 'head': head, 'tail': tail };
   count = parseCount(count, command);

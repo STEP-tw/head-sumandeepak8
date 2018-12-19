@@ -1,6 +1,5 @@
 const { errorMessageForMissingFile } = require('./inputValidation.js');
-
-const { parseInput } = require('./parseInput.js');
+const { parseInput, parseCount } = require('./parseInput.js');
 const { inputValidation } = require('./inputValidation.js');
 
 const createFileHeader = function (fileName, filesLength) {
@@ -18,12 +17,12 @@ const readFile = function (readFileSync, file) {
   return readFileSync(file, 'utf-8');
 };
 
-const take = function (file, option, count = 10) {
+const take = function (file, option, count) {
   let delimiter = selectDelimiter(option);
   return file.split(delimiter).slice(0, count).join(delimiter);
 };
 
-const last = function (file, option, count = 10) {
+const last = function (file, option, count) {
   let delimiter = selectDelimiter(option);
   return file.split(delimiter).reverse().slice(0, count).reverse().join(delimiter);
 };
@@ -50,18 +49,9 @@ const tail = function (parsedInput) {
   return extractFileData(parsedInput, last, 'tail');
 };
 
-const parseCount = function (count, command) {
-  parsedCount = {
-    'head': count,
-    'tail': Math.abs(count)
-  };
-  return parsedCount[command];
-};
-
-const commands = { 'head': head, 'tail': tail };
-
 const organizeCommandOutput = function (inputArgs, fs, command) {
-  let { files, option, count } = parseInput(inputArgs);
+  let { files, option, count } = parseInput(inputArgs, command);
+  const commands = { 'head': head, 'tail': tail };
   count = parseCount(count, command);
   let { readFileSync, existsSync } = fs;
   let readContent = readFile.bind(null, readFileSync);

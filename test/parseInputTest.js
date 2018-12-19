@@ -165,7 +165,7 @@ describe('filterOptionAndCount', function () {
     });
 });
 
-describe('optioCountMethod', function () {
+describe('optionCountMethod', function () {
     it('should return an array of two element,first element should be n and second 3', function () {
         deepEqual(optionCountMethod(['-n3']), ['n', '3']);
     });

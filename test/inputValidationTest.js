@@ -69,52 +69,81 @@ describe('errorMessageForLinesAndBytes', function () {
 
 describe('validateOption for head command', function () {
     it('should return  undefined error_message for n', function () {
-        let expectedOutput = undefined;
+        let expectedOutput = {
+          isValid : true,  
+          message : undefined
+        };
         deepEqual(validateOption('n', 'head'), expectedOutput);
     });
     it('should return  undefined error_message for c', function () {
-        let expectedOutput = undefined;
+        let expectedOutput = {
+            isValid : true,  
+            message : undefined
+          };
         deepEqual(validateOption('c', 'head'), expectedOutput);
     });
     it('should return an error message for s option', function () {
-        let expectedOutput = 'head: illegal option -- s\nusage: head [-n lines | -c bytes] [file ...]';
+        let expectedOutput = {
+            isValid : false,
+            message : 'head: illegal option -- s\nusage: head [-n lines | -c bytes] [file ...]'
+        };
         deepEqual(validateOption('s', 'head'), expectedOutput);
     });
     it('should return error message for illegal u option', function () {
-        let expectedOutput = 'head: illegal option -- u\nusage: head [-n lines | -c bytes] [file ...]';
+        let expectedOutput = { isValid : false, 
+            message : 'head: illegal option -- u\nusage: head [-n lines | -c bytes] [file ...]'
+        };
         deepEqual(validateOption('u', 'head'), expectedOutput);
     });
 });
 
 describe('validateOption for tail command', function () {
     it('should return undefined error_message when option is n and command is tail', function () {
-        let expectedOutput = undefined;
+        let expectedOutput = { 
+            isValid : true,
+            message : undefined
+        };
         deepEqual(validateOption('n', 'tail'), expectedOutput);
     });
     it('should return undefined error message when option is c and command is tail', function () {
-        let expectedOutput = undefined;
+        let expectedOutput = {
+            isValid : true,
+            message : undefined
+        };
         deepEqual(validateOption('c', 'tail'), expectedOutput);
     });
 });
 
 describe('validateCount for command head', function () {
     it('should show an error message on screen as expected output', function () {
-        let expectedOutput = `head: illegal line count -- -2`;
+        let expectedOutput = {
+            isValid : false,
+            message : `head: illegal line count -- -2`
+        };
         deepEqual(validateCount(-2, 'n', 'head'), expectedOutput);
     });
     it('should return an error message for -5 count as expectedOutput', function () {
-        let expectedOutput = `head: illegal byte count -- -5`;
+        let expectedOutput ={ 
+            isValid : false,
+            message : `head: illegal byte count -- -5`
+        };
         deepEqual(validateCount(-5, 'c', 'head'), expectedOutput);
     });
 });
 
 describe('validateCount for command tail', function () {
     it('should return expectedOutput if option is -c', function () {
-        let expectedOutput = 'tail: illegal offset -- a';
+        let expectedOutput = { 
+            isValid : false,
+            message : 'tail: illegal offset -- a'
+        };
         deepEqual(validateCount('a', '-n', 'tail'), expectedOutput);
     });
     it('should return the given expectedOutput as given below for -2a count', function () {
-        let expectedOutput = 'tail: illegal offset -- -2a';
+        let expectedOutput = {
+             isValid : false, 
+             message : 'tail: illegal offset -- -2a'
+            };
         deepEqual(validateCount('-2a', '-c', 'tail'), expectedOutput);
     });
 });

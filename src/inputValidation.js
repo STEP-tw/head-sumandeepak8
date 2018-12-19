@@ -48,22 +48,24 @@ const countErrorMessage = function(isValid, count, option, command){
 
 const validateOption = function (option, command) {
     let isValid = (option == 'n' || option == 'c');
-    return optionErrorMessage(isValid, option, command);
-;}
+    let message = optionErrorMessage(isValid, option, command);
+    return { isValid, message };
+}
 
 const validateCount = function (count, option, command) {
     let isValid = isValidCount(count, command);
-    return countErrorMessage(isValid, count, option, command);
+    let message = countErrorMessage(isValid, count, option, command);
+    return { isValid, message };
 };
 
 const validateCountAndOption = function (input, command) {
     let { count, option } = parseInput(input);
     let isValidOptionResult = validateOption(option, command);
     let validateCountResult = validateCount(count, option, command);
-    if (isValidOptionResult != undefined)
-       return isValidOptionResult;
-    if (validateCountResult != undefined )
-       return validateCountResult;
+    if (!isValidOptionResult['isValid'])
+       return isValidOptionResult['message'];
+    if (!validateCountResult['isValid'])
+       return validateCountResult['message'];
     return true;
 };
 

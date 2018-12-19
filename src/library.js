@@ -8,13 +8,13 @@ const createFileHeader = function (fileName, filesLength) {
   return '';
 };
 
-const selectDelimiter = function (option = 'n') {
+const selectDelimiter = function (option) {
   let delimiter = { n : '\n', c : '' };
   return delimiter[option];
 };
 
-const readFile = function (readFileSync, file) {
-  return readFileSync(file, 'utf-8');
+const readFile = function (reader, file) {
+  return reader(file, 'utf-8');
 };
 
 const take = function (file, option, count) {
@@ -27,9 +27,9 @@ const last = function (file, option, count) {
   return file.split(delimiter).reverse().slice(0, count).reverse().join(delimiter);
 };
 
-const extractFileData = function (details, commandFunction, command) {
-  let { files, existsSync, option, count, readContent } = details;
-  let delimiter = selectDelimiter(option);
+const extractFileData = function (parsedInput, commandFunction, command) {
+  let { files, existsSync, option, count, readContent } = parsedInput;
+  let delimiter = selectDelimiter(option); 
 
   return files.map(function (file, index) {
     if (!existsSync(file)) return errorMessageForMissingFile(file, command);

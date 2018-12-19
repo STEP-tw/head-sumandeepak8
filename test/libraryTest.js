@@ -112,9 +112,11 @@ describe('head', function () {
   });
 
   describe('mutliple inputArgs file', function () {
-    it('should return max.10 lines if files has ,when the option and value of count is not given ', function () {
+    it('should return 1 line if files has', function () {
       let inputArgs = {
         files: ['file.txt', 'file1.txt', 'file3.txt'],
+        option : 'n',
+        count : 1,
         existsSync,
         readContent
       };

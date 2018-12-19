@@ -1,6 +1,6 @@
 const { errorMessageForMissingFile } = require('./inputValidation.js');
 const { parseInput, parseCount } = require('./parseInput.js');
-const { inputValidation } = require('./inputValidation.js');
+const { validateCountAndOption } = require('./inputValidation.js');
 
 const createFileHeader = function (fileName, filesLength) {
   if (filesLength > 1)
@@ -56,8 +56,8 @@ const organizeCommandOutput = function (inputArgs, command, fs) {
   let { readFileSync, existsSync } = fs;
   let readContent = readFile.bind(null, readFileSync);
   let parsedInput = { files, readContent, existsSync, option, count };
-  if (inputValidation(inputArgs, command) != true)
-    return inputValidation(inputArgs, command);
+  if (validateCountAndOption(inputArgs, command) != true)
+    return validateCountAndOption(inputArgs, command);
 
   if(count == 0)
     return '';

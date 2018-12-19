@@ -56,26 +56,26 @@ const validateCount = function (count, option, command) {
     return countErrorMessage(isValid, count, option, command);
 };
 
-const inputValidation = function (input, command) {
+const validateCountAndOption = function (input, command) {
     let { count, option } = parseInput(input);
     let isValidOptionResult = validateOption(option, command);
-    if (isValidOptionResult != undefined)
-        return isValidOptionResult;
     let validateCountResult = validateCount(count, option, command);
+    if (isValidOptionResult != undefined)
+       return isValidOptionResult;
     if (validateCountResult != undefined )
-        return validateCountResult;
+       return validateCountResult;
     return true;
 };
 
 module.exports = {
-    inputValidation,
+    validateCountAndOption,
     validateCount,
     validateOption,
     isValidCount,
     errorMessageForMissingFile,
     errorMessageForOption,
     errorMessageForLinesAndBytes,
-    inputValidation,
+    validateCountAndOption,
     optionErrorMessage,
     countErrorMessage,
 };

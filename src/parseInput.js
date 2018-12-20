@@ -5,8 +5,7 @@ const filterOptionAndCount = function (inputArgs) {
         let result = (options[0][0] == '-');
         let isFirstElementNumber = (index == 1 &&
             (options[0].length > 2 || isFinite(options[0])));
-        if (result && isFirstElementNumber)
-            result = false;
+        if (result && isFirstElementNumber) result = false;
         index++;
         return result;
     });
@@ -22,7 +21,9 @@ const optionCountMethod = function (optionAndCount) {
 
 const extractOptionAndCount = function (inputArgs) {
     let optionAndCount = filterOptionAndCount(inputArgs);
-    optionAndCount.length == 0 && optionAndCount.push('-n10');
+    if (optionAndCount.length == 0){
+         optionAndCount.push('-n10');
+    };
     if (isFinite(optionAndCount[0][1]))
         return ['n', optionAndCount[0].slice(1)];
     return optionCountMethod(optionAndCount);

@@ -157,11 +157,11 @@ describe('filterOptionAndCount', function () {
         deepStrictEqual(filterOptionAndCount(options), []);
     });
     it('should return an array of option elements when option is given',()=>{
-        let options = ['-c5', 'file', 23];
+        let options = ['-c5', 'file'];
         deepStrictEqual(filterOptionAndCount(options), ['-c5']);
     });
     it('should return first two elements of options when first element is option and second is count',()=>{
-        let options = ['-c', '8', 'file', 23];
+        let options = ['-c', '8'];
         deepStrictEqual(filterOptionAndCount(options), ['-c', '8']);
     });
 });

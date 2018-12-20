@@ -1,10 +1,10 @@
 const filterOptionAndCount = function (inputArgs) {
-    let options = inputArgs.slice(0, 2);
     let index = 0;
-    return options.filter(() => {
-        let result = (options[0][0] == '-');
+    
+    return inputArgs.filter(() => {
+        let result = (inputArgs[0][0] == '-');
         let isFirstElementNumber = (index == 1 &&
-            (options[0].length > 2 || isFinite(options[0])));
+            (inputArgs[0].length > 2 || isFinite(inputArgs[0])));
         if (result && isFirstElementNumber) result = false;
         index++;
         return result;
@@ -20,7 +20,7 @@ const optionCountMethod = function (optionAndCount) {
 }
 
 const extractOptionAndCount = function (inputArgs) {
-    let optionAndCount = filterOptionAndCount(inputArgs);
+    let optionAndCount = filterOptionAndCount(inputArgs.slice(0,2));
     if (optionAndCount.length == 0){
          optionAndCount.push('-n10');
     };
@@ -30,7 +30,8 @@ const extractOptionAndCount = function (inputArgs) {
 };
 
 const extractFiles = function (inputArgs) {
-    return inputArgs.slice(filterOptionAndCount(inputArgs).length);
+    let filesStartIndex = filterOptionAndCount(inputArgs.slice(0,2)).length; 
+    return inputArgs.slice(filesStartIndex);
 };
 
 const parseCount = function (count, command) {

@@ -62,6 +62,8 @@ const organizeCommandOutput = function (inputArgs, command, fs) {
   let parsedInput = { files, readContent, existsSync, option, count };
   if (validateCountAndOption(inputArgs, command) != true)
     return validateCountAndOption(inputArgs, command);
+    console.log('ouput',parsedInput);
+    
 
   return commands[command](parsedInput).join('\n');
 };

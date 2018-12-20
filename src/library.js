@@ -24,7 +24,8 @@ const take = function (file, option, count) {
 
 const last = function (file, option, count) {
   let delimiter = selectDelimiter(option);
-  return file.split(delimiter).reverse().slice(0, count).reverse().join(delimiter);
+  let part = file.split(delimiter).reverse().slice(0, count);
+  return part.reverse().join(delimiter);
 };
 
 const extractFileData = function (parsedInput, commandFunction, command) {
@@ -46,6 +47,9 @@ const head = function (parsedInput) {
 };
 
 const tail = function (parsedInput) {
+  let { count } = parsedInput;
+  if(count == 0)
+    return '';
   return extractFileData(parsedInput, last, 'tail');
 };
 
@@ -58,9 +62,6 @@ const organizeCommandOutput = function (inputArgs, command, fs) {
   let parsedInput = { files, readContent, existsSync, option, count };
   if (validateCountAndOption(inputArgs, command) != true)
     return validateCountAndOption(inputArgs, command);
-
-  if(count == 0)
-    return '';
 
   return commands[command](parsedInput).join('\n');
 };

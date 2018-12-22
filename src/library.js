@@ -73,6 +73,5 @@ module.exports = {
   readFile,
   selectDelimiter,
   createFileHeader,
-  extractFileData,
   organizeCommandOutput,
 };

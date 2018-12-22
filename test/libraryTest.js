@@ -12,6 +12,7 @@ const {
   createFileHeader,
   selectDelimiter,
   readFile,
+  extractFileData,
   organizeCommandOutput,
 } = require('../src/library.js');
 
@@ -203,6 +204,16 @@ describe('tail', function () {
     let expectedOutput = ['==> file <==\nh\ni\nj\nk\nl\n', '==> file1 <==\n2\n3\n4\n5\n\n', '==> file2 <==\nhello\nworld\njavascript\npython']
     deepEqual(tail(input), expectedOutput);
   });
+  it('should return one space line for  multiple file when option is c and count is 0', function () {
+    let input = {
+      files: ['file', 'file1', 'file2'],
+      option: 'n',
+      count: 0,
+      existsSync,
+      readContent
+    };
+    deepEqual(tail(input), '');
+  });
 });
 
 describe('organizeCommandOutput', function () {
@@ -219,5 +230,16 @@ describe('organizeCommandOutput', function () {
     let fs = { readFileSync, existsSync };
     let expectedOutput = `==> file1 <==\n1\n2\n3\n\n==> file2 <==\nhello\nworld\njavascript`;
     deepEqual(organizeCommandOutput(inputArgs, command, fs), expectedOutput);
+  });
+});
+
+describe('extractFileData',function(){
+  it('should return file content for existing file when option is n and count is 2 and command is head',function(){
+  let inputArgs = { files : ['file'], existsSync, option : 'n', count : 2, readContent };
+  deepEqual(extractFileData(inputArgs, take, 'head'),['a\nb']); 
+  });
+  it('should return error message for non existing file when option is n and count is 2 and command can be head or tail',function(){
+    let inputArgs = { files : ['file.txt'], existsSync, option : 'n', count : 2, readContent };
+    deepEqual(extractFileData(inputArgs, last, 'tail'),[ 'tail: file.txt: No such file or directory' ]); 
   });
 });

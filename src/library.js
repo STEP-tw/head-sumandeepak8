@@ -1,5 +1,6 @@
-const { errorMessageForMissingFile, validateCountAndOption } = require('./inputValidation.js');
+const { errorMessageForMissingFile } = require('./inputValidation.js');
 const { parseInput, parseCount } = require('./parseInput.js');
+const { validateCountAndOption } = require('./inputValidation.js');
 
 const createFileHeader = function (fileName, filesLength) {
   if (filesLength > 1)

@@ -1,0 +1,26 @@
+{
+  "name": "headtail",
+  "version": "1.0.0",
+  "description": "Head Usage:",
+  "main": "head.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "node head.js -n5 head.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/STEP-tw/head-sumandeepak8.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/STEP-tw/head-sumandeepak8/issues"
+  },
+  "homepage": "https://github.com/STEP-tw/head-sumandeepak8#readme",
+  "dependencies": {
+    "chalk": "^2.4.1"
+  }
+}

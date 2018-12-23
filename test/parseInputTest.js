@@ -4,7 +4,6 @@ const {
     filterOptionAndCount,
     parseInput,
     parseCount,
-    optionCountMethod,
 } = require('../src/parseInput.js');
 
 const {
@@ -163,18 +162,6 @@ describe('filterOptionAndCount', function () {
     it('should return first two elements of options when first element is option and second is count',()=>{
         let options = ['-c', '8'];
         deepStrictEqual(filterOptionAndCount(options), ['-c', '8']);
-    });
-});
-
-describe('optionCountMethod', function () {
-    it('should return an array of two element,first element should be n and second 3', function () {
-        deepEqual(optionCountMethod(['-n3']), ['n', '3']);
-    });
-    it('should return first element as c and second element as 5', () => {
-        deepEqual(optionCountMethod(['-c5']), ['c', '5']);
-    });
-    it('should return first element as d and second as 8', () => {
-        deepEqual(optionCountMethod(['-d', '8']), ['d', '8']);
     });
 });
 

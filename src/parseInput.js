@@ -1,6 +1,6 @@
 const filterOptionAndCount = function (inputArgs) {
     let index = 0;
-    
+
     return inputArgs.filter(() => {
         let result = (inputArgs[0][0] == '-');
         let isFirstElementNumber = (index == 1 &&
@@ -11,37 +11,47 @@ const filterOptionAndCount = function (inputArgs) {
     });
 };
 
-const optionCountMethod = function (optionAndCount) {
-    let options = {
-        '1': [optionAndCount[0][1], optionAndCount[0].slice(2)],
-        '2': [optionAndCount[0][1], optionAndCount[1]],
-    };
-    return options[optionAndCount.length];
-}
+const isOnlyCount = function (inputArgs) {
+    return inputArgs.match(/^-/) != null && isFinite(inputArgs);
+};
+
+const isOnlyOption = function (inputArgs) {
+    return inputArgs[0].match(/^-/) != null && isNaN(inputArgs) && inputArgs.length == 2;
+};
+
+const isOptionWithCount = function (inputArgs) {
+    return inputArgs[0].match(/^-/) != null && isNaN(inputArgs) && inputArgs.length > 2;
+};
 
 const extractOptionAndCount = function (inputArgs) {
-    let optionAndCount = filterOptionAndCount(inputArgs.slice(0,2));
-    if (optionAndCount.length == 0){
-         optionAndCount.push('-n10');
+    let firstElement = inputArgs[0];
+    if (firstElement.match(/^-/) == null) {
+        return ['n', '10'];
     };
-    if (isFinite(optionAndCount[0][1]))
-        return ['n', optionAndCount[0].slice(1)];
-    return optionCountMethod(optionAndCount);
+    if (isOnlyCount(firstElement)) {
+      return ['n',firstElement.slice(1)];
+    };
+    if(isOnlyOption(firstElement)){
+        return [firstElement.slice(1),inputArgs[1]];
+    }
+    if(isOptionWithCount(firstElement)){
+        return [firstElement.slice(1,2),firstElement.slice(2)]
+    }
 };
 
 const extractFiles = function (inputArgs) {
-    let filesStartIndex = filterOptionAndCount(inputArgs.slice(0,2)).length; 
+    let filesStartIndex = filterOptionAndCount(inputArgs.slice(0, 2)).length;
     return inputArgs.slice(filesStartIndex);
 };
 
 const parseCount = function (count, command) {
-   let parsedCount = {
-      'head': count,
-      'tail': Math.abs(count)
+    let parsedCount = {
+        'head': count,
+        'tail': Math.abs(count)
     };
-   return parsedCount[command];
+    return parsedCount[command];
 };
-  
+
 const parseInput = function (inputArgs) {
     let optionAndCount = extractOptionAndCount(inputArgs);
     let option = optionAndCount[0];
@@ -55,6 +65,5 @@ module.exports = {
     extractFiles,
     extractOptionAndCount,
     parseInput,
-    optionCountMethod,
     parseCount,
 };

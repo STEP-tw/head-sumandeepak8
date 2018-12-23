@@ -12,7 +12,7 @@ const filterOptionAndCount = function (inputArgs) {
 };
 
 const isOnlyCount = function (inputArgs) {
-    return inputArgs.match(/^-/) != null && isFinite(inputArgs);
+    return inputArgs.match(/^-/) != null && isFinite(inputArgs[1]);
 };
 
 const isOnlyOption = function (inputArgs) {

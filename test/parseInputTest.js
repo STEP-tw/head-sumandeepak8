@@ -197,7 +197,7 @@ describe('isOnlyCount', function () {
         deepEqual(isOnlyCount('-34'), true);
     });
     it('should return false when inputArgs is -4n ', function () {
-        deepEqual(isOnlyCount('4n'), false);
+        deepEqual(isOnlyCount('-4n'), true);
     });
 });
 

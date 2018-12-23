@@ -20,7 +20,7 @@ const isOnlyOption = function (inputArgs) {
 };
 
 const isOptionWithCount = function (inputArgs) {
-    return inputArgs[0].match(/^-/) != null && isNaN(inputArgs) && inputArgs.length > 2;
+    return inputArgs[0].match(/^-/) != null && isNaN(inputArgs[1]) && inputArgs.length > 2;
 };
 
 const extractOptionAndCount = function (inputArgs) {
@@ -66,4 +66,7 @@ module.exports = {
     extractOptionAndCount,
     parseInput,
     parseCount,
+    isOnlyOption,
+    isOnlyCount,
+    isOptionWithCount,
 };

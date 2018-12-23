@@ -4,6 +4,9 @@ const {
     filterOptionAndCount,
     parseInput,
     parseCount,
+    isOnlyOption,
+    isOnlyCount,
+    isOptionWithCount,
 } = require('../src/parseInput.js');
 
 const {
@@ -151,31 +154,64 @@ describe('parseInput', function () {
 });
 
 describe('filterOptionAndCount', function () {
-    it('should return an empty array, when option is not given',()=>{
+    it('should return an empty array, when option is not given', () => {
         let options = ['n5', 'file'];
         deepStrictEqual(filterOptionAndCount(options), []);
     });
-    it('should return an array of option elements when option is given',()=>{
+    it('should return an array of option elements when option is given', () => {
         let options = ['-c5', 'file'];
         deepStrictEqual(filterOptionAndCount(options), ['-c5']);
     });
-    it('should return first two elements of options when first element is option and second is count',()=>{
+    it('should return first two elements of options when first element is option and second is count', () => {
         let options = ['-c', '8'];
         deepStrictEqual(filterOptionAndCount(options), ['-c', '8']);
     });
 });
 
-describe('parseCount',function(){
-  it('should return same count value for command head where count is 4',function(){
-    let count = 4;
-    let command = 'head';
-    let expectedOutput = 4;
-  deepEqual(parseCount(count, command),expectedOutput);
+describe('parseCount', function () {
+    it('should return same count value for command head where count is 4', function () {
+        let count = 4;
+        let command = 'head';
+        let expectedOutput = 4;
+        deepEqual(parseCount(count, command), expectedOutput);
+    });
+    it('should return absolute count even the given count is -3 for command tail', () => {
+        let count = -3;
+        let command = 'tail';
+        let expectedOutput = 3;
+        deepEqual(parseCount(count, command), expectedOutput);
+    })
 });
- it('should return absolute count even the given count is -3 for command tail',()=>{
-    let count = -3;
-    let command = 'tail';
-    let expectedOutput = 3;
-    deepEqual(parseCount(count, command), expectedOutput); 
- })
+
+describe('isOnlyOption', function () {
+    it('should return true when inputArgs is -n', function () {
+        deepEqual(isOnlyOption('-n'), true);
+    });
+    it('should return false when inputArgs is -a3', function () {
+        deepEqual(isOnlyOption('-a3'), false);
+    });
+});
+
+describe('isOnlyCount', function () {
+    it('should return true when inputArgs is -34 ', function () {
+        deepEqual(isOnlyCount('-34'), true);
+    });
+    it('should return false when inputArgs is -4n ', function () {
+        deepEqual(isOnlyCount('4n'), false);
+    });
+});
+
+describe('isOptionWithCount', function () {
+    it('should return true for inputArgs -n3 ', function () {
+        deepEqual(isOptionWithCount('-n3'), true);
+    });
+    it('should return false for inputArgs -4', function () {
+        deepEqual(isOptionWithCount('-4'), false);
+    });
+    it('should return false for inputArgs -c', function () {
+        deepEqual(isOptionWithCount('-c'), false);
+    });
+    it('should return false for inputArgs -8n', function () {
+        deepEqual(isOptionWithCount('-8n'), false);
+    });
 });

@@ -184,34 +184,40 @@ describe('parseCount', function () {
 });
 
 describe('isOnlyOption', function () {
-    it('should return true when inputArgs is -n', function () {
-        deepEqual(isOnlyOption('-n'), true);
+    it('should return true when inputArgs is n', function () {
+        deepEqual(isOnlyOption('n'), true);
     });
-    it('should return false when inputArgs is -a3', function () {
-        deepEqual(isOnlyOption('-a3'), false);
+    it('should return false when inputArgs is a3', function () {
+        deepEqual(isOnlyOption('a3'), false);
+    });
+    it('should return false when inputArgs is 3c', function () {
+        deepEqual(isOnlyOption('3c'), false);
     });
 });
 
 describe('isOnlyCount', function () {
-    it('should return true when inputArgs is -34 ', function () {
-        deepEqual(isOnlyCount('-34'), true);
+    it('should return true when inputArgs is 34 ', function () {
+        deepEqual(isOnlyCount('34'), true);
     });
-    it('should return false when inputArgs is -4n ', function () {
-        deepEqual(isOnlyCount('-4n'), true);
+    it('should return false when inputArgs is 4n ', function () {
+        deepEqual(isOnlyCount('4n'), true);
+    });
+    it('should return false when inputArgs is n', function () {
+        deepEqual(isOnlyCount('n'), false);
     });
 });
 
 describe('isOptionWithCount', function () {
-    it('should return true for inputArgs -n3 ', function () {
-        deepEqual(isOptionWithCount('-n3'), true);
+    it('should return true for inputArgs n3 ', function () {
+        deepEqual(isOptionWithCount('n3'), true);
     });
-    it('should return false for inputArgs -4', function () {
-        deepEqual(isOptionWithCount('-4'), false);
+    it('should return false for inputArgs 4', function () {
+        deepEqual(isOptionWithCount('4'), false);
     });
-    it('should return false for inputArgs -c', function () {
-        deepEqual(isOptionWithCount('-c'), false);
+    it('should return false for inputArgs c', function () {
+        deepEqual(isOptionWithCount('c'), false);
     });
-    it('should return false for inputArgs -8n', function () {
-        deepEqual(isOptionWithCount('-8n'), false);
+    it('should return false for inputArgs 8n', function () {
+        deepEqual(isOptionWithCount('8n'), false);
     });
 });

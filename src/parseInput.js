@@ -12,30 +12,33 @@ const filterOptionAndCount = function (inputArgs) {
 };
 
 const isOnlyCount = function (inputArgs) {
-    return inputArgs.match(/^-/) != null && isFinite(inputArgs[1]);
+    return isFinite(inputArgs[0]);
 };
 
 const isOnlyOption = function (inputArgs) {
-    return inputArgs[0].match(/^-/) != null && isNaN(inputArgs) && inputArgs.length == 2;
+    return isNaN(inputArgs) && inputArgs.length == 1;
 };
 
 const isOptionWithCount = function (inputArgs) {
-    return inputArgs[0].match(/^-/) != null && isNaN(inputArgs[1]) && inputArgs.length > 2;
+    return isNaN(inputArgs[0]) && inputArgs.length > 1;
 };
 
 const extractOptionAndCount = function (inputArgs) {
-    let firstElement = inputArgs[0];
-    if (firstElement.match(/^-/) == null) {
+    if (inputArgs[0].match(/^-/) == null) {
         return ['n', '10'];
     };
+
+    let firstElement = inputArgs[0].slice(1);
     if (isOnlyCount(firstElement)) {
-      return ['n',firstElement.slice(1)];
+      return ['n',firstElement];
     };
+    
     if(isOnlyOption(firstElement)){
-        return [firstElement.slice(1),inputArgs[1]];
-    }
+        return [ firstElement ,inputArgs[1]];
+    };
+
     if(isOptionWithCount(firstElement)){
-        return [firstElement.slice(1,2),firstElement.slice(2)]
+        return [firstElement.slice(0,1),firstElement.slice(1)]
     }
 };
 

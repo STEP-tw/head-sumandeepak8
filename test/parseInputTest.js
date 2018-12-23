@@ -4,6 +4,7 @@ const {
     isOnlyOption,
     isOnlyCount,
     isOptionWithCount,
+    hasNoDash,
 } = require('../src/parseInput.js');
 
 const {
@@ -131,4 +132,16 @@ describe('isOptionWithCount', function () {
     it('should return false for inputArgs 8n', function () {
         deepEqual(isOptionWithCount('8n'), false);
     });
+});
+
+describe('hasNoDash', function () {
+    it('should return true when inputArg is n', function () {
+        deepEqual(hasNoDash('n'), true);
+    });
+    it('should return true for inputArg is 4', function () {
+        deepEqual(hasNoDash('4'), true);
+    });
+    it('should return false for input -n3', function () {
+        deepEqual(hasNoDash('-n3'), false);
+    })
 });

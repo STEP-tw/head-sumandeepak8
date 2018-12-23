@@ -1,48 +1,67 @@
-const isOnlyCount = function (inputArgs) {
-    return isFinite(inputArgs[0]);
+const isOnlyCount = function (inputArg) {
+    return isFinite(inputArg[0]);
 };
 
-const isOnlyOption = function (inputArgs) {
-    return isNaN(inputArgs) && inputArgs.length == 1;
+const isOnlyOption = function (inputArg) {
+    return isNaN(inputArg) && inputArg.length == 1;
 };
 
-const isOptionWithCount = function (inputArgs) {
-    return isNaN(inputArgs[0]) && inputArgs.length > 1;
+const isOptionWithCount = function (inputArg) {
+    return isNaN(inputArg[0]) && inputArg.length > 1;
+};
+ 
+const hasNoDash = function(inputArg){
+    return inputArg[0].match(/^-/) == null;
 };
 
 const parseInput = function (inputArgs) {
-    if (inputArgs[0].match(/^-/) == null) {
-        return {
-            option: 'n',
-            count: '10',
-            files: inputArgs
-        };
-    };
-
     let firstElement = inputArgs[0].slice(1);
-    if (isOnlyCount(firstElement)) {
-        return {
-            option: 'n',
-            count: firstElement,
-            files: inputArgs.slice(1)
-        };
-    };
 
-    if (isOnlyOption(firstElement)) {
-        return {
-            option: firstElement,
-            count: inputArgs[1],
-            files: inputArgs.slice(2)
-        };
-    };
+    let object = [
+        {   
+            result : hasNoDash(inputArgs[0]),
+            true : {
+                option : 'n',
+                count : '10',
+                files : inputArgs
+            }
 
-    if (isOptionWithCount(firstElement)) {
-        return {
-            option: firstElement.slice(0, 1),
-            count: firstElement.slice(1),
-            files: inputArgs.slice(1)
-        };
-    };
+        },
+
+        {
+            result: isOnlyCount(firstElement),
+            true: {
+                option: 'n',
+                count: firstElement,
+                files: inputArgs.slice(1)
+            }
+        },
+
+        {
+            result: isOnlyOption(firstElement),
+            true: {
+                option: firstElement,
+                count: inputArgs[1],
+                files: inputArgs.slice(2)
+            }
+
+        },
+
+        {
+            result: isOptionWithCount(firstElement),
+            true: {
+                option: firstElement.slice(0, 1),
+                count: firstElement.slice(1),
+                files: inputArgs.slice(1)
+            }
+        },
+    ];
+
+    let parsedInputResults = object.filter(function (x) {
+        return x['result'];
+    });
+
+    return parsedInputResults[0]['true'];
 };
 
 const parseCount = function (count, command) {
@@ -59,4 +78,5 @@ module.exports = {
     isOnlyOption,
     isOnlyCount,
     isOptionWithCount,
+    hasNoDash,
 };

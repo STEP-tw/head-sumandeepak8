@@ -212,7 +212,7 @@ describe('tail', function () {
       existsSync,
       readContent
     };
-    deepEqual(tail(input), '');
+    deepEqual(tail(input), ['']);
   });
 });
 

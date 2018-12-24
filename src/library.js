@@ -49,7 +49,7 @@ const head = function (parsedInput) {
 const tail = function (parsedInput) {
   let { count } = parsedInput;
   if(count == 0)
-    return '';
+    return [''];
   return extractFileData(parsedInput, last, 'tail');
 };
 
